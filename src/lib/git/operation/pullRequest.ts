@@ -1,0 +1,71 @@
+import type { GitPullRequestAdapter } from "@/lib/git/model/pullRequestAdapter";
+import type { ReviewService } from "@/lib/review/service";
+import type { PromptService } from "@/lib/prompt/service";
+import type { ModelService } from "@/lib/model/service";
+import { generateObject } from "ai";
+import { z } from "zod";
+
+export namespace PullRequestHandle {
+  export class Operation {
+    private readonly reviewService: ReviewService;
+    private readonly promptService: PromptService;
+    private readonly modelService: ModelService;
+
+    constructor(opts: {
+      reviewService: ReviewService;
+      promptService: PromptService;
+      modelService: ModelService;
+    }) {
+      this.reviewService = opts.reviewService;
+      this.promptService = opts.promptService;
+      this.modelService = opts.modelService;
+    }
+
+    async execute(gitAdapter: GitPullRequestAdapter) {
+      const { model, provider } =
+        await this.modelService.getActiveProviderModel();
+      const prompt = await this.promptService.createPrompt(gitAdapter);
+
+      const reviewId = await this.reviewService.initReview(
+        provider,
+        prompt,
+        await gitAdapter.getReviewInformation(),
+      );
+
+      try {
+        const { object } = await generateObject({
+          model: model,
+          schema: reviewSchema,
+          messages: prompt,
+        });
+
+        const { brokenRequirements: comments } = object;
+
+        await gitAdapter.createReview(
+          `Yapir Review with ${model.modelId} \n found ${comments?.length ?? 0} issues`,
+          comments,
+        );
+        await this.reviewService.completeReview(reviewId, object, prompt);
+      } catch (e) {
+        await this.reviewService.failReview(reviewId);
+        throw e;
+      }
+    }
+  }
+
+  const reviewSchema = z.object({
+    brokenRequirements: z
+      .array(
+        z.object({
+          path: z.string().describe("file path"),
+          line: z.number().describe("The line number"),
+          body: z
+            .string()
+            .describe(
+              "Markdown content, the comment to put on the PR. Give quick fix to the user if possible.",
+            ),
+        }),
+      )
+      .describe("The list of violations"),
+  });
+}
