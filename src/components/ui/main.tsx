@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function Main({
   className,
@@ -9,13 +10,8 @@ export function Main({
   children?: ReactNode;
 }) {
   return (
-    <main
-      className={cn(
-        "container mx-auto max-w-6xl p-8 font-[family-name:var(--font-geist-sans)]",
-        className,
-      )}
-    >
-      {children}
-    </main>
+    <>
+      <main className={cn("mx-auto px-10 py-8", className)}>{children}</main>
+    </>
   );
 }
