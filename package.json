@@ -18,6 +18,8 @@
     "@ai-sdk/anthropic": "^1.1.8",
     "@ai-sdk/mistral": "^1.1.10",
     "@ai-sdk/openai": "^1.1.11",
+    "@dicebear/collection": "^9.2.2",
+    "@dicebear/core": "^9.2.2",
     "@formkit/auto-animate": "^0.8.2",
     "@gitbeaker/rest": "^42.1.0",
     "@hookform/resolvers": "^4.1.0",

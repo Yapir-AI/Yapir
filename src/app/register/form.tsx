@@ -6,6 +6,7 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
+import { routes } from "@/lib/route";
 
 export const schema = z.object({
   email: z.string().email(),
@@ -24,7 +25,7 @@ export function RegisterForm() {
           name: "admin",
         },
         {
-          onSuccess: () => router.push("/providers"),
+          onSuccess: () => router.push(routes.providers),
         },
       ),
   });

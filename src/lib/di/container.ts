@@ -16,6 +16,8 @@ import { GitlabConnectorRepositoryList } from "@/lib/git/connectors/gitlab/opera
 import { InstructionService } from "@/lib/instructions/service";
 import { PromptService } from "@/lib/prompt/service";
 import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
+import { ReviewerCreate } from "@/lib/reviewer/operation/create";
+import { ReviewerService } from "@/lib/reviewer/service";
 
 export const container = createTypedContainer({
   db: asValue(db),
@@ -36,4 +38,6 @@ export const container = createTypedContainer({
   providerDeleteOperation: asClass(ProviderDelete.Operation),
   pullRequestHandleOperation: asClass(PullRequestHandle.Operation),
   reviewService: asClass(ReviewService),
+  reviewerService: asClass(ReviewerService),
+  reviewerCreateOperation: asClass(ReviewerCreate.Operation),
 });

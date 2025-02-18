@@ -5,8 +5,9 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ProviderCreate } from "@/lib/provider/operation/create";
 import { ProviderUpdate } from "@/lib/provider/operation/update";
+import { routes } from "@/lib/route";
 
-const revalidateProviders = () => revalidatePath("/providers");
+const revalidateProviders = () => revalidatePath(routes.providers);
 
 export const createProvider = actionClient
   .schema(ProviderCreate.schema)

@@ -1,0 +1,30 @@
+import { TitleSection } from "@/components/rich/titleSection";
+import { H1, HSub } from "@/components/ui/typography";
+import { Main } from "@/components/ui/main";
+import type { ReactNode } from "react";
+import { AddProviderButton } from "@/app/(auth)/providers/addProviderButton";
+import { CreateReviewerButton } from "@/app/(auth)/reviewers/CreateReviewerButton";
+import { container } from "@/lib/di/container";
+
+export default async function ReviewersLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const providers = await container.cradle.providerService.listProviders();
+
+  return (
+    <Main>
+      <TitleSection>
+        <div>
+          <H1>Reviewers</H1>
+          <HSub>
+            Reviewers are those who are responsible for reviewing your code!
+          </HSub>
+        </div>
+        <CreateReviewerButton providers={providers} />
+      </TitleSection>
+      {children}
+    </Main>
+  );
+}

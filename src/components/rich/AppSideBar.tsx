@@ -3,7 +3,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -14,9 +13,10 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
+  BotMessageSquare,
   BrainIcon,
-  GalleryVerticalEnd,
   GitBranchIcon,
+  HomeIcon,
   type LucideIcon,
   NotebookPenIcon,
 } from "lucide-react";
@@ -24,6 +24,29 @@ import packageJson from "@/../package.json";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Route } from "next";
+import { routes } from "@/lib/route";
+
+const navGroups: NavGroup[] = [
+  { title: "Code", items: [] },
+  {
+    title: "Customize",
+    items: [
+      { title: "Reviewers", url: routes.reviewers, icon: BotMessageSquare },
+      { title: "Instructions", url: routes.settings, icon: NotebookPenIcon },
+    ],
+  },
+  {
+    title: "Configure",
+    items: [
+      {
+        title: "Git",
+        url: routes.git,
+        icon: GitBranchIcon,
+      },
+      { title: "Providers", url: routes.providers, icon: BrainIcon },
+    ],
+  },
+];
 
 export function AppSideBar() {
   const pathname = usePathname();
@@ -49,7 +72,7 @@ export function AppSideBar() {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <GalleryVerticalEnd className="size-4" />
+                  <HomeIcon className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">Yapir</span>
@@ -73,7 +96,7 @@ export function AppSideBar() {
                       tooltip={item.title}
                       asChild
                     >
-                      <Link href={item.url}>
+                      <Link href={item.url} prefetch={true}>
                         <item.icon></item.icon>
                         {item.title}
                       </Link>
@@ -90,25 +113,6 @@ export function AppSideBar() {
     </Sidebar>
   );
 }
-
-const navGroups: NavGroup[] = [
-  { title: "Code", items: [] },
-  {
-    title: "Customize",
-    items: [{ title: "Instructions", url: "/settings", icon: NotebookPenIcon }],
-  },
-  {
-    title: "Configure",
-    items: [
-      {
-        title: "Git",
-        url: "/git",
-        icon: GitBranchIcon,
-      },
-      { title: "Providers", url: "/providers", icon: BrainIcon },
-    ],
-  },
-];
 
 type NavGroup = {
   title: string;

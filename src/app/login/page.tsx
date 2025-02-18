@@ -6,14 +6,15 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/app/login/form";
+import { routes } from "@/lib/route";
 
 export default async function LoginPage() {
   const [user, session] = await Promise.all([
     db.query.user.findFirst(),
     auth.api.getSession({ headers: await headers() }),
   ]);
-  if (session) return redirect("/providers");
-  if (!user) return redirect("/register");
+  if (session) return redirect(routes.providers);
+  if (!user) return redirect(routes.register);
 
   return (
     <Main className="flex h-dvh flex-col items-center justify-center gap-5">

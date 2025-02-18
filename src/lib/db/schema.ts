@@ -13,6 +13,7 @@ import { pgTable } from "drizzle-orm/pg-core/table";
 import { pgEnum } from "drizzle-orm/pg-core/columns/enum";
 import { z } from "zod";
 import { ProviderType } from "@/lib/provider/model/type";
+import { relations } from "drizzle-orm/relations";
 
 export const providerTypeEnum = pgEnum("provider_type", ProviderType);
 
@@ -135,3 +136,20 @@ export const instructions = pgTable("instructions", {
 
 export type Instructions = typeof instructions.$inferSelect;
 export const instructionUpdateSchema = createUpdateSchema(instructions);
+
+export const reviewer = pgTable("reviewer", {
+  id: uuid().primaryKey().defaultRandom(),
+  name: text().notNull(),
+  systemPrompt: text(),
+  providerId: uuid()
+    .notNull()
+    .references(() => provider.id)
+    .notNull(),
+});
+
+export const reviewerRelations = relations(reviewer, ({ one }) => ({
+  provider: one(provider, {
+    fields: [reviewer.providerId],
+    references: [provider.id],
+  }),
+}));

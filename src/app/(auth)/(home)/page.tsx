@@ -15,6 +15,7 @@ import { Chat } from "@/app/(auth)/(home)/chat";
 import { EmptyCard } from "@/components/rich/emptyCard";
 import type { Route } from "next";
 import { container } from "@/lib/di/container";
+import { routes } from "@/lib/route";
 
 export default async function HomePage() {
   const reviews = await container.resolve("reviewService").listReviews();
@@ -84,7 +85,7 @@ function NoReviews() {
         <p>Looks like Yapir has not reviewed anything yet.</p>
         <p>
           Have you{" "}
-          <Link className="underline hover:no-underline" href="/git">
+          <Link className="underline hover:no-underline" href={routes.git}>
             connected a Git source?
           </Link>
         </p>

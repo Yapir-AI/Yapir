@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import ky from "ky";
 import { container } from "@/lib/di/container";
 import { gitlabAuthResponseSchema } from "@/lib/git/connectors/gitlab/model/authResponseSchema";
+import { routes } from "@/lib/route";
 
 const schema = z.object({
   code: z.string(),
@@ -36,5 +37,5 @@ export async function GET(req: NextRequest) {
 
   await gitlabConnectorService.updateToken(id, authResponse);
 
-  return redirect("/git");
+  return redirect(routes.git);
 }

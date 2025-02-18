@@ -5,6 +5,7 @@ import { githubConnector } from "@/lib/db/schema";
 import { forbidden, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import { assertAuthenticated } from "@/lib/auth/check";
+import { routes } from "@/lib/route";
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
@@ -26,5 +27,5 @@ export async function GET(req: NextRequest) {
     slug: slug!,
     webhook_secret: webhook_secret!,
   });
-  redirect("/git");
+  redirect(routes.git);
 }

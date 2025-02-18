@@ -14,8 +14,8 @@ export namespace ProviderCreate {
       this.providerService = opts.providerService;
     }
 
-    async execute(requestDto: Schema) {
-      return await this.db.transaction(async (tx) => {
+    execute = (requestDto: Schema) =>
+      this.db.transaction(async (tx) => {
         if (requestDto.enabled) {
           await this.providerService.disableAllProviders(tx);
         }
@@ -25,7 +25,6 @@ export namespace ProviderCreate {
           .returning();
         return id;
       });
-    }
   }
 
   export const schema = z.object({

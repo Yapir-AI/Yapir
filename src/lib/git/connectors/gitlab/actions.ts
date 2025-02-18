@@ -6,12 +6,13 @@ import { GitlabConnectorCreate } from "@/lib/git/connectors/gitlab/operation/con
 import { GitlabRepositoryConnect } from "@/lib/git/connectors/gitlab/operation/repositoryConnect";
 import { assertAuthenticated } from "@/lib/auth/check";
 import { container } from "@/lib/di/container";
+import { routes } from "@/lib/route";
 
 export const createGitlabConnector = actionClient
   .schema(GitlabConnectorCreate.schema)
   .action(async ({ parsedInput, ctx: { gitlabConnectorCreateOperation } }) => {
     await gitlabConnectorCreateOperation.execute(parsedInput);
-    revalidatePath("/git");
+    revalidatePath(routes.git);
   });
 
 export const connectToRepository = actionClient
