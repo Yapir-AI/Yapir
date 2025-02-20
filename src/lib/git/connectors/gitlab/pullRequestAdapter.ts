@@ -7,7 +7,6 @@ import {
   type GitComment,
   type GitFileChange,
   GitPullRequestAdapter,
-  type GitReviewInfo,
   type GitThread,
 } from "@/lib/git/model/pullRequestAdapter";
 
@@ -114,7 +113,13 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
     );
   }
 
-  override getReviewInformation(): Promise<GitReviewInfo> | GitReviewInfo {
-    throw new Error("Method not implemented.");
+  override getReviewInformation() {
+    return {
+      repoName: this.event.project.name,
+      repoUrl: this.event.project.web_url,
+      pullNumber: this.mergeRequestIId,
+      pullUrl: this.event.object_attributes.url,
+      pullName: this.event.object_attributes.title,
+    };
   }
 }

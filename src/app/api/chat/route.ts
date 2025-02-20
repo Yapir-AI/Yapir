@@ -7,10 +7,11 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   await assertAuthenticated();
-  const { messages, providerId } = await req.json();
-  const modelService = container.resolve("modelService");
+  const { messages, reviewerId } = await req.json();
+  const { modelService, reviewerService } = container.cradle;
 
-  const model = await modelService.getModelByProviderId(providerId);
+  const reviewer = await reviewerService.findById(reviewerId);
+  const model = modelService.toModel(reviewer.aiProvider);
 
   const result = streamText({
     model: model,

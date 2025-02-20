@@ -1,10 +1,10 @@
 import { Gitlab } from "@gitbeaker/rest";
 import ky from "ky";
-import { type GitlabConnectorEntity } from "@/lib/db/schema";
 import { isBefore } from "date-fns/isBefore";
 import { differenceInSeconds } from "date-fns/differenceInSeconds";
 import { gitlabAuthResponseSchema } from "@/lib/git/connectors/gitlab/model/authResponseSchema";
 import type { GitlabConnectorService } from "@/lib/git/connectors/gitlab/connectorService";
+import type { GitlabConnector } from "@prisma/client";
 
 export class GitlabClientFactory {
   private gitlabConnectorService: GitlabConnectorService;
@@ -26,7 +26,7 @@ export class GitlabClientFactory {
     );
   }
 
-  private async refreshToken(connector: GitlabConnectorEntity) {
+  private async refreshToken(connector: GitlabConnector) {
     const json = await ky
       .post("oauth/token", {
         prefixUrl: connector.url,
@@ -46,7 +46,7 @@ export class GitlabClientFactory {
     return authResponse.access_token;
   }
 
-  private checkAccessTokenExpiry(connector: GitlabConnectorEntity) {
+  private checkAccessTokenExpiry(connector: GitlabConnector) {
     if (!connector || !connector.accessToken || !connector.expiresAt)
       return undefined;
 

@@ -1,11 +1,11 @@
 "use client";
 
-import type { Instructions } from "@/lib/db/schema";
 import { updateInstruction as updateInstructionAction } from "@/lib/instructions/actions";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useDebouncedMutation } from "@/lib/reactQuery/useDebouncedMutation";
+import type { Instructions } from "@prisma/client";
 
 export function DefaultInstructions({
   id,

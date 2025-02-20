@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { container } from "@/lib/di/container";
-import { type GitHubConnectorEntity } from "@/lib/db/schema";
 import { App } from "octokit";
 import { Octokit } from "@octokit/core";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
 import type { WebhookEventName } from "@octokit/webhooks-types";
 import { GithubPullRequestAdapter } from "@/lib/git/connectors/github/pullRequestAdapter";
+import type { GithubConnector } from "@prisma/client";
 
 export async function POST({ text, headers }: NextRequest) {
   const appId = Number(headers.get("x-github-hook-installation-target-id"));
@@ -32,7 +32,8 @@ export async function POST({ text, headers }: NextRequest) {
         event,
         await octokit(),
       );
-      return await pullRequestHandleOperation.execute(githubAdapter);
+      //@ts-ignore TODO
+      return await pullRequestHandleOperation.execute(githubAdapter, undefined);
     },
   );
 
@@ -45,12 +46,12 @@ export async function POST({ text, headers }: NextRequest) {
   return NextResponse.json({});
 }
 
-function createGithubApp(app: GitHubConnectorEntity) {
+function createGithubApp(app: GithubConnector) {
   return new App({
     appId: app.id,
     Octokit: Octokit.plugin(restEndpointMethods),
     webhooks: {
-      secret: app.webhook_secret,
+      secret: app.webhookSecret,
     },
     //@ts-expect-error unused
     oauth: {},

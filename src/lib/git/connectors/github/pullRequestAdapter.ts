@@ -21,14 +21,14 @@ export class GithubPullRequestAdapter extends GitPullRequestAdapter {
   private readonly payload = this.event.payload;
   private readonly owner = this.payload.repository.owner.login;
   private readonly repo = this.payload.repository.name;
-  private readonly pull_number = this.payload.pull_request.number;
+  private readonly pullNumber = this.payload.pull_request.number;
   private readonly sha = this.payload.pull_request.head.sha;
 
   override async getFileChanges(): Promise<GitFileChange[]> {
     const { data } = await this.octokit.rest.pulls.listFiles({
       owner: this.owner,
       repo: this.repo,
-      pull_number: this.pull_number,
+      pull_number: this.pullNumber,
       sha: this.sha,
     });
     return data.map(({ filename, status, previous_filename, patch }) => ({
@@ -57,7 +57,7 @@ export class GithubPullRequestAdapter extends GitPullRequestAdapter {
   override async listReviewComments(): Promise<GitThread[]> {
     const response = await this.octokit.graphql<PullRequestQuery>(`{
         repository(owner: "${this.owner}", name: "${this.repo}"){
-            pullRequest(number: ${this.pull_number}) {
+            pullRequest(number: ${this.pullNumber}) {
                 reviewThreads(first: 100) {
                     nodes {
                         id
@@ -89,7 +89,7 @@ export class GithubPullRequestAdapter extends GitPullRequestAdapter {
     await this.octokit.rest.pulls.createReview({
       owner: this.owner,
       repo: this.repo,
-      pull_number: this.pull_number,
+      pull_number: this.pullNumber,
       event: "REQUEST_CHANGES",
       body,
       comments: comments ?? [],
@@ -98,11 +98,11 @@ export class GithubPullRequestAdapter extends GitPullRequestAdapter {
 
   override async getReviewInformation(): Promise<GitReviewInfo> {
     return {
-      repo_name: this.payload.repository.full_name,
-      repo_url: this.payload.repository.html_url,
-      pull_number: this.payload.pull_request.number,
-      pull_url: this.payload.pull_request.html_url,
-      pull_name: this.payload.pull_request.title,
+      repoName: this.payload.repository.full_name,
+      repoUrl: this.payload.repository.html_url,
+      pullNumber: this.payload.pull_request.number,
+      pullUrl: this.payload.pull_request.html_url,
+      pullName: this.payload.pull_request.title,
     };
   }
 }

@@ -1,21 +1,15 @@
-import type { Db } from "@/lib/db";
-import { provider } from "@/lib/db/schema";
-import { eq } from "drizzle-orm/sql/expressions/conditions";
+import { PrismaClient } from "@prisma/client";
 
 export namespace ProviderDelete {
   export class Operation {
-    private readonly db: Db;
+    private readonly prisma: PrismaClient;
 
-    constructor(opts: { db: Db }) {
-      this.db = opts.db;
+    constructor(opts: { prisma: PrismaClient }) {
+      this.prisma = opts.prisma;
     }
 
     async execute(id: string) {
-      await this.db.delete(provider).where(eq(provider.id, id));
-    }
-
-    async greet(id: string) {
-      console.log(`hello ${id}`);
+      await this.prisma.aiProvider.delete({ where: { id: id } });
     }
   }
 }

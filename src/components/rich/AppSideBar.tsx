@@ -15,6 +15,7 @@ import {
 import {
   BotMessageSquare,
   BrainIcon,
+  FolderGit2,
   GitBranchIcon,
   HomeIcon,
   type LucideIcon,
@@ -27,7 +28,10 @@ import type { Route } from "next";
 import { routes } from "@/lib/route";
 
 const navGroups: NavGroup[] = [
-  { title: "Code", items: [] },
+  {
+    title: "Code",
+    items: [{ title: "Projects", url: routes.projects, icon: FolderGit2 }],
+  },
   {
     title: "Customize",
     items: [
@@ -71,7 +75,7 @@ export function AppSideBar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
                   <HomeIcon className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">

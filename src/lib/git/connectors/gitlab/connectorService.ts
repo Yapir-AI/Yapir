@@ -1,33 +1,24 @@
-import { db, type Db } from "@/lib/db";
 import type { gitlabAuthResponseSchema } from "@/lib/git/connectors/gitlab/model/authResponseSchema";
 import { z } from "zod";
-import { gitlabConnector } from "@/lib/db/schema";
-import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { notFound } from "next/navigation";
+import { PrismaClient } from "@prisma/client";
 
 export class GitlabConnectorService {
-  private readonly db: Db;
+  private readonly prisma: PrismaClient;
 
-  constructor(opts: { db: Db }) {
-    this.db = opts.db;
+  constructor(opts: { prisma: PrismaClient }) {
+    this.prisma = opts.prisma;
   }
 
   async listConnectors() {
-    const installations = await this.db.query.gitlabConnector.findMany();
+    const installations = await this.prisma.gitlabConnector.findMany();
 
     return installations.map(
-      ({
-        id,
-        displayName,
-        creation_date,
-        url,
-        applicationId,
-        accessToken,
-      }) => ({
+      ({ id, displayName, creationDate, url, applicationId, accessToken }) => ({
         id,
         displayName,
         applicationId,
-        creation_date,
+        creationDate,
         url,
         ready: !!accessToken,
       }),
@@ -44,19 +35,19 @@ export class GitlabConnectorService {
   ) {
     const expiresAt = Math.floor(Date.now() / 1000) + expires_in;
 
-    await this.db
-      .update(gitlabConnector)
-      .set({
+    await this.prisma.gitlabConnector.update({
+      data: {
         accessToken: access_token,
         expiresAt: new Date(expiresAt * 1000),
         refreshToken: refresh_token,
-      })
-      .where(eq(gitlabConnector.id, connectorId));
+      },
+      where: { id: connectorId },
+    });
   }
 
   async findById(id: string) {
-    const connector = await db.query.gitlabConnector.findFirst({
-      where: eq(gitlabConnector.id, id),
+    const connector = await this.prisma.gitlabConnector.findUniqueOrThrow({
+      where: { id },
     });
 
     if (!connector) throw notFound();

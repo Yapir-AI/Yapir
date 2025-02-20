@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReviewEntity } from "@/lib/db/schema";
 import { cn } from "@/lib/utils";
 import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowUp } from "lucide-react";
 import { type KeyboardEventHandler, useEffect, useRef } from "react";
 import { extractJSON } from "@/lib/json/utils";
+import type { CoreMessage } from "ai";
+import type { Review } from "@prisma/client";
 
 function Message({
   role,
@@ -41,18 +42,22 @@ function Message({
         )}
       >
         {beforeJSON}
-        {json && <pre className="text-xs">{JSON.stringify(json, null, 2)}</pre>}
+        {json && (
+          <pre className="max-w-xs overflow-scroll text-xs sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:max-w-3xl">
+            {JSON.stringify(json, null, 2)}
+          </pre>
+        )}
         {afterJSON}
       </div>
     </div>
   );
 }
 
-export function Chat(review: ReviewEntity) {
+export function Chat(review: Review) {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
       initialMessages: [
-        ...review.messages.map(({ content, role }, id) => ({
+        ...(review.messages as CoreMessage[]).map(({ content, role }, id) => ({
           content: content as string,
           role: role as "system" | "user" | "assistant",
           id: "" + id,
@@ -65,7 +70,7 @@ export function Chat(review: ReviewEntity) {
         },
       ],
       body: {
-        providerId: review.providerId,
+        reviewerId: review.reviewerId,
       },
       experimental_throttle: 100,
     });
@@ -89,7 +94,7 @@ export function Chat(review: ReviewEntity) {
   return (
     <div className="rounded-xl bg-accent/20">
       <div
-        className="max-h-[500px] space-y-3 overflow-scroll rounded p-2"
+        className="max-h-[500px] max-w-full space-y-3 overflow-y-scroll rounded p-2"
         ref={ref}
       >
         {messages.map((message) => (

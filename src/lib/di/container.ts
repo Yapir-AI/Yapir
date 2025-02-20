@@ -1,7 +1,7 @@
 import { asClass, asValue } from "awilix";
 import { createTypedContainer } from "@/lib/di/typedcontainer";
 import { ReviewService } from "@/lib/review/service";
-import { db } from "@/lib/db";
+import prismaClient from "@/lib/db";
 import { ProviderCreate } from "@/lib/provider/operation/create";
 import { ProviderUpdate } from "@/lib/provider/operation/update";
 import { ProviderDelete } from "@/lib/provider/operation/delete";
@@ -18,9 +18,11 @@ import { PromptService } from "@/lib/prompt/service";
 import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 import { ReviewerCreate } from "@/lib/reviewer/operation/create";
 import { ReviewerService } from "@/lib/reviewer/service";
+import { GitlabProjectService } from "@/lib/git/connectors/gitlab/projectService";
+import { ProjectService } from "@/lib/project/service";
 
 export const container = createTypedContainer({
-  db: asValue(db),
+  prisma: asValue(prismaClient),
   modelService: asClass(ModelService),
   githubConnectorService: asClass(GithubConnectorService),
   gitlabConnectorService: asClass(GitlabConnectorService),
@@ -32,11 +34,13 @@ export const container = createTypedContainer({
   ),
   instructionService: asClass(InstructionService),
   promptService: asClass(PromptService),
+  projectService: asClass(ProjectService),
   providerService: asClass(ProviderService),
   providerCreateOperation: asClass(ProviderCreate.Operation),
   providerUpdateOperation: asClass(ProviderUpdate.Operation),
   providerDeleteOperation: asClass(ProviderDelete.Operation),
   pullRequestHandleOperation: asClass(PullRequestHandle.Operation),
+  gitlabProjectService: asClass(GitlabProjectService),
   reviewService: asClass(ReviewService),
   reviewerService: asClass(ReviewerService),
   reviewerCreateOperation: asClass(ReviewerCreate.Operation),

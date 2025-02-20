@@ -55,7 +55,7 @@ export function CreateReviewerButton({
               },
               description: "Just a friendly name to identify this review bot.",
             },
-            providerId: {
+            aiProviderId: {
               fieldType: "autocomplete",
               inputProps: {
                 //@ts-expect-error todo proper typing

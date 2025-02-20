@@ -56,9 +56,9 @@ export interface GitFileChange {
 }
 
 export interface GitReviewInfo {
-  repo_name: string;
-  repo_url: string;
-  pull_number: number;
-  pull_url: string;
-  pull_name: string;
+  repoName: string;
+  repoUrl: string;
+  pullNumber: number;
+  pullUrl: string;
+  pullName: string;
 }

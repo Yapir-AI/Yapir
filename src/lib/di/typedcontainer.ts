@@ -24,12 +24,22 @@ type ExtractResolverType<T> = T extends Resolver<infer X> ? X : null;
 interface TypedAwilixContainer<T extends ContainerDefinition>
   extends Pick<
     AwilixContainer,
-    Exclude<keyof AwilixContainer, "resolve" | "cradle">
+    Exclude<
+      keyof AwilixContainer,
+      "resolve" | "cradle" | "register" | "createScope"
+    >
   > {
   resolve<K extends keyof T>(
     key: K,
     resolveOptions?: ResolveOptions,
   ): ExtractResolverType<T[K]>;
+
+  createScope(): TypedAwilixContainer<T>;
+
+  register<K extends string, R>(
+    key: K,
+    value: Resolver<R>,
+  ): TypedAwilixContainer<T & { K: Resolver<R> }>;
 
   cradle: {
     [K in keyof T]: ExtractResolverType<T[K]>;

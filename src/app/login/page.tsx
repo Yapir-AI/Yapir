@@ -1,7 +1,7 @@
 import { Main } from "@/components/ui/main";
 import { H1, HSub } from "@/components/ui/typography";
 import { Card, CardContent } from "@/components/ui/card";
-import { db } from "@/lib/db";
+import prismaClient from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -10,7 +10,7 @@ import { routes } from "@/lib/route";
 
 export default async function LoginPage() {
   const [user, session] = await Promise.all([
-    db.query.user.findFirst(),
+    prismaClient.user.findFirst(),
     auth.api.getSession({ headers: await headers() }),
   ]);
   if (session) return redirect(routes.providers);

@@ -1,70 +1,45 @@
-import { provider } from "@/lib/db/schema";
-import { db, type Db } from "@/lib/db";
-import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createOllama } from "ollama-ai-provider";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createMistral } from "@ai-sdk/mistral";
+import { type AiProvider, PrismaClient } from "@prisma/client";
 
 export class ModelService {
-  private readonly db: Db;
+  private readonly prisma: PrismaClient;
 
-  constructor(opts: { db: Db }) {
-    this.db = opts.db;
+  constructor(opts: { prisma: PrismaClient }) {
+    this.prisma = opts.prisma;
   }
 
-  async getActiveProviderModel() {
-    const activeProvider = await this.db.query.provider.findFirst({
-      where: eq(provider.enabled, true),
-    });
+  toModel(provider: AiProvider) {
+    const model = provider.model;
 
-    if (!activeProvider) throw Error("No Provider found");
-
-    return {
-      model: this.toModel(activeProvider),
-      provider: activeProvider,
-    };
-  }
-
-  async getModelByProviderId(providerId: string) {
-    const providerEntity = await db.query.provider.findFirst({
-      where: eq(provider.id, providerId),
-    });
-
-    if (!providerEntity) throw Error("No Provider found");
-
-    return this.toModel(providerEntity);
-  }
-
-  private toModel(providerEntity: typeof provider.$inferSelect) {
-    const model = providerEntity.model;
-
-    switch (providerEntity.type) {
-      case "openai":
+    switch (provider.type) {
+      case "OPENAI":
         return createOpenAI({
           compatibility: "strict",
-          apiKey: providerEntity.apiKey ?? undefined,
-          baseURL: providerEntity.baseUrl ?? undefined,
+          apiKey: provider.apiKey ?? undefined,
+          baseURL: provider.baseUrl ?? undefined,
         })(model);
-      case "ollama":
+      case "OLLAMA":
         return createOllama({
-          baseURL: providerEntity.baseUrl ?? undefined,
+          baseURL: provider.baseUrl ?? undefined,
         })(model);
-      case "anthropic":
+      case "ANTHROPIC":
         return createAnthropic({
-          apiKey: providerEntity.apiKey ?? undefined,
-          baseURL: providerEntity.baseUrl ?? undefined,
+          apiKey: provider.apiKey ?? undefined,
+          baseURL: provider.baseUrl ?? undefined,
         })(model);
-      case "openai_like":
+      case "OPENAI_LIKE":
         return createOpenAI({
           compatibility: "compatible",
-          baseURL: providerEntity.baseUrl ?? undefined,
-          apiKey: providerEntity.apiKey ?? undefined,
+          baseURL: provider.baseUrl ?? undefined,
+          apiKey: provider.apiKey ?? undefined,
         })(model);
-      case "mistral":
+      case "MISTRAL":
         return createMistral({
-          baseURL: providerEntity.baseUrl ?? undefined,
-          apiKey: providerEntity.apiKey ?? undefined,
+          baseURL: provider.baseUrl ?? undefined,
+          apiKey: provider.apiKey ?? undefined,
         })(model);
     }
   }

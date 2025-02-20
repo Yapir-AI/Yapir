@@ -5,10 +5,7 @@ import { GitHubIcon } from "@/components/icons/github";
 import Link from "next/link";
 import type { GithubConnectorListElement } from "@/lib/git/connectors/github/connectorService";
 
-export function GithubCard({
-  slug,
-  creation_date,
-}: GithubConnectorListElement) {
+export function GithubCard({ slug, creationDate }: GithubConnectorListElement) {
   return (
     <Card className="flex items-center gap-5 p-5">
       <GitHubIcon className="size-8 fill-foreground" />
@@ -16,7 +13,7 @@ export function GithubCard({
         <CardTitle>GitHub</CardTitle>
         <CardDescription>{slug}</CardDescription>
         <CardDescription>
-          Created {new Date(creation_date).toLocaleDateString()}
+          Created {new Date(creationDate).toLocaleDateString()}
         </CardDescription>
       </div>
       <Button asChild variant="link" className="ml-auto">

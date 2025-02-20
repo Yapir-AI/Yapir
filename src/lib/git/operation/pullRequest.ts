@@ -4,6 +4,8 @@ import type { PromptService } from "@/lib/prompt/service";
 import type { ModelService } from "@/lib/model/service";
 import { generateObject } from "ai";
 import { z } from "zod";
+import type { GitProjectWithReviewersAndProviders } from "@/lib/git/types";
+import type { ReviewerWithProvider } from "@/lib/reviewer/types";
 
 export namespace PullRequestHandle {
   export class Operation {
@@ -21,16 +23,31 @@ export namespace PullRequestHandle {
       this.modelService = opts.modelService;
     }
 
-    async execute(gitAdapter: GitPullRequestAdapter) {
-      const { model, provider } =
-        await this.modelService.getActiveProviderModel();
+    async execute(
+      gitAdapter: GitPullRequestAdapter,
+      project: GitProjectWithReviewersAndProviders,
+    ) {
+      await Promise.all(
+        project.reviewers.map((reviewer) =>
+          this.review(project.id, gitAdapter, reviewer),
+        ),
+      );
+    }
+
+    async review(
+      projectId: string,
+      gitAdapter: GitPullRequestAdapter,
+      reviewer: ReviewerWithProvider,
+    ) {
+      const model = this.modelService.toModel(reviewer.aiProvider);
       const prompt = await this.promptService.createPrompt(gitAdapter);
 
-      const reviewId = await this.reviewService.initReview(
-        provider,
-        prompt,
-        await gitAdapter.getReviewInformation(),
-      );
+      const reviewId = await this.reviewService.initReview({
+        reviewerId: reviewer.id,
+        projectId: projectId,
+        messages: prompt,
+        reviewInfo: await gitAdapter.getReviewInformation(),
+      });
 
       try {
         const { object } = await generateObject({

@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarInset } from "@/components/ui/sidebar";
 
 export function Main({
   className,
@@ -11,7 +10,9 @@ export function Main({
 }) {
   return (
     <>
-      <main className={cn("mx-auto px-10 py-8", className)}>{children}</main>
+      <SidebarInset className="px-10 py-8">
+        <div className="container mx-auto">{children}</div>
+      </SidebarInset>
     </>
   );
 }

@@ -25,7 +25,7 @@ export function AddProviderButton() {
 
   const { defaultUrl, apiKeyPrefix, modelSuggestions, name } = values.type
     ? providerConfigs[values.type]
-    : providerConfigs["anthropic"];
+    : providerConfigs["ANTHROPIC"];
 
   async function create(values: ProviderCreate.Schema) {
     await createProvider(values);

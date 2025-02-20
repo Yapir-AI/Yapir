@@ -2,7 +2,6 @@
   "name": "yapir",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "bun",
   "prettier": {
     "plugins": [
       "prettier-plugin-tailwindcss"
@@ -28,6 +27,7 @@
     "@octokit/graphql-schema": "^15.25.0",
     "@octokit/plugin-rest-endpoint-methods": "^13.3.1",
     "@octokit/webhooks-types": "^7.6.1",
+    "@prisma/client": "^6.4.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-checkbox": "^1.1.4",
@@ -53,8 +53,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
-    "drizzle-orm": "^0.39.3",
-    "drizzle-zod": "^0.7.0",
     "ignore": "^7.0.3",
     "ky": "^1.7.5",
     "lucide-react": "^0.475.0",
@@ -78,7 +76,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.30.4",
     "postcss": "^8",
     "prettier": "^3.5.1",
     "prettier-plugin-tailwindcss": "^0.6.11",

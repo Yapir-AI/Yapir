@@ -1,7 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
-import { db } from "@/lib/db";
-import { githubConnector } from "@/lib/db/schema";
+import prismaClient from "@/lib/db";
 import { forbidden, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import { assertAuthenticated } from "@/lib/auth/check";
@@ -21,11 +20,14 @@ export async function GET(req: NextRequest) {
 
   const { id, pem, webhook_secret, slug } = response.data;
 
-  await db.insert(githubConnector).values({
-    id,
-    pem,
-    slug: slug!,
-    webhook_secret: webhook_secret!,
+  await prismaClient.githubConnector.create({
+    data: {
+      id,
+      pem,
+      slug: slug!,
+      webhookSecret: webhook_secret!,
+    },
   });
+
   redirect(routes.git);
 }

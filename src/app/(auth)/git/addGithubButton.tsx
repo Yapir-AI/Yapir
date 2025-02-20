@@ -26,7 +26,7 @@ export function GithubConnectorButton() {
     <Dialog>
       <DialogTrigger asChild>
         <Button>
-          <GitHubIcon />
+          <GitHubIcon className="fill-primary-foreground" />
           GitHub
         </Button>
       </DialogTrigger>

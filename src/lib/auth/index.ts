@@ -1,16 +1,16 @@
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/lib/db";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware } from "better-auth/api";
 import { forbidden } from "next/navigation";
-import { env } from "@/lib/env";
+import { env } from "../env";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import prismaClient from "@/lib/db";
 
 const beforeMiddleWare = createAuthMiddleware(async (ctx) => {
   if (ctx.path !== "/sign-up/email") {
     return;
   }
-  const user = await db.query.user.findFirst();
+  const user = await prismaClient.user.findFirst();
   if (user) forbidden();
 });
 
@@ -20,7 +20,7 @@ export const auth = betterAuth({
   },
   trustedOrigins: [env.betterAuth.url],
   plugins: [nextCookies()],
-  database: drizzleAdapter(db, { provider: "pg" }),
+  database: prismaAdapter(prismaClient, { provider: "postgresql" }),
   hooks: {
     before: beforeMiddleWare,
   },

@@ -55,7 +55,7 @@ export function GitlabConnectorButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <GitLabIcon />
+          <GitLabIcon className="fill-primary-foreground" />
           GitLab
         </Button>
       </DialogTrigger>

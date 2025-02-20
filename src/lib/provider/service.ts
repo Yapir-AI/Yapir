@@ -1,16 +1,15 @@
-import { type Db, type Transaction } from "@/lib/db";
 import { providerConfigs } from "@/lib/provider/model/configs";
-import { provider } from "@/lib/db/schema";
+import { PrismaClient } from "@prisma/client";
 
 export class ProviderService {
-  private readonly db: Db;
+  private readonly prisma: PrismaClient;
 
-  constructor(opts: { db: Db }) {
-    this.db = opts.db;
+  constructor(opts: { prisma: PrismaClient }) {
+    this.prisma = opts.prisma;
   }
 
   async listProviders() {
-    const providers = await this.db.query.provider.findMany();
+    const providers = await this.prisma.aiProvider.findMany();
 
     return providers
       .reverse()
@@ -27,8 +26,11 @@ export class ProviderService {
       }));
   }
 
-  async disableAllProviders(db: Transaction) {
-    return db.update(provider).set({ enabled: false });
+  disableAllProviders(tx: Pick<PrismaClient, "aiProvider">) {
+    return tx.aiProvider.updateMany({
+      data: { enabled: false },
+      where: { enabled: true },
+    });
   }
 }
 

@@ -1,24 +1,20 @@
-import { db, type Db } from "@/lib/db";
-import { instructions } from "@/lib/db/schema";
+import { PrismaClient } from "@prisma/client";
 
 export class InstructionService {
-  private readonly db: Db;
+  private readonly prisma: PrismaClient;
 
-  constructor(opts: { db: Db }) {
-    this.db = opts.db;
+  constructor(opts: { prisma: PrismaClient }) {
+    this.prisma = opts.prisma;
   }
 
   async getDefaultInstructions() {
     return (
-      (await this.db.query.instructions.findFirst()) ??
-      db
-        .insert(instructions)
-        .values({
+      (await this.prisma.instructions.findFirst()) ??
+      this.prisma.instructions.create({
+        data: {
           title: "Default instructions",
-          content: "",
-        })
-        .returning()
-        .then((e) => e[0])
+        },
+      })
     );
   }
 }

@@ -32,7 +32,7 @@ import {
 import type { GitLabConnectorListElement } from "@/lib/git/connectors/gitlab/connectorService";
 
 export function GitlabCard(elem: GitLabConnectorListElement) {
-  const { displayName, creation_date, url, applicationId, id, ready } = elem;
+  const { displayName, creationDate, url, applicationId, id, ready } = elem;
 
   const setupUrl = buildUrl(url, {
     path: "/oauth/authorize",
@@ -60,7 +60,7 @@ export function GitlabCard(elem: GitLabConnectorListElement) {
         <CardTitle>GitLab</CardTitle>
         <CardDescription>{displayName}</CardDescription>
         <CardDescription suppressHydrationWarning>
-          Created {creation_date.toLocaleDateString()}
+          Created {creationDate.toLocaleDateString()}
         </CardDescription>
       </div>
       <div className="ml-auto">

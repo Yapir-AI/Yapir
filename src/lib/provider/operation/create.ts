@@ -1,34 +1,37 @@
-import type { Db } from "@/lib/db";
 import { z } from "zod";
-import { ProviderType } from "@/lib/provider/model/type";
-import { provider } from "@/lib/db/schema";
 import type { ProviderService } from "@/lib/provider/service";
+import { AiProviderType, PrismaClient } from "@prisma/client";
 
 export namespace ProviderCreate {
   export class Operation {
-    private readonly db: Db;
+    private readonly prisma: PrismaClient;
     private readonly providerService: ProviderService;
 
-    constructor(opts: { db: Db; providerService: ProviderService }) {
-      this.db = opts.db;
+    constructor(opts: {
+      prisma: PrismaClient;
+      providerService: ProviderService;
+    }) {
+      this.prisma = opts.prisma;
       this.providerService = opts.providerService;
     }
 
     execute = (requestDto: Schema) =>
-      this.db.transaction(async (tx) => {
+      this.prisma.$transaction(async (tx) => {
         if (requestDto.enabled) {
           await this.providerService.disableAllProviders(tx);
         }
-        const [{ id }] = await tx
-          .insert(provider)
-          .values(requestDto)
-          .returning();
+        const { id } = await tx.aiProvider.create({ data: requestDto });
         return id;
       });
   }
 
   export const schema = z.object({
-    type: z.enum(ProviderType).default("anthropic").describe("Provider"),
+    type: z
+      .enum(
+        Object.values(AiProviderType) as [AiProviderType, ...AiProviderType[]],
+      )
+      .default("ANTHROPIC")
+      .describe("Provider"),
     baseUrl: z.string().url().optional(),
     apiKey: z.string().optional(),
     model: z.string(),

@@ -1,23 +1,26 @@
-import { createInsertSchema } from "drizzle-zod";
-import { gitlabConnector } from "@/lib/db/schema";
 import { z } from "zod";
-import type { Db } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
 
 export namespace GitlabConnectorCreate {
   export class Operation {
-    private readonly db: Db;
+    private readonly prisma: PrismaClient;
 
-    constructor(opts: { db: Db }) {
-      this.db = opts.db;
+    constructor(opts: { prisma: PrismaClient }) {
+      this.prisma = opts.prisma;
     }
 
     async execute(request: Schema) {
-      await this.db.insert(gitlabConnector).values(request);
+      await this.prisma.gitlabConnector.create({ data: request });
     }
   }
 
-  export const schema = createInsertSchema(gitlabConnector, {
+  export const schema = z.object({
     url: z.string().describe("GitLab URL").default("https://gitlab.com"),
+    applicationId: z.string(),
+    applicationSecret: z.string(),
+    displayName: z.string(),
+    groupName: z.string().optional(),
+    redirectUri: z.string(),
   });
 
   export type Schema = z.infer<typeof schema>;

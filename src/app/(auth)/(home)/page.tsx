@@ -9,13 +9,13 @@ import { ExternalLink } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { ReviewEntity } from "@/lib/db/schema";
 import { cn } from "@/lib/utils";
 import { Chat } from "@/app/(auth)/(home)/chat";
 import { EmptyCard } from "@/components/rich/emptyCard";
 import type { Route } from "next";
 import { container } from "@/lib/di/container";
 import { routes } from "@/lib/route";
+import type { ReviewStatus } from "@prisma/client";
 
 export default async function HomePage() {
   const reviews = await container.resolve("reviewService").listReviews();
@@ -35,18 +35,18 @@ export default async function HomePage() {
               <div className="flex grow items-center justify-between">
                 <div>
                   <CardTitle className="text-xl">
-                    {review.pull_name}{" "}
+                    {review.pullName}{" "}
                     <span className="font-light text-muted-foreground">
-                      #{review.pull_number}
+                      #{review.pullNumber}
                     </span>
                     <StatusBadge status={review.status} />
                   </CardTitle>
-                  <CardDescription>{review.repo_name}</CardDescription>
+                  <CardDescription>{review.project.fullName}</CardDescription>
                   <CardDescription>{formatDate(review.at)} ago</CardDescription>
                 </div>
                 <div>
                   <Button asChild variant="link">
-                    <Link href={review.pull_url as Route}>
+                    <Link href={review.pullUrl as Route}>
                       Go to PR <ExternalLink />
                     </Link>
                   </Button>
@@ -64,7 +64,7 @@ export default async function HomePage() {
   );
 }
 
-function StatusBadge({ status }: Pick<ReviewEntity, "status">) {
+function StatusBadge({ status }: { status: ReviewStatus }) {
   return (
     <div
       className={cn(

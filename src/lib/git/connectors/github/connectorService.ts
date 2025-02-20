@@ -1,28 +1,26 @@
-import type { Db } from "@/lib/db";
-import { githubConnector } from "@/lib/db/schema";
-import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { forbidden } from "next/navigation";
+import { PrismaClient } from "@prisma/client";
 
 export class GithubConnectorService {
-  private readonly db: Db;
+  private readonly prisma: PrismaClient;
 
-  constructor(opts: { db: Db }) {
-    this.db = opts.db;
+  constructor(opts: { prisma: PrismaClient }) {
+    this.prisma = opts.prisma;
   }
 
   async listConnectors() {
-    const installations = await this.db.query.githubConnector.findMany();
+    const installations = await this.prisma.githubConnector.findMany();
 
-    return installations.map(({ id, slug, creation_date }) => ({
+    return installations.map(({ id, slug, creationDate }) => ({
       id,
       slug,
-      creation_date,
+      creationDate,
     }));
   }
 
   async findById(id: number) {
-    const app = await this.db.query.githubConnector.findFirst({
-      where: eq(githubConnector.id, id),
+    const app = await this.prisma.githubConnector.findUniqueOrThrow({
+      where: { id },
     });
 
     if (!app) throw forbidden();

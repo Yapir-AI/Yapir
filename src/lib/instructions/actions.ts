@@ -1,14 +1,14 @@
 "use server";
 
-import { db } from "@/lib/db";
 import { actionClient } from "@/lib/safeAction/client";
-import { instructions, instructionUpdateSchema } from "@/lib/db/schema";
-import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { z } from "zod";
 
+const schema = z.object({ content: z.string().optional() });
+
 export const updateInstruction = actionClient
-  .schema(instructionUpdateSchema)
+  .schema(schema)
   .bindArgsSchemas<[id: z.ZodString]>([z.string().uuid()])
-  .action(async ({ parsedInput, bindArgsParsedInputs: [id] }) =>
-    db.update(instructions).set(parsedInput).where(eq(instructions.id, id)),
+  .action(
+    async ({ parsedInput, bindArgsParsedInputs: [id], ctx: { prisma } }) =>
+      prisma.instructions.update({ data: parsedInput, where: { id } }),
   );

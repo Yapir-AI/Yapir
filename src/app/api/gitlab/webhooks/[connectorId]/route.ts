@@ -16,12 +16,20 @@ export async function POST(
   )
     return NextResponse.json({});
 
-  const { gitlabClientFactory, pullRequestHandleOperation } = container.cradle;
+  const connectorId = (await params).connectorId;
 
-  const gitlab = gitlabClientFactory.forConnectorId((await params).connectorId);
+  const {
+    gitlabClientFactory,
+    pullRequestHandleOperation,
+    gitlabProjectService,
+  } = container.createScope().cradle;
+
+  const project = await gitlabProjectService.getOrInitProject(json);
+
+  const gitlab = gitlabClientFactory.forConnectorId(connectorId);
   const gitlabAdapter = new GitlabPullRequestAdapter(gitlab, json);
 
-  await pullRequestHandleOperation.execute(gitlabAdapter);
+  await pullRequestHandleOperation.execute(gitlabAdapter, project);
 
   return NextResponse.json({});
 }

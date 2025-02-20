@@ -1,33 +1,23 @@
 import { z } from "zod";
-import type { Db } from "@/lib/db";
-import { reviewer } from "@/lib/db/schema";
+import { PrismaClient } from "@prisma/client";
 
 export namespace ReviewerCreate {
   export class Operation {
-    private readonly db: Db;
+    private readonly prisma: PrismaClient;
 
-    constructor({ db }: { db: Db }) {
-      this.db = db;
+    constructor({ prisma }: { prisma: PrismaClient }) {
+      this.prisma = prisma;
     }
 
     async execute(request: Schema) {
-      const [{ id }] = await this.db
-        .insert(reviewer)
-        .values(request)
-        .returning();
-
+      const { id } = await this.prisma.reviewer.create({ data: request });
       return id;
     }
   }
 
   export const schema = z.object({
     name: z.string(),
-    providerId: z.string().uuid().describe("Provider"),
-    // overrides: z
-    //   .object({
-    //     systemPrompt: z.string().optional(),
-    //   })
-    //   .optional(),
+    aiProviderId: z.string().uuid().describe("Provider"),
   });
 
   export type Schema = z.infer<typeof schema>;
