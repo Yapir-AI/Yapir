@@ -80,7 +80,7 @@ CREATE TABLE "GitProject" (
 
 -- CreateTable
 CREATE TABLE "GithubConnector" (
-    "id" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL,
     "slug" TEXT NOT NULL,
     "pem" TEXT NOT NULL,
     "webhookSecret" TEXT NOT NULL,
