@@ -17,7 +17,7 @@ export default async function LoginPage() {
   if (!user) return redirect(routes.register);
 
   return (
-    <Main className="flex h-dvh flex-col items-center justify-center gap-5">
+    <main className="flex h-dvh w-full flex-col items-center justify-center gap-5">
       <H1>Log In</H1>
       <HSub>Enter your credentials to access your account</HSub>
       <Card className="w-full max-w-lg">
@@ -25,6 +25,6 @@ export default async function LoginPage() {
           <LoginForm />
         </CardContent>
       </Card>
-    </Main>
+    </main>
   );
 }
