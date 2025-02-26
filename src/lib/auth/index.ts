@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware } from "better-auth/api";
 import { forbidden } from "next/navigation";
-import { env } from "../env";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prismaClient from "@/lib/db";
 
@@ -18,7 +17,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  trustedOrigins: [env.betterAuth.url],
+  trustedOrigins: [process.env.BETTER_AUTH_URL!],
   plugins: [nextCookies()],
   database: prismaAdapter(prismaClient, { provider: "postgresql" }),
   hooks: {
