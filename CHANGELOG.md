@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/yapir-ai/yapir/compare/v0.4.0...v0.4.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* make encryption key optional in build stage ([027758b](https://github.com/yapir-ai/yapir/commit/027758ba64e653f1403458cf597acf1058fa84b0))
+
+
+
 # [0.4.0](https://github.com/yapir-ai/yapir/compare/v0.3.0...v0.4.0) (2025-02-27)
 
 
