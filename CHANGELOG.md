@@ -1,4 +1,13 @@
-# 0.1.0 (2025-02-26)
+# [0.2.0](https://github.com/yapir-ai/yapir/compare/v0.1.0...v0.2.0) (2025-02-27)
+
+
+### Features
+
+* chat - errors / ui ([4695649](https://github.com/yapir-ai/yapir/commit/4695649ff1cdb9b6eeffc3f5a9bfd179e747a7c8))
+
+
+
+# [0.1.0](https://github.com/yapir-ai/yapir/compare/c382adb438c118307f3a0d2e33f8aadfc60d50af...v0.1.0) (2025-02-26)
 
 
 ### Bug Fixes
