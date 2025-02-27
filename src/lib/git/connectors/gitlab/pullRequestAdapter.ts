@@ -97,7 +97,7 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
         this.gitlab.MergeRequestDiscussions.create(
           this.projectId,
           this.mergeRequestIId,
-          "Yapir: " + comment.body,
+          comment.body,
           {
             position: {
               baseSha: review.diff_refs.base_sha,
