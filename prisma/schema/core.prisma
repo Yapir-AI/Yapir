@@ -49,17 +49,18 @@ model AiProvider {
 }
 
 model Review {
-  id         String       @id @default(uuid()) @db.Uuid
-  at         DateTime     @default(now())
-  messages   Json
-  status     ReviewStatus @default(PENDING)
-  pullNumber BigInt
-  pullUrl    String
-  pullName   String
-  projectId  String       @db.Uuid
-  project    GitProject   @relation(fields: [projectId], references: [id])
-  reviewerId String       @db.Uuid
-  reviewer   Reviewer     @relation(fields: [reviewerId], references: [id])
+  id           String       @id @default(uuid()) @db.Uuid
+  at           DateTime     @default(now())
+  messages     Json
+  status       ReviewStatus @default(PENDING)
+  errorMessage String?
+  pullNumber   BigInt
+  pullUrl      String
+  pullName     String
+  projectId    String       @db.Uuid
+  project      GitProject   @relation(fields: [projectId], references: [id])
+  reviewerId   String       @db.Uuid
+  reviewer     Reviewer     @relation(fields: [reviewerId], references: [id])
 }
 
 model Reviewer {

@@ -7,12 +7,25 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/route";
+import { EmptyCard } from "@/components/rich/emptyCard";
 
 export default async function ProjectsPage() {
   const projects = await container.cradle.projectService.listProjects();
 
+  if (projects.length === 0) {
+    return (
+      <EmptyCard>
+        <CardTitle>Currently no Project...</CardTitle>
+        <CardDescription>
+          Open a Merge/Pull Request on one of your git projects. <br />
+          The Project will appear here.
+        </CardDescription>
+      </EmptyCard>
+    );
+  }
+
   return (
-    <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="grid gap-2 xl:grid-cols-2 2xl:grid-cols-3">
       {projects.map((project) => (
         <Project {...project} key={project.id} />
       ))}

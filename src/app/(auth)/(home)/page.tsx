@@ -16,13 +16,12 @@ import type { Route } from "next";
 import { container } from "@/lib/di/container";
 import { routes } from "@/lib/route";
 import type { ReviewStatus } from "@prisma/client";
+import type { ReviewListElement } from "@/lib/review/service";
+import { Avatar } from "@/lib/avatar";
+import { botttsNeutral, glass } from "@dicebear/collection";
 
 export default async function HomePage() {
   const reviews = await container.resolve("reviewService").listReviews();
-
-  const formatDate = (date: Date) => {
-    return formatDistanceToNow(date);
-  };
 
   if (reviews.length === 0) return <NoReviews />;
 
@@ -32,28 +31,8 @@ export default async function HomePage() {
         <AccordionItem asChild key={review.id} value={review.id}>
           <Card className="px-8 py-2">
             <AccordionTrigger className="hover:no-underline">
-              <div className="flex grow items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl">
-                    {review.pullName}{" "}
-                    <span className="font-light text-muted-foreground">
-                      #{review.pullNumber}
-                    </span>
-                    <StatusBadge status={review.status} />
-                  </CardTitle>
-                  <CardDescription>{review.project.fullName}</CardDescription>
-                  <CardDescription>{formatDate(review.at)} ago</CardDescription>
-                </div>
-                <div>
-                  <Button asChild variant="link">
-                    <Link href={review.pullUrl as Route}>
-                      Go to PR <ExternalLink />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
+              <ReviewHeader {...review} />
             </AccordionTrigger>
-
             <AccordionContent>
               <Chat {...review} />
             </AccordionContent>
@@ -61,6 +40,50 @@ export default async function HomePage() {
         </AccordionItem>
       ))}
     </Accordion>
+  );
+}
+
+function ReviewHeader({
+  reviewer,
+  project,
+  pullName,
+  pullNumber,
+  status,
+  at,
+  pullUrl,
+}: ReviewListElement) {
+  return (
+    <div className="flex grow items-center justify-between">
+      <div className="flex gap-4">
+        <Avatar
+          style={glass}
+          options={{ seed: project.name, size: 68, radius: 10 }}
+        />
+        <div className="flex flex-col justify-evenly">
+          <Link href={pullUrl} target="_blank">
+            <CardTitle className="text-xl hover:underline">
+              {pullName}{" "}
+              <span className="font-light text-muted-foreground">
+                #{pullNumber}
+              </span>
+              <StatusBadge status={status} />
+            </CardTitle>
+          </Link>
+          <CardDescription>{project.fullName}</CardDescription>
+        </div>
+      </div>
+
+      <div className="flex gap-4">
+        <div className="flex flex-col justify-evenly text-right">
+          <CardTitle className="text-xl">{reviewer.name}</CardTitle>
+          <CardDescription>{formatDate(at)} ago</CardDescription>
+        </div>
+        <Avatar
+          style={botttsNeutral}
+          options={{ seed: reviewer.name, size: 68, radius: 10 }}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -93,3 +116,7 @@ function NoReviews() {
     </EmptyCard>
   );
 }
+
+const formatDate = (date: Date) => {
+  return formatDistanceToNow(date);
+};

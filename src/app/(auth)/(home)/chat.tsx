@@ -9,6 +9,7 @@ import { type KeyboardEventHandler, useEffect, useRef } from "react";
 import { extractJSON } from "@/lib/json/utils";
 import type { CoreMessage } from "ai";
 import type { Review } from "@prisma/client";
+import type { ReviewListElement } from "@/lib/review/service";
 
 function Message({
   role,
@@ -53,27 +54,33 @@ function Message({
   );
 }
 
-export function Chat(review: Review) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat({
-      initialMessages: [
-        ...(review.messages as CoreMessage[]).map(({ content, role }, id) => ({
-          content: content as string,
-          role: role as "system" | "user" | "assistant",
-          id: "" + id,
-        })),
-        {
-          role: "assistant",
-          content:
-            "Now that I answered your review. You can know ask me anything about it, such as writing a summary. I'll be able to respond with proper text.",
-          id: "released",
-        },
-      ],
-      body: {
-        reviewerId: review.reviewerId,
+export function Chat(review: ReviewListElement) {
+  const {
+    messages,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+  } = useChat({
+    initialMessages: [
+      ...(review.messages as CoreMessage[]).map(({ content, role }, id) => ({
+        content: content as string,
+        role: role as "system" | "user" | "assistant",
+        id: "" + id,
+      })),
+      {
+        role: "assistant",
+        content:
+          "Now that I answered your review. You can know ask me anything about it, such as writing a summary. I'll be able to respond with proper text.",
+        id: "released",
       },
-      experimental_throttle: 100,
-    });
+    ],
+    body: {
+      reviewerId: review.reviewerId,
+    },
+    experimental_throttle: 100,
+  });
 
   const thinking =
     isLoading && messages[messages.length - 1].role !== "assistant";
@@ -108,16 +115,18 @@ export function Chat(review: Review) {
           />
         )}
       </div>
+      {review.errorMessage && (
+        <div className="text-center text-xs text-destructive">
+          {review.errorMessage}
+        </div>
+      )}
       <div className="my-2" />
-      <form
-        onSubmit={handleSubmit}
-        className="relative flex flex-row gap-2 p-2"
-      >
+      <form onSubmit={handleSubmit} className="relative gap-2 p-2">
         <Textarea
           className="bg-accent/60"
           name="prompt"
           value={input}
-          placeholder="From now on, you can now respond with plain text..."
+          placeholder="Can you write me a summary of the changes..."
           onChange={handleInputChange}
           onKeyDown={submitOnCmdEnter}
         />
@@ -133,7 +142,19 @@ export function Chat(review: Review) {
             <ArrowUp />
           </Button>
         )}
+        <div className="mt-2 flex gap-2">
+          <Button variant="secondary" onClick={() => setInput(summaryPrompt)}>
+            Write me a summary
+          </Button>
+          <Button variant="secondary" onClick={() => setInput(fixPrompt)}>
+            Help me fix!
+          </Button>
+        </div>
       </form>
     </div>
   );
 }
+
+const summaryPrompt =
+  "Can you write me a summary of the initial changes regardless of issues?";
+const fixPrompt = "Can you help me fix the issues one by one?";

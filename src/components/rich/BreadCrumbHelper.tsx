@@ -11,6 +11,7 @@ import {
 import { routes, type YapirRoute } from "@/lib/route";
 import { Fragment } from "react";
 import { cn } from "@/lib/utils";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export type BreadCrumbItem = {
   label: string;
@@ -40,6 +41,7 @@ export function BreadCrumbHelper({
           "container mx-auto flex h-14 items-center transition-all",
         )}
       >
+        <SidebarTrigger className="mr-5" />
         <BreadcrumbList>
           {items.map((item, index) => {
             const { label, href } =

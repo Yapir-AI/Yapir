@@ -12,7 +12,7 @@ export function EmptyCard({
   return (
     <Card
       className={cn(
-        "relative flex min-h-96 flex-col items-center justify-center border-dashed",
+        "relative flex min-h-96 flex-col items-center justify-center border-dashed text-center",
         className,
       )}
     >

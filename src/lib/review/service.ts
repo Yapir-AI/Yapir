@@ -59,10 +59,14 @@ export class ReviewService {
     });
   }
 
-  async failReview(reviewId: string) {
+  async failReview(reviewId: string, message?: string) {
     return this.prisma.review.update({
-      data: { status: "ERROR" },
+      data: { status: "ERROR", errorMessage: message },
       where: { id: reviewId },
     });
   }
 }
+
+export type ReviewListElement = Awaited<
+  ReturnType<typeof ReviewService.prototype.listReviews>
+>[number];

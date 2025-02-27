@@ -2,7 +2,7 @@ import type { GitPullRequestAdapter } from "@/lib/git/model/pullRequestAdapter";
 import type { ReviewService } from "@/lib/review/service";
 import type { PromptService } from "@/lib/prompt/service";
 import type { ModelService } from "@/lib/model/service";
-import { generateObject } from "ai";
+import { AISDKError, generateObject } from "ai";
 import { z } from "zod";
 import type { GitProjectWithReviewersAndProviders } from "@/lib/git/types";
 import type { ReviewerWithProvider } from "@/lib/reviewer/types";
@@ -64,7 +64,9 @@ export namespace PullRequestHandle {
         );
         await this.reviewService.completeReview(reviewId, object, prompt);
       } catch (e) {
-        await this.reviewService.failReview(reviewId);
+        let message: string | undefined;
+        if (AISDKError.isInstance(e)) message = e.name + ": " + e.message;
+        await this.reviewService.failReview(reviewId, message);
         throw e;
       }
     }
