@@ -12,7 +12,17 @@ const prismaClient = (
     Prisma.PrismaClientOptions,
     Prisma.PrismaClientOptions
   >,
-) => new PrismaClient(options).$extends(fieldEncryptionExtension());
+) => {
+  const encryptionKey = process.env.PRISMA_FIELD_ENCRYPTION_KEY;
+
+  if (encryptionKey)
+    return new PrismaClient(options).$extends(fieldEncryptionExtension());
+
+  console.warn(
+    "Running without PRISMA_FIELD_ENCRYPTION_KEY. Secrets will not be encrypted in database. Ignore this while building",
+  );
+  return new PrismaClient(options);
+};
 
 if (process.env.NODE_ENV === "production") {
   prisma = prismaClient();
