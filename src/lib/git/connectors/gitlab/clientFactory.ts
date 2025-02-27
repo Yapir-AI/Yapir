@@ -13,13 +13,16 @@ export class GitlabClientFactory {
     this.gitlabConnectorService = opts.gitlabConnectorService;
   }
 
-  forConnectorId(connectorId: string) {
-    return new Gitlab({ oauthToken: () => this.getToken(connectorId) });
-  }
-
-  private async getToken(connectorId: string) {
+  async forConnectorId(connectorId: string) {
     const connector = await this.gitlabConnectorService.findById(connectorId);
 
+    return new Gitlab({
+      host: connector.url,
+      oauthToken: () => this.getToken(connector),
+    });
+  }
+
+  private async getToken(connector: GitlabConnector) {
     return (
       this.checkAccessTokenExpiry(connector) ??
       (await this.refreshToken(connector))
@@ -61,6 +64,6 @@ export class GitlabClientFactory {
   }
 }
 
-export type GitlabClient = ReturnType<
-  typeof GitlabClientFactory.prototype.forConnectorId
+export type GitlabClient = Awaited<
+  ReturnType<typeof GitlabClientFactory.prototype.forConnectorId>
 >;

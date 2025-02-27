@@ -9,7 +9,7 @@ export namespace GitlabConnectorRepositoryList {
     }
 
     async execute(connectorId: string) {
-      const gitlab = this.gitlabClientFactory.forConnectorId(connectorId);
+      const gitlab = await this.gitlabClientFactory.forConnectorId(connectorId);
       const projects = await gitlab.Projects.all({
         owned: true,
       });

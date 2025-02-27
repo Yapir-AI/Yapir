@@ -10,7 +10,7 @@ export namespace GitlabRepositoryConnect {
     }
 
     async execute({ connectorId, origin, repoId }: Schema) {
-      const gitlab = this.gitlabClientFactory.forConnectorId(connectorId);
+      const gitlab = await this.gitlabClientFactory.forConnectorId(connectorId);
 
       await gitlab.ProjectHooks.add(
         repoId,
