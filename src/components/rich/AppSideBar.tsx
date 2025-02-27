@@ -36,18 +36,22 @@ const navGroups: NavGroup[] = [
     title: "Customize",
     items: [
       { title: "Reviewers", url: routes.reviewers, icon: BotMessageSquare },
-      { title: "Instructions", url: routes.settings, icon: NotebookPenIcon },
+      {
+        title: "Default Instructions",
+        url: routes.settings,
+        icon: NotebookPenIcon,
+      },
     ],
   },
   {
     title: "Configure",
     items: [
       {
-        title: "Git",
+        title: "Git Connections",
         url: routes.git,
         icon: GitBranchIcon,
       },
-      { title: "Providers", url: routes.providers, icon: BrainIcon },
+      { title: "AI Providers", url: routes.providers, icon: BrainIcon },
     ],
   },
 ];

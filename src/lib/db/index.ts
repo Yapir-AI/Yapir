@@ -1,16 +1,24 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { fieldEncryptionExtension } from "prisma-field-encryption";
 
 declare global {
-  var prisma: PrismaClient;
+  var prisma: ReturnType<typeof prismaClient>;
 }
 
-let prisma: PrismaClient;
+let prisma: ReturnType<typeof prismaClient>;
+
+const prismaClient = (
+  options?: Prisma.Subset<
+    Prisma.PrismaClientOptions,
+    Prisma.PrismaClientOptions
+  >,
+) => new PrismaClient(options).$extends(fieldEncryptionExtension());
 
 if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
+  prisma = prismaClient();
 } else {
   if (!global.prisma) {
-    global.prisma = new PrismaClient({ log: ["query"] });
+    global.prisma = prismaClient({ log: ["query"] });
   }
   prisma = global.prisma;
 }

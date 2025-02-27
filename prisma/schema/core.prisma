@@ -13,8 +13,8 @@ model GitProject {
 model GithubConnector {
   id            Int      @id
   slug          String
-  pem           String
-  webhookSecret String
+  pem           String /// @encrypted
+  webhookSecret String /// @encrypted
   creationDate  DateTime @default(now())
 }
 
@@ -26,8 +26,8 @@ model GitlabConnector {
   groupName         String?
   displayName       String
   creationDate      DateTime  @default(now())
-  accessToken       String?
-  refreshToken      String?
+  accessToken       String? /// @encrypted
+  refreshToken      String? /// @encrypted
   expiresAt         DateTime?
   redirectUri       String
 }
@@ -43,7 +43,7 @@ model AiProvider {
   type     AiProviderType
   enabled  Boolean        @default(false)
   baseUrl  String?
-  apiKey   String?
+  apiKey   String? /// @encrypted
   model    String
   reviewer Reviewer[]
 }

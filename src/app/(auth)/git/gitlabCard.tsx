@@ -57,8 +57,8 @@ export function GitlabCard(elem: GitLabConnectorListElement) {
     <Card className="flex items-center gap-5 p-5">
       <GitLabIcon className="size-8 fill-foreground" />
       <div>
-        <CardTitle>GitLab</CardTitle>
-        <CardDescription>{displayName}</CardDescription>
+        <CardTitle>{displayName}</CardTitle>
+        <CardDescription>GitLab</CardDescription>
         <CardDescription suppressHydrationWarning>
           Created {creationDate.toLocaleDateString()}
         </CardDescription>
