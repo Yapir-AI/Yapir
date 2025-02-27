@@ -10,8 +10,7 @@ export async function POST(
   const json: WebhookMergeRequestEventSchema = await request.json();
   if (
     json.object_kind !== "merge_request" ||
-    (json.object_attributes?.action !== "open" &&
-      json.object_attributes?.action !== "update") ||
+    json.object_attributes?.action !== "open" ||
     json.object_attributes.state !== "opened"
   )
     return NextResponse.json({});
@@ -26,7 +25,7 @@ export async function POST(
 
   const project = await gitlabProjectService.getOrInitProject(json);
 
-  const gitlab = gitlabClientFactory.forConnectorId(connectorId);
+  const gitlab = await gitlabClientFactory.forConnectorId(connectorId);
   const gitlabAdapter = new GitlabPullRequestAdapter(gitlab, json);
 
   await pullRequestHandleOperation.execute(gitlabAdapter, project);
