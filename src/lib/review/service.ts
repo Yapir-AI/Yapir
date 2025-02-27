@@ -2,6 +2,7 @@ import type { CoreMessage } from "ai";
 import type { GitReviewInfo } from "@/lib/git/model/pullRequestAdapter";
 import { PrismaClient } from "@prisma/client";
 import type { InputJsonArray } from "@prisma/client/runtime/client";
+import { startOfYesterday } from "date-fns/startOfYesterday";
 
 export class ReviewService {
   private readonly prisma: PrismaClient;
@@ -12,10 +13,14 @@ export class ReviewService {
 
   listReviews() {
     return this.prisma.review.findMany({
-      take: 10,
       include: {
         project: true,
         reviewer: true,
+      },
+      where: {
+        at: {
+          gte: startOfYesterday(),
+        },
       },
       orderBy: [{ at: "desc" }],
     });
