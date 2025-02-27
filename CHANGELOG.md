@@ -1,3 +1,21 @@
+# [0.3.0](https://github.com/yapir-ai/yapir/compare/v0.2.0...v0.3.0) (2025-02-27)
+
+
+### Bug Fixes
+
+* gitlab only on opened pr (no update) ([d31ad7f](https://github.com/yapir-ai/yapir/commit/d31ad7f0dd65e5abee106d42f9e400bd162c74fa))
+* support custom GitLab URLs and proper async handling ([0249107](https://github.com/yapir-ai/yapir/commit/0249107557b4022bcff1b35180356342f420b7b7))
+
+
+### Features
+
+* better chat component ([7dc3866](https://github.com/yapir-ai/yapir/commit/7dc3866bce0062d6652df259927602c3e088967f))
+* new favicon ([28b646e](https://github.com/yapir-ai/yapir/commit/28b646e974da86810084abbb5c9e61856dd9ae8d))
+* only recent reviews on home page ([3521d71](https://github.com/yapir-ai/yapir/commit/3521d71cfc57018bf5261fcf1cf926cf472b9c80))
+* use reviewer name in git comments ([c104762](https://github.com/yapir-ai/yapir/commit/c104762c60e798249c8a08587cf7a4bc3d8bc986))
+
+
+
 # [0.2.0](https://github.com/yapir-ai/yapir/compare/v0.1.0...v0.2.0) (2025-02-27)
 
 
