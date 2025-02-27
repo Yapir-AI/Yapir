@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/yapir-ai/yapir/compare/v0.3.0...v0.4.0) (2025-02-27)
+
+
+### Features
+
+* field encryption for secret stuff ([466f163](https://github.com/yapir-ai/yapir/commit/466f16366695bcfb0c95daaaaaa5fdfb91c95ba0))
+
+
+
 # [0.3.0](https://github.com/yapir-ai/yapir/compare/v0.2.0...v0.3.0) (2025-02-27)
 
 
