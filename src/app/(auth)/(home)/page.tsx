@@ -5,14 +5,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import { ExternalLink } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Chat } from "@/app/(auth)/(home)/chat";
 import { EmptyCard } from "@/components/rich/emptyCard";
-import type { Route } from "next";
 import { container } from "@/lib/di/container";
 import { routes } from "@/lib/route";
 import type { ReviewStatus } from "@prisma/client";

@@ -8,8 +8,8 @@ import { ArrowUp } from "lucide-react";
 import { type KeyboardEventHandler, useEffect, useRef } from "react";
 import { extractJSON } from "@/lib/json/utils";
 import type { CoreMessage } from "ai";
-import type { Review } from "@prisma/client";
 import type { ReviewListElement } from "@/lib/review/service";
+import Markdown from "react-markdown";
 
 function Message({
   role,
@@ -36,19 +36,21 @@ function Message({
       <p>{role}</p>
       <div
         className={cn(
-          "w-fit max-w-full overflow-x-auto whitespace-pre-line rounded p-4",
+          "prose w-fit overflow-x-auto whitespace-pre-line rounded p-4",
+          "prose-headings:m-0 prose-headings:leading-none prose-p:leading-normal prose-p:m-0 prose-ol:m-0 prose-ol:leading-none prose-ul:m-0 prose-ul:leading-none prose-li:m-0 prose-li:leading-none",
+          "max-w-xs text-sm sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:max-w-3xl",
           role === "assistant" && "mr-2 rounded-r-2xl border",
           role === "system" && "w-full border bg-background",
           role === "user" && "rounded-l-2xl bg-accent",
         )}
       >
-        {beforeJSON}
+        <Markdown>{beforeJSON}</Markdown>
         {json && (
-          <pre className="max-w-xs overflow-scroll text-xs sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:max-w-3xl">
-            {JSON.stringify(json, null, 2)}
-          </pre>
+          <Markdown>
+            {"```json\n" + JSON.stringify(json, null, 2) + "\n```"}
+          </Markdown>
         )}
-        {afterJSON}
+        {afterJSON && <Markdown>{afterJSON}</Markdown>}
       </div>
     </div>
   );
@@ -95,7 +97,13 @@ export function Chat(review: ReviewListElement) {
   };
 
   useEffect(() => {
-    ref.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" });
+    const container = ref.current;
+    if (!container) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages]);
 
   return (

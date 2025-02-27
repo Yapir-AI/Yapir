@@ -1,0 +1,29 @@
+# YAPIR Development Guidelines
+
+## Build/Run Commands
+- `bun dev` - Start development server with Turbopack
+- `bun build` - Production build
+- `bun start` - Run production build
+- `bun lint` - Run linting
+- `npx prisma generate` - Generate Prisma client
+
+## Project Organization
+- `src/app` - React components and pages (Next.js App Router)
+- `src/lib` - Domain-specific business logic
+- `src/components` - Reusable UI components
+
+## Code Style
+- **Architecture**: Use dependency injection with Awilix (container in src/lib/di/container.ts). Service oriented architecture
+- **Components**: Prefer server components when possible
+- **Type Safety**: Strict TypeScript with comprehensive type definitions, implicit inferred types as much as possible from zod & prisma schema
+- **Validation**: Zod for schema validation and type inference
+- **Form Actions**: Use server actions with next-safe-action for form submissions
+- **Styling**: TailwindCSS with shadcn/ui components
+- **Naming**: Follow "Operation" class pattern for atomic operations, "Service" for reusable logic
+- **Imports**: Group by external libraries first, then internal paths (@/ imports)
+- **Database**: Multi file schema in prisma/schema folder. core.prisma is the business entities schema
+- **Auth**: better-auth setup in src/lib/auth/index.ts
+
+## Database
+- PostgreSQL with Prisma ORM
+- Environment variables in .env file (DATABASE_URL)
