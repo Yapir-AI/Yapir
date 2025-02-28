@@ -6,6 +6,8 @@ import { H1, HSub } from "@/components/ui/typography";
 import { ProjectReviewers } from "@/app/(auth)/projects/[id]/pageContent";
 
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
+import { Avatar } from "@/lib/avatar";
+import { glass } from "@dicebear/collection";
 
 export default async function ProjectPage({
   params,
@@ -34,9 +36,15 @@ export default async function ProjectPage({
       <BreadCrumbHelper items={["Home", "Projects", { label: project.name }]} />
       <Main>
         <TitleSection>
-          <div>
-            <H1>{project.name}</H1>
-            <HSub>Manage your project reviewers</HSub>
+          <div className="flex gap-8">
+            <Avatar
+              style={glass}
+              options={{ seed: project.name, size: 80, radius: 10 }}
+            />
+            <div className="flex flex-col justify-evenly">
+              <H1>{project.name}</H1>
+              <HSub>Manage your project reviewers</HSub>
+            </div>
           </div>
         </TitleSection>
         <ProjectReviewers

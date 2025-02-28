@@ -7,6 +7,7 @@ import { ReviewerCard } from "@/app/(auth)/reviewers/(root)/reviewerCard";
 import { Switch } from "@/components/ui/switch";
 import { toggleProjectReviewer } from "@/lib/project/action";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { H3 } from "@/components/ui/typography";
 
 type ProjectReviewer = ReviewerListElement & {
   enabled: boolean;
@@ -24,9 +25,10 @@ export function ProjectReviewers({
   const [ref] = useAutoAnimate({ duration: 200 });
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="flex flex-col gap-4">
+      <H3>Project Reviewers</H3>
       {activeReviewers > 1 && (
-        <Alert className="mb-4" variant="warning">
+        <Alert variant="warning">
           <CircleAlert className="size-4" />
           <AlertTitle>Be advised!</AlertTitle>
           <AlertDescription>

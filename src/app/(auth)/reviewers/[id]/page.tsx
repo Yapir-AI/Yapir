@@ -19,6 +19,8 @@ import {
 } from "@/lib/reviewer/types";
 import { ProjectCard } from "@/lib/project/components/projectCard";
 import { SystemPrompt } from "@/app/(auth)/reviewers/[id]/SystemPrompt";
+import Link from "next/link";
+import { routes } from "@/lib/route";
 
 export default async function ReviewerPage({
   params,
@@ -111,6 +113,14 @@ function Projects(reviewer: ReviewerWithProviderAndProjects) {
   return (
     <div className="flex flex-col gap-4">
       <H3>Associated Projects</H3>
+      {reviewer.projects.length === 0 && (
+        <span className="mt-2 text-center text-sm text-muted-foreground">
+          <p>No associated projects yet</p>
+          <Link className="hover:underline" href={routes.projects}>
+            Go to projects
+          </Link>
+        </span>
+      )}
       {reviewer.projects.map((project) => (
         <ProjectCard key={project.id} {...project} />
       ))}
