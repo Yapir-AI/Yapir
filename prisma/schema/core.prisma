@@ -64,14 +64,15 @@ model Review {
 }
 
 model Reviewer {
-  id                  String       @id @default(uuid()) @db.Uuid
-  name                String
-  aiProviderId        String       @db.Uuid
-  aiProvider          AiProvider   @relation(fields: [aiProviderId], references: [id])
-  systemPrompt        String?
-  systemPromptEnabled Boolean      @default(false)
-  projects            GitProject[]
-  reviews             Review[]
+  id                     String       @id @default(uuid()) @db.Uuid
+  name                   String
+  aiProviderId           String       @db.Uuid
+  aiProvider             AiProvider   @relation(fields: [aiProviderId], references: [id])
+  systemPrompt           String?
+  systemPromptEnabled    Boolean      @default(false)
+  useProjectInstructions Boolean      @default(true)
+  projects               GitProject[]
+  reviews                Review[]
 }
 
 enum GitProviderType {

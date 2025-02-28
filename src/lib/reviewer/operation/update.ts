@@ -10,8 +10,13 @@ export namespace ReviewerUpdate {
     }
 
     async execute(request: Schema) {
-      const { reviewerId, providerId, systemPrompt, systemPromptEnabled } =
-        request;
+      const {
+        reviewerId,
+        providerId,
+        systemPrompt,
+        systemPromptEnabled,
+        useProjectInstructions,
+      } = request;
 
       await this.prisma.reviewer.update({
         where: { id: reviewerId },
@@ -19,6 +24,7 @@ export namespace ReviewerUpdate {
           aiProviderId: providerId,
           systemPrompt,
           systemPromptEnabled,
+          useProjectInstructions,
         },
       });
 
@@ -31,6 +37,7 @@ export namespace ReviewerUpdate {
     providerId: z.string().uuid().optional(),
     systemPrompt: z.string().optional(),
     systemPromptEnabled: z.boolean().optional(),
+    useProjectInstructions: z.boolean().optional(),
   });
 
   export type Schema = z.infer<typeof schema>;

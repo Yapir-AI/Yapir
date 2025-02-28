@@ -15,6 +15,7 @@ import {
 import {
   BotMessageSquare,
   BrainIcon,
+  FileCog,
   FolderGit2,
   GitBranchIcon,
   HomeIcon,
@@ -30,7 +31,10 @@ import { routes } from "@/lib/route";
 const navGroups: NavGroup[] = [
   {
     title: "Code",
-    items: [{ title: "Projects", url: routes.projects, icon: FolderGit2 }],
+    items: [
+      { title: "Reviews", url: routes.home, icon: NotebookPenIcon },
+      { title: "Projects", url: routes.projects, icon: FolderGit2 },
+    ],
   },
   {
     title: "Customize",
@@ -39,7 +43,7 @@ const navGroups: NavGroup[] = [
       {
         title: "Default Instructions",
         url: routes.settings,
-        icon: NotebookPenIcon,
+        icon: FileCog,
       },
     ],
   },

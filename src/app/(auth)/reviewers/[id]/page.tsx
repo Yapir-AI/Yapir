@@ -21,6 +21,8 @@ import { ProjectCard } from "@/lib/project/components/projectCard";
 import { SystemPrompt } from "@/app/(auth)/reviewers/[id]/SystemPrompt";
 import Link from "next/link";
 import { routes } from "@/lib/route";
+import type { Reviewer } from "@prisma/client";
+import { Switch } from "@/components/ui/switch";
 
 export default async function ReviewerPage({
   params,
@@ -55,7 +57,8 @@ export default async function ReviewerPage({
           <div className="flex flex-col gap-2"></div>
         </TitleSection>
         <div className="grid gap-10 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+          <div className="space-y-10 lg:col-span-2">
+            <ProjectInstructions {...reviewer} />
             <SystemPrompt {...reviewer} />
           </div>
           <div className="space-y-10">
@@ -124,6 +127,33 @@ function Projects(reviewer: ReviewerWithProviderAndProjects) {
       {reviewer.projects.map((project) => (
         <ProjectCard key={project.id} {...project} />
       ))}
+    </div>
+  );
+}
+
+function ProjectInstructions(reviewer: Reviewer) {
+  async function toggleProjectInstructions(value: boolean) {
+    "use server";
+    await updateReviewer({
+      reviewerId: reviewer.id,
+      useProjectInstructions: value,
+    });
+  }
+
+  return (
+    <div className="flex items-center justify-between">
+      <div className="space-y-4">
+        <H3>Project Instructions</H3>
+        <p className="text-sm text-muted-foreground">
+          When enabled, the reviewer will use the{" "}
+          <span className="italic">.yapir/instructions.md </span>
+          file in the review.
+        </p>
+      </div>
+      <Switch
+        checked={reviewer.useProjectInstructions}
+        onCheckedChange={toggleProjectInstructions}
+      />
     </div>
   );
 }

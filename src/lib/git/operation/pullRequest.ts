@@ -59,7 +59,7 @@ export namespace PullRequestHandle {
           messages: prompt,
         });
 
-        const { brokenRequirements: comments } = object;
+        const { comments } = object;
 
         await gitAdapter.createReview(
           `Yapir Review with ${model.modelId} \n found ${comments?.length ?? 0} issues`,
@@ -76,7 +76,7 @@ export namespace PullRequestHandle {
   }
 
   const reviewSchema = z.object({
-    brokenRequirements: z
+    comments: z
       .array(
         z.object({
           path: z.string().describe("file path"),
@@ -88,6 +88,6 @@ export namespace PullRequestHandle {
             ),
         }),
       )
-      .describe("The list of violations"),
+      .describe("The list of comments"),
   });
 }

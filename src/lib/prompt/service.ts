@@ -31,10 +31,16 @@ export class PromptService {
             ? reviewer.systemPrompt
             : PromptService.DEFAULT_CONTENT,
       },
-      {
+    ];
+
+    if (reviewer.useProjectInstructions) {
+      messages.push({
         role: "user",
         content: `Requirements: \n${repositoryInstructions}\n${settingInstructions.content}`,
-      },
+      });
+    }
+
+    messages.push(
       {
         role: "user",
         content: `Code changes: \n${JSON.stringify(changes)}`,
@@ -43,7 +49,7 @@ export class PromptService {
         role: "user",
         content: `Current Comments: \n${JSON.stringify(currentComments)}`,
       },
-    ];
+    );
 
     return messages;
   }
