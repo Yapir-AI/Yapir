@@ -40,7 +40,10 @@ export namespace PullRequestHandle {
       reviewer: ReviewerWithProvider,
     ) {
       const model = this.modelService.toModel(reviewer.aiProvider);
-      const prompt = await this.promptService.createPrompt(gitAdapter);
+      const prompt = await this.promptService.createPrompt(
+        gitAdapter,
+        reviewer,
+      );
 
       const reviewId = await this.reviewService.initReview({
         reviewerId: reviewer.id,

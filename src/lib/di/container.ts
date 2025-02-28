@@ -17,6 +17,7 @@ import { InstructionService } from "@/lib/instructions/service";
 import { PromptService } from "@/lib/prompt/service";
 import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 import { ReviewerCreate } from "@/lib/reviewer/operation/create";
+import { ReviewerUpdate } from "@/lib/reviewer/operation/update";
 import { ReviewerService } from "@/lib/reviewer/service";
 import { GitlabProjectService } from "@/lib/git/connectors/gitlab/projectService";
 import { ProjectService } from "@/lib/project/service";
@@ -44,4 +45,5 @@ export const container = createTypedContainer({
   reviewService: asClass(ReviewService),
   reviewerService: asClass(ReviewerService),
   reviewerCreateOperation: asClass(ReviewerCreate.Operation),
+  reviewerUpdateOperation: asClass(ReviewerUpdate.Operation),
 });

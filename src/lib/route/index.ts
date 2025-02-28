@@ -1,6 +1,7 @@
 export const routes = {
   home: "/",
   reviewers: "/reviewers",
+  reviewer: (id: string) => `${routes.reviewers}/${id}` as const,
   providers: "/providers",
   settings: "/settings",
   git: "/git",

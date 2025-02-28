@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlert } from "lucide-react";
 import type { ReviewerListElement } from "@/lib/reviewer/service";
-import { ReviewerCard } from "@/app/(auth)/reviewers/reviewerCard";
+import { ReviewerCard } from "@/app/(auth)/reviewers/(root)/reviewerCard";
 import { Switch } from "@/components/ui/switch";
 import { toggleProjectReviewer } from "@/lib/project/action";
 import { useAutoAnimate } from "@formkit/auto-animate/react";

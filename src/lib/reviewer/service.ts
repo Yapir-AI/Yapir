@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { reviewerWithProvider } from "@/lib/reviewer/types";
 
 export class ReviewerService {
@@ -18,10 +18,10 @@ export class ReviewerService {
     });
   }
 
-  findById(id: string) {
+  findById(id: string, include: Prisma.ReviewerSelect = reviewerWithProvider) {
     return this.prisma.reviewer.findUniqueOrThrow({
       where: { id },
-      include: reviewerWithProvider,
+      include,
     });
   }
 

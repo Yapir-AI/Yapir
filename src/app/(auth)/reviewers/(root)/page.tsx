@@ -1,6 +1,6 @@
 import { container } from "@/lib/di/container";
 import type { Metadata } from "next";
-import { ReviewerCard } from "@/app/(auth)/reviewers/reviewerCard";
+import { ReviewerCard } from "@/app/(auth)/reviewers/(root)/reviewerCard";
 import { EmptyCard } from "@/components/rich/emptyCard";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import Arrow2 from "@/components/rich/arrow";
