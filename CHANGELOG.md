@@ -1,3 +1,14 @@
+# [0.6.0](https://github.com/yapir-ai/yapir/compare/v0.5.0...v0.6.0) (2025-02-28)
+
+
+### Features
+
+* possibility to disable project instructions ([6e356d4](https://github.com/yapir-ai/yapir/commit/6e356d43ed39f9a36f3e3e6934207ae4fce46c9d))
+* removed provider disabling ([a4dccca](https://github.com/yapir-ai/yapir/commit/a4dcccabe83674dd05a1575a88fc372ce32f74d7))
+* theme selection ([320d8fb](https://github.com/yapir-ai/yapir/commit/320d8fb414e3277a1bc712afcb4ac686ae85e0e0))
+
+
+
 # [0.5.0](https://github.com/yapir-ai/yapir/compare/v0.4.1...v0.5.0) (2025-02-28)
 
 
@@ -41,15 +52,6 @@
 * new favicon ([28b646e](https://github.com/yapir-ai/yapir/commit/28b646e974da86810084abbb5c9e61856dd9ae8d))
 * only recent reviews on home page ([3521d71](https://github.com/yapir-ai/yapir/commit/3521d71cfc57018bf5261fcf1cf926cf472b9c80))
 * use reviewer name in git comments ([c104762](https://github.com/yapir-ai/yapir/commit/c104762c60e798249c8a08587cf7a4bc3d8bc986))
-
-
-
-# [0.2.0](https://github.com/yapir-ai/yapir/compare/v0.1.0...v0.2.0) (2025-02-27)
-
-
-### Features
-
-* chat - errors / ui ([4695649](https://github.com/yapir-ai/yapir/commit/4695649ff1cdb9b6eeffc3f5a9bfd179e747a7c8))
 
 
 
