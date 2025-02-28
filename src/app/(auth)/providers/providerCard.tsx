@@ -15,7 +15,6 @@ import { DeleteProviderButton } from "@/app/(auth)/providers/deleteProviderButto
 
 export function ProviderCard({
   icon,
-  enabled,
   defaultUrl,
   name,
   apiKeyPrefix,
@@ -39,29 +38,18 @@ export function ProviderCard({
   return (
     <AccordionItem asChild value={id}>
       <Card className={cn("p-8")}>
-        <div className="flex w-full items-center justify-between">
-          <AccordionTrigger>
-            <CardTitle
-              className={cn(
-                "text-xl transition-all duration-500",
-                !enabled && "text-muted-foreground *:fill-muted-foreground",
-              )}
-            >
-              {icon}
-              {name}
-            </CardTitle>
-            <Badge
-              className="transition-all duration-500"
-              variant={enabled ? "default" : "outline"}
-            >
-              {model}
-            </Badge>
-          </AccordionTrigger>
-          <Switch
-            checked={enabled}
-            onCheckedChange={() => update({ enabled: !enabled })}
-          />
-        </div>
+        <AccordionTrigger>
+          <CardTitle className={cn("text-xl transition-all duration-500")}>
+            {icon}
+            {name}
+          </CardTitle>
+          <Badge
+            className="ml-auto transition-all duration-500"
+            variant="outline"
+          >
+            {model}
+          </Badge>
+        </AccordionTrigger>
         <AccordionContent className="overflow-visible">
           <AutoForm
             onSubmit={(values) => update(values)}
@@ -102,15 +90,10 @@ export function ProviderCard({
                 description:
                   "The model you want to use, make sure you select a performant enough model.",
               },
-              enabled: {
-                fieldType: "switch",
-                description:
-                  "Should we enable this provider? It will disable the current selected provider",
-              },
             }}
           >
             <div className="flex justify-end gap-2">
-              {!enabled && <DeleteProviderButton id={id} />}
+              <DeleteProviderButton id={id} />
               <AutoFormSubmit className="block">Update</AutoFormSubmit>
             </div>
           </AutoForm>

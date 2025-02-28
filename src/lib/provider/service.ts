@@ -13,24 +13,16 @@ export class ProviderService {
 
     return providers
       .reverse()
-      .map(({ id, baseUrl, type, model, enabled }) => ({
+      .map(({ id, baseUrl, type, model }) => ({
         id,
         baseUrl,
         type,
         model,
-        enabled,
       }))
       .map((provider) => ({
         ...provider,
         ...providerConfigs[provider.type],
       }));
-  }
-
-  disableAllProviders(tx: Pick<PrismaClient, "aiProvider">) {
-    return tx.aiProvider.updateMany({
-      data: { enabled: false },
-      where: { enabled: true },
-    });
   }
 }
 

@@ -41,7 +41,6 @@ model Instructions {
 model AiProvider {
   id       String         @id @default(uuid()) @db.Uuid
   type     AiProviderType
-  enabled  Boolean        @default(false)
   baseUrl  String?
   apiKey   String? /// @encrypted
   model    String

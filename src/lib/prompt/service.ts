@@ -67,12 +67,10 @@ export class PromptService {
     "   - If ANY existing comment already reports the same requirement violation (even if unresolved), skip creating a new one\n" +
     "   - Exact wording matches are not required, just the same requirement violation\n" +
     "3. Only create a new comment if not already reported\n" +
-    "4. Mark your previous comments as resolved if their requirements are now met\n" +
     "Rules:\n" +
     "- ONLY return JSON, no other text\n" +
-    '- If all requirements met: return { "brokenRequirements": [] }\n' +
+    '- If all requirements met: return { "comments": [] }\n' +
     "- No comments on met requirements\n" +
     "- No suggestions beyond specific violation\n" +
-    "- No assumptions about unseen code\n" +
-    "- Do not resolve others threads";
+    "- No assumptions about unseen code\n";
 }
