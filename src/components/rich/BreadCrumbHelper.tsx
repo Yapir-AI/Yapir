@@ -12,6 +12,7 @@ import { routes, type YapirRoute } from "@/lib/route";
 import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ThemeToggle } from "@/components/rich/ThemeToggle";
 
 export type BreadCrumbItem = {
   label: string;
@@ -65,6 +66,8 @@ export function BreadCrumbHelper({
             );
           })}
         </BreadcrumbList>
+        <div className="grow" />
+        <ThemeToggle />
       </Breadcrumb>
     </div>
   );
