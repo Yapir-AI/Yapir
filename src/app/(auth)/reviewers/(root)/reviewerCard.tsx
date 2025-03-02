@@ -6,17 +6,19 @@ import { botttsNeutral } from "@dicebear/collection";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { routes } from "@/lib/route";
+import { cn } from "@/lib/utils";
 
 export function ReviewerCard({
   name,
   aiProvider,
   children,
   id,
-}: ReviewerListElement & { children?: ReactNode }) {
+  className,
+}: ReviewerListElement & { children?: ReactNode; className?: string }) {
   const { name: providerName } = providerConfigs[aiProvider.type];
 
   return (
-    <Card className="flex gap-4 p-4">
+    <Card className={cn("flex gap-4 p-4", className)}>
       <Link className="group flex grow gap-4" href={routes.reviewer(id)}>
         <Avatar
           style={botttsNeutral}

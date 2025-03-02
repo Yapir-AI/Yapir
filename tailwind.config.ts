@@ -9,6 +9,11 @@ export default {
   ],
   theme: {
     extend: {
+      grayscale: {
+        25: "25%",
+        50: "50%",
+        75: "75%",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

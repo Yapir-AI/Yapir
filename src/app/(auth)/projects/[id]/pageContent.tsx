@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { toggleProjectReviewer } from "@/lib/project/action";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { H3 } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
 
 type ProjectReviewer = ReviewerListElement & {
   enabled: boolean;
@@ -23,6 +24,7 @@ export function ProjectReviewers({
   reviewers: ProjectReviewer[];
 }) {
   const [ref] = useAutoAnimate({ duration: 200 });
+  const [gridRef] = useAutoAnimate();
 
   return (
     <div ref={ref} className="flex flex-col gap-4">
@@ -37,8 +39,8 @@ export function ProjectReviewers({
           </AlertDescription>
         </Alert>
       )}
-      <div className="grid gap-2 xl:grid-cols-2 2xl:grid-cols-3">
-        {reviewers.map((r) => (
+      <div className="grid gap-2 xl:grid-cols-2 2xl:grid-cols-3" ref={gridRef}>
+        {reviewers.sort(sortReviewers).map((r) => (
           <ProjectReviewerCard {...r} key={r.id} projectId={projectId} />
         ))}
       </div>
@@ -50,7 +52,13 @@ export function ProjectReviewerCard(
   reviewer: ReviewerListElement & { enabled: boolean; projectId: string },
 ) {
   return (
-    <ReviewerCard {...reviewer}>
+    <ReviewerCard
+      {...reviewer}
+      className={cn(
+        "transition-all duration-1000",
+        !reviewer.enabled && "grayscale-75 contrast-[90%]",
+      )}
+    >
       <Switch
         checked={reviewer.enabled}
         onCheckedChange={(checked) =>
@@ -64,3 +72,12 @@ export function ProjectReviewerCard(
     </ReviewerCard>
   );
 }
+
+const sortReviewers = (a: ProjectReviewer, b: ProjectReviewer) => {
+  // Sort by enabled status (enabled reviewers first)
+  if (a.enabled !== b.enabled) {
+    return a.enabled ? -1 : 1;
+  }
+  // If enabled status is the same, sort alphabetically by name
+  return a.name.localeCompare(b.name);
+};
