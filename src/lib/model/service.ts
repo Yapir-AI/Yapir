@@ -2,15 +2,9 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createOllama } from "ollama-ai-provider";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createMistral } from "@ai-sdk/mistral";
-import { type AiProvider, PrismaClient } from "@prisma/client";
+import { type AiProvider } from "@prisma/client";
 
 export class ModelService {
-  private readonly prisma: PrismaClient;
-
-  constructor(opts: { prisma: PrismaClient }) {
-    this.prisma = opts.prisma;
-  }
-
   toModel(provider: AiProvider) {
     const model = provider.model;
 

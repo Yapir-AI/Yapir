@@ -63,7 +63,10 @@ export namespace PullRequestHandle {
 
         await gitAdapter.createReview(
           `Yapir Review with ${model.modelId} \n found ${comments?.length ?? 0} issues`,
-          comments.map((c) => ({ ...c, body: `${reviewer.name}:\n${c.body}` })),
+          comments.map((c) => ({
+            ...c,
+            body: `${reviewer.name}:\n\n${c.body}`,
+          })),
         );
         await this.reviewService.completeReview(reviewId, object, prompt);
       } catch (e) {
