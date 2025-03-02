@@ -9,6 +9,7 @@ import {
   GitPullRequestAdapter,
   type GitThread,
 } from "@/lib/git/model/pullRequestAdapter";
+import { GitlabCommentHelper } from "@/lib/git/connectors/gitlab/GitlabCommentHelper";
 
 export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
   constructor(
@@ -20,6 +21,7 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
 
   private readonly projectId = this.event.project.id;
   private readonly mergeRequestIId = this.event.object_attributes.iid;
+  private commentHelper?: GitlabCommentHelper;
 
   private readonly mr = this.gitlab.MergeRequests.show(
     this.projectId,
@@ -31,6 +33,8 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
       this.projectId,
       this.mergeRequestIId,
     );
+
+    this.commentHelper = new GitlabCommentHelper(this.gitlab, changes);
 
     return changes.map((change) => {
       return {
@@ -100,15 +104,17 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
           comment.body,
           {
             position: {
+              ...this.commentHelper!.findClosestValidCommentLocation(
+                comment.path,
+                comment.line,
+              ),
               baseSha: review.diff_refs.base_sha,
               startSha: review.diff_refs.start_sha,
               headSha: review.diff_refs.head_sha,
               positionType: "text",
-              newLine: "" + comment.line,
-              newPath: comment.path,
             },
           },
-        ),
+        ).catch((e: Error) => console.error(JSON.stringify(e.cause))),
       ),
     );
   }
