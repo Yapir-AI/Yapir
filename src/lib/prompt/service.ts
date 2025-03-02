@@ -12,15 +12,15 @@ export class PromptService {
 
   async createPrompt(gitAdapter: GitPullRequestAdapter, reviewer: Reviewer) {
     const [
-      changes,
       currentComments,
       repositoryInstructions,
       settingInstructions,
+      formattedChanges,
     ] = await Promise.all([
-      gitAdapter.getReviewChanges(),
       gitAdapter.listReviewComments(),
       gitAdapter.getRepositoryInstructions(),
       this.getSettingInstructions(),
+      gitAdapter.formatChangesForLLM(),
     ]);
 
     const messages: CoreMessage[] = [
@@ -43,7 +43,7 @@ export class PromptService {
     messages.push(
       {
         role: "user",
-        content: `Code changes: \n${JSON.stringify(changes)}`,
+        content: `Code changes: \n${formattedChanges}`,
       },
       {
         role: "user",
