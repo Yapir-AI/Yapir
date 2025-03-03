@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/yapir-ai/yapir/compare/v0.7.0...v0.7.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* gitlab refresh token conccurency ([286e7bf](https://github.com/yapir-ai/yapir/commit/286e7bf818f10c922f68ad340a8746fd3836054e))
+
+
+
 # [0.7.0](https://github.com/yapir-ai/yapir/compare/v0.6.0...v0.7.0) (2025-03-03)
 
 
@@ -41,15 +50,6 @@
 ### Bug Fixes
 
 * make encryption key optional in build stage ([027758b](https://github.com/yapir-ai/yapir/commit/027758ba64e653f1403458cf597acf1058fa84b0))
-
-
-
-# [0.4.0](https://github.com/yapir-ai/yapir/compare/v0.3.0...v0.4.0) (2025-02-27)
-
-
-### Features
-
-* field encryption for secret stuff ([466f163](https://github.com/yapir-ai/yapir/commit/466f16366695bcfb0c95daaaaaa5fdfb91c95ba0))
 
 
 
