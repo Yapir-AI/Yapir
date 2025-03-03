@@ -15,6 +15,7 @@ export class GitlabClientFactory {
 
   async forConnectorId(connectorId: string) {
     const connector = await this.gitlabConnectorService.findById(connectorId);
+    await this.getToken(connector);
 
     return new Gitlab({
       host: connector.url,
