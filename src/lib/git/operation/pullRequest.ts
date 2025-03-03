@@ -65,7 +65,7 @@ export namespace PullRequestHandle {
           `Yapir Review with ${model.modelId} \n found ${comments?.length ?? 0} issues`,
           comments.map((c) => ({
             ...c,
-            body: `${reviewer.name}:\n\n${c.body}`,
+            body: `## ${reviewer.name}:\n\n${c.body}`,
           })),
         );
         await this.reviewService.completeReview(reviewId, object, prompt);
