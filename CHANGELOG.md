@@ -1,3 +1,12 @@
+## [0.7.2](https://github.com/yapir-ai/yapir/compare/v0.7.1...v0.7.2) (2025-03-03)
+
+
+### Bug Fixes
+
+* gitlab refresh token bug on first refresh ([6cedd28](https://github.com/yapir-ai/yapir/commit/6cedd282980bfb2f2481804b52a6b2bd91cd7a28))
+
+
+
 ## [0.7.1](https://github.com/yapir-ai/yapir/compare/v0.7.0...v0.7.1) (2025-03-03)
 
 
@@ -41,15 +50,6 @@
 
 * added icon & sub title to project page ([9a866a2](https://github.com/yapir-ai/yapir/commit/9a866a202e7a84c964cc3ac9d1b512abd0db1d14))
 * reviewer page and system prompt ([ffb1611](https://github.com/yapir-ai/yapir/commit/ffb1611c245e2e23e2a41ad5880f7397f6a22a86))
-
-
-
-## [0.4.1](https://github.com/yapir-ai/yapir/compare/v0.4.0...v0.4.1) (2025-02-27)
-
-
-### Bug Fixes
-
-* make encryption key optional in build stage ([027758b](https://github.com/yapir-ai/yapir/commit/027758ba64e653f1403458cf597acf1058fa84b0))
 
 
 
