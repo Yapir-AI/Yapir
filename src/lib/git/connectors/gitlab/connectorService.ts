@@ -35,7 +35,7 @@ export class GitlabConnectorService {
   ) {
     const expiresAt = Math.floor(Date.now() / 1000) + expires_in;
 
-    await this.prisma.gitlabConnector.update({
+    return this.prisma.gitlabConnector.update({
       data: {
         accessToken: access_token,
         expiresAt: new Date(expiresAt * 1000),

@@ -45,7 +45,12 @@ export class GitlabClientFactory {
       .json();
 
     const authResponse = gitlabAuthResponseSchema.parse(json);
-    await this.gitlabConnectorService.updateToken(connector.id, authResponse);
+    const { accessToken, refreshToken, expiresAt } =
+      await this.gitlabConnectorService.updateToken(connector.id, authResponse);
+    // Update connector for fellow usages of the factory output
+    connector.refreshToken = refreshToken;
+    connector.accessToken = accessToken;
+    connector.expiresAt = expiresAt;
 
     return authResponse.access_token;
   }
