@@ -1,3 +1,12 @@
+## [0.7.3](https://github.com/yapir-ai/yapir/compare/v0.7.2...v0.7.3) (2025-03-05)
+
+
+### Bug Fixes
+
+* dark mode text color on chat ([f16ee04](https://github.com/yapir-ai/yapir/commit/f16ee0417e6a71e3659e87d57765389129605267))
+
+
+
 ## [0.7.2](https://github.com/yapir-ai/yapir/compare/v0.7.1...v0.7.2) (2025-03-03)
 
 
@@ -40,16 +49,6 @@
 * possibility to disable project instructions ([6e356d4](https://github.com/yapir-ai/yapir/commit/6e356d43ed39f9a36f3e3e6934207ae4fce46c9d))
 * removed provider disabling ([a4dccca](https://github.com/yapir-ai/yapir/commit/a4dcccabe83674dd05a1575a88fc372ce32f74d7))
 * theme selection ([320d8fb](https://github.com/yapir-ai/yapir/commit/320d8fb414e3277a1bc712afcb4ac686ae85e0e0))
-
-
-
-# [0.5.0](https://github.com/yapir-ai/yapir/compare/v0.4.1...v0.5.0) (2025-02-28)
-
-
-### Features
-
-* added icon & sub title to project page ([9a866a2](https://github.com/yapir-ai/yapir/commit/9a866a202e7a84c964cc3ac9d1b512abd0db1d14))
-* reviewer page and system prompt ([ffb1611](https://github.com/yapir-ai/yapir/commit/ffb1611c245e2e23e2a41ad5880f7397f6a22a86))
 
 
 
