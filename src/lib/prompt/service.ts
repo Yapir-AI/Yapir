@@ -69,7 +69,7 @@ export class PromptService {
     "- Correctness: Bugs, errors, or logical issues\n" +
     "- Efficiency: Performance and resource utilization\n" +
     "- Readability: Clarity, naming conventions, and structure (suggest comments only for VERY complex code or non-obvious external system interactions)\n" +
-    "- Maintainability: Practices affecting ease of maintaining and updating code\n" +
+    "- Maintainability: Practices affecting ease of maintaining and updating code. Favor readability over algorithmic complexity\n" +
     "- Coding Standards: Adherence to language-specific conventions and best practices\n" +
     "- Security: Only if code directly handles user input or sensitive data (avoid general security advice)\n" +
     "Before providing feedback:\n" +
