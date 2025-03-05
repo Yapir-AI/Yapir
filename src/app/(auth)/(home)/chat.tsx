@@ -36,8 +36,8 @@ function Message({
       <p>{role}</p>
       <div
         className={cn(
-          "prose w-fit overflow-x-auto whitespace-pre-line rounded p-4",
-          "prose-headings:m-0 prose-headings:leading-none prose-p:leading-normal prose-p:m-0 prose-ol:m-0 prose-ol:leading-none prose-ul:m-0 prose-ul:leading-none prose-li:m-0 prose-li:leading-none",
+          "prose w-fit overflow-x-auto whitespace-pre-line rounded p-4 text-foreground prose-headings:text-foreground",
+          "prose-headings:m-0 prose-headings:leading-none prose-p:m-0 prose-p:leading-normal prose-ol:m-0 prose-ol:leading-none prose-ul:m-0 prose-ul:leading-none prose-li:m-0 prose-li:leading-none",
           "max-w-xs text-sm sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:max-w-3xl",
           role === "assistant" && "mr-2 rounded-r-2xl border",
           role === "system" && "w-full border bg-background",
