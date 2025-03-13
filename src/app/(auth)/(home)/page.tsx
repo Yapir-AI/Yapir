@@ -15,7 +15,8 @@ import { routes } from "@/lib/route";
 import type { ReviewStatus } from "@prisma/client";
 import type { ReviewListElement } from "@/lib/review/service";
 import { Avatar } from "@/lib/avatar";
-import { botttsNeutral, glass } from "@dicebear/collection";
+import { botttsNeutral } from "@dicebear/collection";
+import { ProjectAvatar } from "@/lib/avatar/project";
 
 export default async function HomePage() {
   const reviews = await container.resolve("reviewService").listReviews();
@@ -52,10 +53,7 @@ function ReviewHeader({
   return (
     <div className="flex grow items-center justify-between">
       <div className="flex gap-4">
-        <Avatar
-          style={glass}
-          options={{ seed: project.name, size: 68, radius: 10 }}
-        />
+        <ProjectAvatar projectName={project.name} options={{ size: 68 }} />
         <div className="flex flex-col justify-evenly">
           <Link href={pullUrl} target="_blank">
             <CardTitle className="text-xl hover:underline">
