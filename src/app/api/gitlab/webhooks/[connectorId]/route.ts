@@ -26,7 +26,10 @@ export async function POST(
   const project = await gitlabProjectService.getOrInitProject(json);
 
   const gitlab = await gitlabClientFactory.forConnectorId(connectorId);
-  const gitlabAdapter = new GitlabPullRequestAdapter(gitlab, json);
+  const gitlabAdapter = GitlabPullRequestAdapter.fromMergeRequestEvent(
+    gitlab,
+    json,
+  );
 
   await pullRequestHandleOperation.execute(gitlabAdapter, project);
 

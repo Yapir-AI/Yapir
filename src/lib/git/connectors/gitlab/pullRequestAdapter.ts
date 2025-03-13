@@ -1,4 +1,5 @@
 import type {
+  ExpandedMergeRequestSchema,
   MergeRequestDiscussionNoteSchema,
   WebhookMergeRequestEventSchema,
 } from "@gitbeaker/core";
@@ -10,23 +11,53 @@ import {
   type GitThread,
 } from "@/lib/git/model/pullRequestAdapter";
 import { GitlabCommentHelper } from "@/lib/git/connectors/gitlab/GitlabCommentHelper";
+import type { ReviewWithProject } from "@/lib/review/types";
+import { GitDiffFormatter } from "@/lib/git/utils/gitDiffFormatter";
 
 export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
   constructor(
+    private readonly projectId: number,
+    private readonly mergeRequestIId: number,
+    private readonly repoName: string,
+    private readonly repoUrl: string,
+    private readonly pullUrl: string,
+    private readonly pullName: string,
     private readonly gitlab: GitlabClient,
-    private readonly event: WebhookMergeRequestEventSchema,
   ) {
     super();
+    this.mr = gitlab.MergeRequests.show(this.projectId, this.mergeRequestIId);
   }
 
-  private readonly projectId = this.event.project.id;
-  private readonly mergeRequestIId = this.event.object_attributes.iid;
-  private commentHelper?: GitlabCommentHelper;
+  private readonly mr: Promise<ExpandedMergeRequestSchema>;
 
-  private readonly mr = this.gitlab.MergeRequests.show(
-    this.projectId,
-    this.mergeRequestIId,
-  );
+  static fromMergeRequestEvent(
+    gitlab: GitlabClient,
+    event: WebhookMergeRequestEventSchema,
+  ) {
+    return new GitlabPullRequestAdapter(
+      event.project.id,
+      event.object_attributes.iid,
+      event.project.name,
+      event.project.web_url,
+      event.object_attributes.url,
+      event.object_attributes.title,
+      gitlab,
+    );
+  }
+
+  static fromReview(gitlab: GitlabClient, review: ReviewWithProject) {
+    return new GitlabPullRequestAdapter(
+      Number(review.project.originId),
+      Number(review.pullNumber),
+      review.project.name,
+      review.project.url,
+      review.pullUrl,
+      review.pullName,
+      gitlab,
+    );
+  }
+
+  private commentHelper?: GitlabCommentHelper;
 
   override async getFileChanges(): Promise<GitFileChange[]> {
     const changes = await this.gitlab.MergeRequests.allDiffs(
@@ -55,7 +86,7 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
     const file = await this.gitlab.RepositoryFiles.show(
       this.projectId,
       path,
-      this.event.object_attributes.last_commit.id,
+      (await this.mr).diff_refs.head_sha,
     );
 
     return atob(file.content);
@@ -119,13 +150,42 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
     );
   }
 
+  /**
+   * Enhanced version of formatChangesForLLM that:
+   * 1. Keeps the same diff format with line +/- and file headers
+   * 2. Removes the hunk headers (like "@@ -16,7 +16,6 @@") while preserving line numbers
+   * 3. Fetches and includes the full file content for each file
+   */
+  async formatEnhancedChangesForLLM(): Promise<string> {
+    const changes = await this.getReviewChanges();
+
+    // Fetch all file contents in parallel
+    const changesWithContents = await Promise.all(
+      changes.map(async (change) => {
+        let content = "";
+        // Only try to get content for files that exist in the current state
+        if (!change.status.deleted_file) {
+          try {
+            content = await this.getFileContent(change.filename);
+          } catch (error) {
+            console.warn(`Failed to get content for ${change.filename}:`, error);
+          }
+        }
+        return { ...change, content };
+      })
+    );
+
+    // Use the enhanced formatter in GitDiffFormatter
+    return GitDiffFormatter.formatEnhancedChangesForLLM(changesWithContents);
+  }
+
   override getReviewInformation() {
     return {
-      repoName: this.event.project.name,
-      repoUrl: this.event.project.web_url,
+      repoName: this.repoName,
+      repoUrl: this.repoUrl,
       pullNumber: this.mergeRequestIId,
-      pullUrl: this.event.object_attributes.url,
-      pullName: this.event.object_attributes.title,
+      pullUrl: this.pullUrl,
+      pullName: this.pullName,
     };
   }
 }

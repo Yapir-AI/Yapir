@@ -77,6 +77,7 @@ export class PromptService {
     "Skip creating new comments for requirement violations that have already been reported (exact wording/line match not required)\n" +
     "Only create new comments for unreported issues\n" +
     "## FEEDBACK GUIDELINES:\n" +
+    "Use conventional comment format\n" +
     "Be clear, concise, and specific in your comments\n" +
     "Use code snippets or examples to illustrate points when necessary\n" +
     "Maintain a professional and respectful tone\n" +
@@ -91,5 +92,6 @@ export class PromptService {
     "## IMPORTANT CONSTRAINTS:\n" +
     "Provide feedback based solely on the code changes presented\n" +
     "Make no assumptions about the rest of the application, unseen code, or overall application design\n" +
+    "You can only comment on changed lines. Unchanged lines are here solely for context\n" +
     "Focus only on what is explicitly visible in the provided code";
 }

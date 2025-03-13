@@ -3,6 +3,7 @@ import type { GitReviewInfo } from "@/lib/git/model/pullRequestAdapter";
 import { PrismaClient } from "@prisma/client";
 import type { InputJsonArray } from "@prisma/client/runtime/client";
 import { startOfYesterday } from "date-fns/startOfYesterday";
+import { reviewWithProject } from "@/lib/review/types";
 
 export class ReviewService {
   private readonly prisma: PrismaClient;
@@ -23,6 +24,13 @@ export class ReviewService {
         },
       },
       orderBy: [{ at: "desc" }],
+    });
+  }
+
+  findById(id: string) {
+    return this.prisma.review.findUniqueOrThrow({
+      where: { id },
+      include: reviewWithProject,
     });
   }
 
