@@ -23,7 +23,6 @@ export namespace ProviderCreate {
     baseUrl: z.string().url().optional(),
     apiKey: z.string().optional(),
     model: z.string(),
-    enabled: z.boolean().default(false),
   });
 
   export type Schema = z.infer<typeof schema>;
