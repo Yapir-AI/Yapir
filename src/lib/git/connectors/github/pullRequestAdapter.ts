@@ -7,8 +7,8 @@ import {
 } from "@/lib/git/model/pullRequestAdapter";
 import type { EmitterWebhookEvent } from "@octokit/webhooks";
 import type { Octokit } from "@octokit/core";
-import type { Api } from "@octokit/plugin-rest-endpoint-methods";
 import { atob } from "node:buffer";
+import type { Api } from "@octokit/plugin-rest-endpoint-methods";
 
 export class GithubPullRequestAdapter extends GitPullRequestAdapter {
   constructor(

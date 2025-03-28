@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { container } from "@/lib/di/container";
-import { App } from "octokit";
-import { Octokit } from "@octokit/core";
+import { App, Octokit } from "octokit";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
 import type { WebhookEventName } from "@octokit/webhooks-types";
 import { GithubPullRequestAdapter } from "@/lib/git/connectors/github/pullRequestAdapter";
@@ -30,6 +29,7 @@ export async function POST({ text, headers }: NextRequest) {
     async (event) => {
       const githubAdapter = new GithubPullRequestAdapter(
         event,
+        // @ts-ignore fixme when implementing github
         await octokit(),
       );
       //@ts-ignore TODO
