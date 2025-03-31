@@ -1,3 +1,14 @@
+# [0.8.0](https://github.com/yapir-ai/yapir/compare/v0.7.3...v0.8.0) (2025-03-31)
+
+
+### Features
+
+* added sentry integration ([d74c357](https://github.com/yapir-ai/yapir/commit/d74c35773956a162b08bf72d5a2771ce6168dfcd))
+* better project avatar ([ae505a5](https://github.com/yapir-ai/yapir/commit/ae505a579416de1788ebf1b7d7e065621319fc04))
+* include complete files in reviews ([b532747](https://github.com/yapir-ai/yapir/commit/b53274748b71a2533b3cc44b1f51518a68e9c0ab))
+
+
+
 ## [0.7.3](https://github.com/yapir-ai/yapir/compare/v0.7.2...v0.7.3) (2025-03-05)
 
 
@@ -38,17 +49,6 @@
 * better project reviewer visual status ([4bac9a8](https://github.com/yapir-ai/yapir/commit/4bac9a857efbba85f7e2a890c073bb684728d81e))
 * tuned default prompt ([ef35815](https://github.com/yapir-ai/yapir/commit/ef3581577a7e210faff19a5a451cce5d96fb547e))
 * tuned git changes prompting ([0217604](https://github.com/yapir-ai/yapir/commit/02176041c0a774422f0516df0f7fdc8c1591e2e2))
-
-
-
-# [0.6.0](https://github.com/yapir-ai/yapir/compare/v0.5.0...v0.6.0) (2025-02-28)
-
-
-### Features
-
-* possibility to disable project instructions ([6e356d4](https://github.com/yapir-ai/yapir/commit/6e356d43ed39f9a36f3e3e6934207ae4fce46c9d))
-* removed provider disabling ([a4dccca](https://github.com/yapir-ai/yapir/commit/a4dcccabe83674dd05a1575a88fc372ce32f74d7))
-* theme selection ([320d8fb](https://github.com/yapir-ai/yapir/commit/320d8fb414e3277a1bc712afcb4ac686ae85e0e0))
 
 
 
