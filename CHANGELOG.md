@@ -1,3 +1,12 @@
+## [0.8.1](https://github.com/yapir-ai/yapir/compare/v0.8.0...v0.8.1) (2025-04-01)
+
+
+### Bug Fixes
+
+* actually use whole files in prompts ([af03e72](https://github.com/yapir-ai/yapir/commit/af03e72965ff5839b79b2c82fb46f3572144f7f7))
+
+
+
 # [0.8.0](https://github.com/yapir-ai/yapir/compare/v0.7.3...v0.8.0) (2025-03-31)
 
 
@@ -33,22 +42,6 @@
 ### Bug Fixes
 
 * gitlab refresh token conccurency ([286e7bf](https://github.com/yapir-ai/yapir/commit/286e7bf818f10c922f68ad340a8746fd3836054e))
-
-
-
-# [0.7.0](https://github.com/yapir-ai/yapir/compare/v0.6.0...v0.7.0) (2025-03-03)
-
-
-### Bug Fixes
-
-* added line checker for gitlab comments ([3b9f4db](https://github.com/yapir-ai/yapir/commit/3b9f4db4cd584d1e29099b02803cb710c9203664))
-
-
-### Features
-
-* better project reviewer visual status ([4bac9a8](https://github.com/yapir-ai/yapir/commit/4bac9a857efbba85f7e2a890c073bb684728d81e))
-* tuned default prompt ([ef35815](https://github.com/yapir-ai/yapir/commit/ef3581577a7e210faff19a5a451cce5d96fb547e))
-* tuned git changes prompting ([0217604](https://github.com/yapir-ai/yapir/commit/02176041c0a774422f0516df0f7fdc8c1591e2e2))
 
 
 
