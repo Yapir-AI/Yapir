@@ -17,8 +17,8 @@ export class GithubPullRequestAdapter extends GitPullRequestAdapter {
   ) {
     super();
   }
-
   private readonly payload = this.event.payload;
+
   private readonly owner = this.payload.repository.owner.login;
   private readonly repo = this.payload.repository.name;
   private readonly pullNumber = this.payload.pull_request.number;
@@ -52,6 +52,10 @@ export class GithubPullRequestAdapter extends GitPullRequestAdapter {
     };
 
     return atob(content);
+  }
+
+  override getDiffs(): Promise<string> {
+    throw new Error("Method not implemented.");
   }
 
   override async listReviewComments(): Promise<GitThread[]> {

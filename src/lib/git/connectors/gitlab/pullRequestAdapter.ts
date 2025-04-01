@@ -156,7 +156,7 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
    * 2. Removes the hunk headers (like "@@ -16,7 +16,6 @@") while preserving line numbers
    * 3. Fetches and includes the full file content for each file
    */
-  async formatEnhancedChangesForLLM(): Promise<string> {
+  async getDiffs(): Promise<string> {
     const changes = await this.getReviewChanges();
 
     // Fetch all file contents in parallel
@@ -168,11 +168,14 @@ export class GitlabPullRequestAdapter extends GitPullRequestAdapter {
           try {
             content = await this.getFileContent(change.filename);
           } catch (error) {
-            console.warn(`Failed to get content for ${change.filename}:`, error);
+            console.warn(
+              `Failed to get content for ${change.filename}:`,
+              error,
+            );
           }
         }
         return { ...change, content };
-      })
+      }),
     );
 
     // Use the enhanced formatter in GitDiffFormatter

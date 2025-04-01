@@ -20,7 +20,7 @@ export class PromptService {
       gitAdapter.listReviewComments(),
       gitAdapter.getRepositoryInstructions(),
       this.getSettingInstructions(),
-      gitAdapter.formatChangesForLLM(),
+      gitAdapter.getDiffs(),
     ]);
 
     const messages: CoreMessage[] = [

@@ -8,6 +8,8 @@ export abstract class GitPullRequestAdapter {
 
   abstract listReviewComments(): Promise<GitThread[]>;
 
+  abstract getDiffs(): Promise<string>;
+
   abstract createReview(
     body: string,
     comments: Omit<GitComment, "author">[],
@@ -24,18 +26,6 @@ export abstract class GitPullRequestAdapter {
     const changes = await this.getFileChanges();
 
     return changes.filter((change) => !ig.ignores(change.filename));
-  }
-
-  /**
-   * Formats the file changes in a more readable text format for LLM processing.
-   * The format includes:
-   * - File names (before/after)
-   * - File status (new, deleted, renamed)
-   * - Line numbers with +/- indicators for added/removed lines
-   */
-  async formatChangesForLLM(): Promise<string> {
-    const changes = await this.getReviewChanges();
-    return GitDiffFormatter.formatChangesForLLM(changes);
   }
 
   async getRepositoryInstructions() {
