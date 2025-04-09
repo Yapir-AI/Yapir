@@ -3,6 +3,6 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
-import { sentryDefaultOptions } from "./sentry.config";
+import { sentryDefaultOptions } from "../sentry.config";
 
 Sentry.init(sentryDefaultOptions);
