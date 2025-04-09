@@ -109,7 +109,7 @@ export function AppSideBar() {
                       asChild
                     >
                       <Link href={item.url} prefetch={true}>
-                        <item.icon></item.icon>
+                        <item.icon />
                         {item.title}
                       </Link>
                     </SidebarMenuButton>
