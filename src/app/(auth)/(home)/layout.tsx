@@ -4,15 +4,15 @@ import { Main } from "@/components/ui/main";
 import type { ReactNode } from "react";
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
+export default function ProjectsLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <BreadCrumbHelper items={["Home"]} />
+      <BreadCrumbHelper items={["Projects"]} />
       <Main>
         <TitleSection>
           <div>
-            <H1>Reviews</H1>
-            <HSub>Find all your recent reviews</HSub>
+            <H1>Projects</H1>
+            <HSub>Projects represents your Git repositories.</HSub>
           </div>
         </TitleSection>
         {children}

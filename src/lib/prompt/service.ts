@@ -1,26 +1,18 @@
-import type { InstructionService } from "@/lib/instructions/service";
-import type { GitPullRequestAdapter } from "@/lib/git/model/pullRequestAdapter";
 import type { CoreMessage } from "ai";
 import type { Reviewer } from "@prisma/client";
+import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
+import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
 
 export class PromptService {
-  private readonly instructionService: InstructionService;
+  private readonly gitMergeRequestAdapter: GitMergeRequestAdapter;
 
-  constructor(opts: { instructionService: InstructionService }) {
-    this.instructionService = opts.instructionService;
+  constructor(opts: { gitMergeRequestAdapter: GitMergeRequestAdapter }) {
+    this.gitMergeRequestAdapter = opts.gitMergeRequestAdapter;
   }
 
-  async createPrompt(gitAdapter: GitPullRequestAdapter, reviewer: Reviewer) {
-    const [
-      currentComments,
-      repositoryInstructions,
-      settingInstructions,
-      formattedChanges,
-    ] = await Promise.all([
-      gitAdapter.listReviewComments(),
-      gitAdapter.getRepositoryInstructions(),
-      this.getSettingInstructions(),
-      gitAdapter.getDiffs(),
+  async createPrompt(reviewer: Reviewer, diffs: GitMergeRequestDiffs) {
+    const [repositoryInstructions] = await Promise.all([
+      this.gitMergeRequestAdapter.getRepositoryInstructions(),
     ]);
 
     const messages: CoreMessage[] = [
@@ -36,26 +28,16 @@ export class PromptService {
     if (reviewer.useProjectInstructions) {
       messages.push({
         role: "user",
-        content: `Requirements: \n${repositoryInstructions}\n${settingInstructions.content}`,
+        content: `Requirements: \n${repositoryInstructions}`,
       });
     }
 
-    messages.push(
-      {
-        role: "user",
-        content: `Code changes: \n${formattedChanges}`,
-      },
-      {
-        role: "user",
-        content: `Current Comments: \n${JSON.stringify(currentComments)}`,
-      },
-    );
+    messages.push({
+      role: "user",
+      content: `Code changes: \n${diffs.toLLMString()}`,
+    });
 
     return messages;
-  }
-
-  private async getSettingInstructions() {
-    return this.instructionService.getDefaultInstructions();
   }
 
   public static DEFAULT_CONTENT =

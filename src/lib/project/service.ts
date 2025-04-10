@@ -19,7 +19,7 @@ export class ProjectService {
       },
       include: {
         reviewers: {
-          include: { aiProvider: true },
+          include: { aiProvider: { omit: { apiKey: true } } },
         },
       },
     });

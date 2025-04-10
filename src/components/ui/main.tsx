@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { SidebarInset } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function Main({
   className,
@@ -11,7 +12,7 @@ export function Main({
   return (
     <>
       <SidebarInset className="px-10 py-8">
-        <div className="container mx-auto">{children}</div>
+        <div className={cn("container mx-auto", className)}>{children}</div>
       </SidebarInset>
     </>
   );

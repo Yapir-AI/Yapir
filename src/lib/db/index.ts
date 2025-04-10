@@ -1,18 +1,20 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { fieldEncryptionExtension } from "prisma-field-encryption";
 
-declare global {
-  var prisma: ReturnType<typeof prismaClient>;
-}
+export type YapirPrismaClient = ReturnType<typeof prismaClient>;
 
-let prisma: ReturnType<typeof prismaClient>;
+let prisma: YapirPrismaClient;
 
-const prismaClient = (
-  options?: Prisma.Subset<
-    Prisma.PrismaClientOptions,
-    Prisma.PrismaClientOptions
-  >,
-) => {
+const options = {
+  omit: {
+    aiProvider: { apiKey: true },
+  },
+} as const satisfies Prisma.Subset<
+  Prisma.PrismaClientOptions,
+  Prisma.PrismaClientOptions
+>;
+
+const prismaClient = () => {
   const encryptionKey = process.env.PRISMA_FIELD_ENCRYPTION_KEY;
 
   if (encryptionKey)
@@ -27,9 +29,12 @@ const prismaClient = (
 if (process.env.NODE_ENV === "production") {
   prisma = prismaClient();
 } else {
+  // @ts-expect-error
   if (!global.prisma) {
+    // @ts-expect-error
     global.prisma = prismaClient();
   }
+  // @ts-expect-error
   prisma = global.prisma;
 }
 

@@ -1,6 +1,6 @@
 import type { WebhookMergeRequestEventSchema } from "@gitbeaker/core";
 import { PrismaClient } from "@prisma/client";
-import { gitProjectWithReviewersAndProviders } from "@/lib/git/types";
+import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 
 export class GitlabProjectService {
   private readonly prisma: PrismaClient;
@@ -16,7 +16,7 @@ export class GitlabProjectService {
         url: url,
         providerType: "GITLAB",
       },
-      include: gitProjectWithReviewersAndProviders,
+      include: PullRequestHandle.projectForReview,
     });
 
     if (existingProject) return existingProject;
@@ -29,7 +29,7 @@ export class GitlabProjectService {
         fullName: project.path_with_namespace,
         providerType: "GITLAB",
       },
-      include: gitProjectWithReviewersAndProviders,
+      include: PullRequestHandle.projectForReview,
     });
   }
 }

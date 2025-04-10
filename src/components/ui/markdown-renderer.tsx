@@ -1,4 +1,4 @@
-import React, { type JSX, Suspense } from "react";
+import React, { Fragment, type JSX, Suspense } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -45,8 +45,8 @@ const HighlightedPre = React.memo(
       <pre {...props}>
         <code>
           {tokens.map((line, lineIndex) => (
-            <>
-              <span key={lineIndex}>
+            <Fragment key={lineIndex}>
+              <span>
                 {line.map((token, tokenIndex) => {
                   const style =
                     typeof token.htmlStyle === "string"
@@ -65,7 +65,7 @@ const HighlightedPre = React.memo(
                 })}
               </span>
               {lineIndex !== tokens.length - 1 && "\n"}
-            </>
+            </Fragment>
           ))}
         </code>
       </pre>

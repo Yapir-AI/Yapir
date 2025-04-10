@@ -10,7 +10,10 @@ export async function POST(req: Request) {
   const { messages, reviewerId } = await req.json();
   const { modelService, reviewerService } = container.cradle;
 
-  const reviewer = await reviewerService.findById(reviewerId);
+  const reviewer = await reviewerService.findById(reviewerId, {
+    aiProvider: { omit: { apiKey: false } },
+  });
+  reviewer.aiProvider.apiKey;
   const model = modelService.toModel(reviewer.aiProvider);
 
   const result = streamText({

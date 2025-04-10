@@ -1,13 +1,13 @@
 model GitProject {
-  id           String          @id @default(uuid()) @db.Uuid
-  originId     String
-  url          String
-  name         String
-  fullName     String
-  providerType GitProviderType
-  creationDate DateTime        @default(now())
-  reviewers    Reviewer[]
-  reviews      Review[]
+  id            String          @id @default(uuid(7)) @db.Uuid
+  originId      String
+  url           String
+  name          String
+  fullName      String
+  providerType  GitProviderType
+  createdAt     DateTime        @default(now())
+  reviewers     Reviewer[]
+  mergeRequests MergeRequest[]
 }
 
 model GithubConnector {
@@ -15,31 +15,25 @@ model GithubConnector {
   slug          String
   pem           String /// @encrypted
   webhookSecret String /// @encrypted
-  creationDate  DateTime @default(now())
+  createdAt     DateTime @default(now())
 }
 
 model GitlabConnector {
-  id                String    @id @default(uuid()) @db.Uuid
+  id                String    @id @default(uuid(7)) @db.Uuid
   url               String
   applicationId     String
-  applicationSecret String
+  applicationSecret String /// @encrypted
   groupName         String?
   displayName       String
-  creationDate      DateTime  @default(now())
+  createdAt         DateTime  @default(now())
   accessToken       String? /// @encrypted
   refreshToken      String? /// @encrypted
   expiresAt         DateTime?
   redirectUri       String
 }
 
-model Instructions {
-  id      String @id @default(uuid()) @db.Uuid
-  title   String
-  content String @default("")
-}
-
 model AiProvider {
-  id       String         @id @default(uuid()) @db.Uuid
+  id       String         @id @default(uuid(7)) @db.Uuid
   type     AiProviderType
   baseUrl  String?
   apiKey   String? /// @encrypted
@@ -47,23 +41,53 @@ model AiProvider {
   reviewer Reviewer[]
 }
 
+model MergeRequest {
+  id              String     @id @default(uuid(7)) @db.Uuid
+  originId        String
+  name            String
+  url             String
+  sourceBranch    String
+  targetBranch    String
+  authorName      String
+  authorAvatarUrl String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  reviews         Review[]
+  projectId       String     @db.Uuid
+  project         GitProject @relation(fields: [projectId], references: [id])
+
+  @@unique([originId, projectId])
+}
+
 model Review {
-  id           String       @id @default(uuid()) @db.Uuid
-  at           DateTime     @default(now())
-  messages     Json
-  status       ReviewStatus @default(PENDING)
-  errorMessage String?
-  pullNumber   BigInt
-  pullUrl      String
-  pullName     String
-  projectId    String       @db.Uuid
-  project      GitProject   @relation(fields: [projectId], references: [id])
-  reviewerId   String       @db.Uuid
-  reviewer     Reviewer     @relation(fields: [reviewerId], references: [id])
+  id             String       @id @default(uuid(7)) @db.Uuid
+  at             DateTime     @default(now())
+  /// [GitMergeRequestDiffs]
+  diffs          Json
+  status         ReviewStatus @default(PENDING)
+  errorMessage   String?
+  reviewerId     String       @db.Uuid
+  reviewer       Reviewer     @relation(fields: [reviewerId], references: [id])
+  mergeRequestId String       @db.Uuid
+  mergeRequest   MergeRequest @relation(fields: [mergeRequestId], references: [id])
+  comments       Comment[]
+}
+
+model Comment {
+  id         String          @id @default(uuid(7)) @db.Uuid
+  location   CommentLocation
+  path       String
+  line       Int
+  text       String
+  createdAt  DateTime        @default(now())
+  thumbsUp   Int             @default(0)
+  thumbsDown Int             @default(0)
+  reviewId   String          @db.Uuid
+  review     Review          @relation(fields: [reviewId], references: [id])
 }
 
 model Reviewer {
-  id                     String       @id @default(uuid()) @db.Uuid
+  id                     String       @id @default(uuid(7)) @db.Uuid
   name                   String
   aiProviderId           String       @db.Uuid
   aiProvider             AiProvider   @relation(fields: [aiProviderId], references: [id])
@@ -91,4 +115,9 @@ enum ReviewStatus {
   REVIEWED
   PENDING
   ERROR
+}
+
+enum CommentLocation {
+  OLD
+  NEW
 }

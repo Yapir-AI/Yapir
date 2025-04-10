@@ -1,9 +1,9 @@
-import type { CoreMessage } from "ai";
-import type { GitReviewInfo } from "@/lib/git/model/pullRequestAdapter";
-import { PrismaClient } from "@prisma/client";
-import type { InputJsonArray } from "@prisma/client/runtime/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { startOfYesterday } from "date-fns/startOfYesterday";
-import { reviewWithProject } from "@/lib/review/types";
+import {
+  gitMergeRequestDiffs,
+  type GitMergeRequestDiffs,
+} from "@/lib/git/parsing/model/GitMergeRequestDiffs";
 
 export class ReviewService {
   private readonly prisma: PrismaClient;
@@ -12,11 +12,19 @@ export class ReviewService {
     this.prisma = opts.prisma;
   }
 
+  findById<T extends Prisma.ReviewInclude>(id: string, include: T) {
+    return this.prisma.review
+      .findUniqueOrThrow({
+        where: { id },
+        include,
+      })
+      .then((r) => ({ ...r, diffs: gitMergeRequestDiffs(r.diffs) }));
+  }
+
   listReviews() {
     return this.prisma.review.findMany({
       include: {
-        project: true,
-        reviewer: true,
+        reviewer: {},
       },
       where: {
         at: {
@@ -27,46 +35,35 @@ export class ReviewService {
     });
   }
 
-  findById(id: string) {
-    return this.prisma.review.findUniqueOrThrow({
-      where: { id },
-      include: reviewWithProject,
-    });
-  }
-
   async initReview({
     reviewerId,
-    projectId,
-    messages,
-    reviewInfo,
+    diffs,
+    mergeRequestId,
   }: {
     reviewerId: string;
-    projectId: string;
-    messages: CoreMessage[];
-    reviewInfo: GitReviewInfo;
+    mergeRequestId: string;
+    diffs: GitMergeRequestDiffs;
   }) {
     const { id } = await this.prisma.review.create({
       data: {
-        messages: messages as InputJsonArray,
-        pullNumber: reviewInfo.pullNumber,
-        pullUrl: reviewInfo.pullUrl,
-        pullName: reviewInfo.pullName,
+        diffs: JSON.parse(JSON.stringify(diffs)),
+        status: "PENDING",
         reviewerId,
-        projectId,
+        mergeRequestId,
       },
     });
 
     return id;
   }
 
-  async completeReview(reviewId: string, object: any, messages: CoreMessage[]) {
+  async completeReview(
+    reviewId: string,
+    comments: Prisma.CommentCreateWithoutReviewInput[],
+  ) {
     return this.prisma.review.update({
       data: {
         status: "REVIEWED",
-        messages: [
-          ...messages,
-          { role: "assistant", content: JSON.stringify(object) },
-        ] as InputJsonArray,
+        comments: { create: comments },
       },
       where: { id: reviewId },
     });

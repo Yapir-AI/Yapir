@@ -32,7 +32,7 @@ import {
 import type { GitLabConnectorListElement } from "@/lib/git/connectors/gitlab/connectorService";
 
 export function GitlabCard(elem: GitLabConnectorListElement) {
-  const { displayName, creationDate, url, applicationId, id, ready } = elem;
+  const { displayName, createdAt, url, applicationId, id, ready } = elem;
 
   const setupUrl = buildUrl(url, {
     path: "/oauth/authorize",
@@ -55,12 +55,12 @@ export function GitlabCard(elem: GitLabConnectorListElement) {
 
   return (
     <Card className="flex items-center gap-5 p-5">
-      <GitLabIcon className="size-8 fill-foreground" />
+      <GitLabIcon className="fill-foreground size-8" />
       <div>
         <CardTitle>{displayName}</CardTitle>
         <CardDescription>GitLab</CardDescription>
         <CardDescription suppressHydrationWarning>
-          Created {creationDate.toLocaleDateString()}
+          Created {createdAt.toLocaleDateString()}
         </CardDescription>
       </div>
       <div className="ml-auto">
@@ -179,7 +179,7 @@ function AddWebhookToRepository({
       </TableCell>
       <TableCell>
         <Link href={(url + "/-/hooks") as Route} target="_blank">
-          <ExternalLink className="mx-auto size-4 fill-muted" />
+          <ExternalLink className="fill-muted mx-auto size-4" />
         </Link>
       </TableCell>
     </TableRow>

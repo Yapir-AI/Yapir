@@ -1,55 +1,55 @@
-import type { GitPullRequestAdapter } from "@/lib/git/model/pullRequestAdapter";
 import type { ReviewService } from "@/lib/review/service";
 import type { PromptService } from "@/lib/prompt/service";
 import type { ModelService } from "@/lib/model/service";
 import { AISDKError, generateObject } from "ai";
 import { z } from "zod";
-import type { GitProjectWithReviewersAndProviders } from "@/lib/git/types";
-import type { ReviewerWithProvider } from "@/lib/reviewer/types";
+import type { Prisma } from "@prisma/client";
+import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
+import { routes } from "@/lib/route";
+import { env } from "@/lib/env";
 
 export namespace PullRequestHandle {
   export class Operation {
     private readonly reviewService: ReviewService;
     private readonly promptService: PromptService;
     private readonly modelService: ModelService;
+    private readonly gitMergeRequestAdapter: GitMergeRequestAdapter;
+    private readonly project: ProjectForReview;
 
     constructor(opts: {
       reviewService: ReviewService;
       promptService: PromptService;
       modelService: ModelService;
+      gitMergeRequestAdapter: GitMergeRequestAdapter;
+      project: ProjectForReview;
     }) {
       this.reviewService = opts.reviewService;
       this.promptService = opts.promptService;
       this.modelService = opts.modelService;
+      this.gitMergeRequestAdapter = opts.gitMergeRequestAdapter;
+      this.project = opts.project;
     }
 
-    async execute(
-      gitAdapter: GitPullRequestAdapter,
-      project: GitProjectWithReviewersAndProviders,
-    ) {
+    async execute(mergeRequestId: string) {
       await Promise.all(
-        project.reviewers.map((reviewer) =>
-          this.review(project.id, gitAdapter, reviewer),
+        this.project.reviewers.map((reviewer) =>
+          this.review(reviewer, mergeRequestId),
         ),
       );
     }
 
     async review(
-      projectId: string,
-      gitAdapter: GitPullRequestAdapter,
-      reviewer: ReviewerWithProvider,
+      reviewer: ProjectForReview["reviewers"][number],
+      mergeRequestId: string,
     ) {
+      const diffs = await this.gitMergeRequestAdapter.getDiffs();
       const model = this.modelService.toModel(reviewer.aiProvider);
-      const prompt = await this.promptService.createPrompt(
-        gitAdapter,
-        reviewer,
-      );
+      const prompt = await this.promptService.createPrompt(reviewer, diffs);
 
       const reviewId = await this.reviewService.initReview({
         reviewerId: reviewer.id,
-        projectId: projectId,
-        messages: prompt,
-        reviewInfo: await gitAdapter.getReviewInformation(),
+        mergeRequestId,
+        diffs,
       });
 
       try {
@@ -61,14 +61,10 @@ export namespace PullRequestHandle {
 
         const { comments } = object;
 
-        await gitAdapter.createReview(
-          `Yapir Review with ${model.modelId} \n found ${comments?.length ?? 0} issues`,
-          comments.map((c) => ({
-            ...c,
-            body: `## ${reviewer.name}:\n\n${c.body}`,
-          })),
-        );
-        await this.reviewService.completeReview(reviewId, object, prompt);
+        await this.gitMergeRequestAdapter.postNote({
+          content: `${reviewer.name} just [reviewed your code](${env.appUrl + routes.review(this.project.id, reviewId)}).`,
+        });
+        await this.reviewService.completeReview(reviewId, comments);
       } catch (e) {
         let message: string | undefined;
         if (AISDKError.isInstance(e)) message = e.name + ": " + e.message;
@@ -78,16 +74,33 @@ export namespace PullRequestHandle {
     }
   }
 
+  export const projectForReview = {
+    reviewers: {
+      include: {
+        aiProvider: true,
+      },
+    },
+  } as const satisfies Prisma.GitProjectSelect;
+
+  export type ProjectForReview = Prisma.GitProjectGetPayload<{
+    include: typeof projectForReview;
+  }>;
+
   const reviewSchema = z.object({
     comments: z
       .array(
         z.object({
           path: z.string().describe("file path"),
           line: z.number().describe("The line number"),
-          body: z
+          text: z
             .string()
             .describe(
               "Markdown content, the comment to put on the PR. Give quick fix to the user if possible.",
+            ),
+          location: z
+            .enum(["OLD", "NEW"])
+            .describe(
+              "If the comment is on the old or new line. Adapt file path accordingly",
             ),
         }),
       )

@@ -12,6 +12,7 @@ export async function POST({ text, headers }: NextRequest) {
   const payload = await text();
   const json = JSON.parse(payload);
 
+  // @ts-ignore
   const { githubConnectorService, pullRequestHandleOperation } =
     container.cradle;
 

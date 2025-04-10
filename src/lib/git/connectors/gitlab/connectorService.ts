@@ -1,24 +1,33 @@
 import type { gitlabAuthResponseSchema } from "@/lib/git/connectors/gitlab/model/authResponseSchema";
 import { z } from "zod";
 import { notFound } from "next/navigation";
-import { PrismaClient } from "@prisma/client";
+import type { YapirPrismaClient } from "@/lib/db";
 
 export class GitlabConnectorService {
-  private readonly prisma: PrismaClient;
+  private readonly prisma: YapirPrismaClient;
 
-  constructor(opts: { prisma: PrismaClient }) {
+  constructor(opts: { prisma: YapirPrismaClient }) {
     this.prisma = opts.prisma;
   }
 
   async listConnectors() {
-    const installations = await this.prisma.gitlabConnector.findMany();
+    const installations = await this.prisma.gitlabConnector.findMany({
+      select: {
+        accessToken: true,
+        id: true,
+        displayName: true,
+        createdAt: true,
+        url: true,
+        applicationId: true,
+      },
+    });
 
     return installations.map(
-      ({ id, displayName, creationDate, url, applicationId, accessToken }) => ({
+      ({ id, displayName, createdAt, url, applicationId, accessToken }) => ({
         id,
         displayName,
         applicationId,
-        creationDate,
+        createdAt,
         url,
         ready: !!accessToken,
       }),

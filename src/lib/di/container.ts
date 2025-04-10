@@ -13,7 +13,6 @@ import { GitlabClientFactory } from "@/lib/git/connectors/gitlab/clientFactory";
 import { GitlabRepositoryConnect } from "@/lib/git/connectors/gitlab/operation/repositoryConnect";
 import { GitlabConnectorCreate } from "@/lib/git/connectors/gitlab/operation/connectorCreate";
 import { GitlabConnectorRepositoryList } from "@/lib/git/connectors/gitlab/operation/connectorRepositoryList";
-import { InstructionService } from "@/lib/instructions/service";
 import { PromptService } from "@/lib/prompt/service";
 import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 import { ReviewerCreate } from "@/lib/reviewer/operation/create";
@@ -21,10 +20,14 @@ import { ReviewerUpdate } from "@/lib/reviewer/operation/update";
 import { ReviewerService } from "@/lib/reviewer/service";
 import { GitlabProjectService } from "@/lib/git/connectors/gitlab/projectService";
 import { ProjectService } from "@/lib/project/service";
+import { MergeRequestService } from "@/lib/mergeRequest/service";
+import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
+import { CommentService } from "@/lib/comment/service";
 
 export const container = createTypedContainer({
   prisma: asValue(prismaClient),
   modelService: asClass(ModelService),
+  commentService: asClass(CommentService),
   githubConnectorService: asClass(GithubConnectorService),
   gitlabConnectorService: asClass(GitlabConnectorService),
   gitlabClientFactory: asClass(GitlabClientFactory),
@@ -33,17 +36,36 @@ export const container = createTypedContainer({
   gitlabConnectorRepositoryListOperation: asClass(
     GitlabConnectorRepositoryList.Operation,
   ),
-  instructionService: asClass(InstructionService),
   promptService: asClass(PromptService),
   projectService: asClass(ProjectService),
   providerService: asClass(ProviderService),
   providerCreateOperation: asClass(ProviderCreate.Operation),
   providerUpdateOperation: asClass(ProviderUpdate.Operation),
   providerDeleteOperation: asClass(ProviderDelete.Operation),
-  pullRequestHandleOperation: asClass(PullRequestHandle.Operation),
   gitlabProjectService: asClass(GitlabProjectService),
+  mergeRequestService: asClass(MergeRequestService),
   reviewService: asClass(ReviewService),
   reviewerService: asClass(ReviewerService),
   reviewerCreateOperation: asClass(ReviewerCreate.Operation),
   reviewerUpdateOperation: asClass(ReviewerUpdate.Operation),
 });
+
+export function reviewContainer({
+  mergeRequestId,
+  gitMergeRequestAdapter,
+  project,
+}: {
+  mergeRequestId: string;
+  gitMergeRequestAdapter: GitMergeRequestAdapter;
+  project: PullRequestHandle.ProjectForReview;
+}) {
+  return container
+    .createScope()
+    .register(
+      "pullRequestHandleOperation",
+      asClass(PullRequestHandle.Operation),
+    )
+    .register("mergeRequestId", asValue(mergeRequestId))
+    .register("gitMergeRequestAdapter", asValue(gitMergeRequestAdapter))
+    .register("project", asValue(project)).cradle;
+}

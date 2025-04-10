@@ -39,7 +39,7 @@ interface TypedAwilixContainer<T extends ContainerDefinition>
   register<K extends string, R>(
     key: K,
     value: Resolver<R>,
-  ): TypedAwilixContainer<T & { K: Resolver<R> }>;
+  ): TypedAwilixContainer<T & Record<K, Resolver<R>>>;
 
   cradle: {
     [K in keyof T]: ExtractResolverType<T[K]>;

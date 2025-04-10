@@ -5,23 +5,6 @@ import type { GitFileChange } from "../model/pullRequestAdapter";
  */
 export class GitDiffFormatter {
   /**
-   * Formats the file changes in a readable text format for LLM processing.
-   */
-  public static formatChangesForLLM(changes: GitFileChange[]): string {
-    return changes
-      .map((change) => {
-        let result = this.formatFileHeader(change);
-
-        if (change.patch) {
-          result += this.formatPatchWithLineNumbers(change.patch, false);
-        }
-
-        return result;
-      })
-      .join("\n\n");
-  }
-
-  /**
    * Enhanced version with full file content and integrated diff information
    */
   public static formatEnhancedChangesForLLM(

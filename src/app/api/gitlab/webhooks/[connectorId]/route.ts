@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { WebhookMergeRequestEventSchema } from "@gitbeaker/core";
-import { GitlabPullRequestAdapter } from "@/lib/git/connectors/gitlab/pullRequestAdapter";
-import { container } from "@/lib/di/container";
+import { container, reviewContainer } from "@/lib/di/container";
+import { GitlabMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 
 export async function POST(
   request: NextRequest,
@@ -17,21 +17,37 @@ export async function POST(
 
   const connectorId = (await params).connectorId;
 
-  const {
-    gitlabClientFactory,
-    pullRequestHandleOperation,
-    gitlabProjectService,
-  } = container.createScope().cradle;
+  const { gitlabClientFactory, gitlabProjectService, mergeRequestService } =
+    container.cradle;
 
   const project = await gitlabProjectService.getOrInitProject(json);
+  const mergeRequest = await mergeRequestService.create({
+    authorName: json.user.name,
+    authorAvatarUrl: json.user.avatar_url,
+    createdAt: new Date(json.object_attributes.created_at),
+    updatedAt: new Date(json.object_attributes.updated_at),
+    project: { connect: { id: project.id } },
+    originId: "" + json.object_attributes.iid,
+    name: json.object_attributes.title,
+    sourceBranch: json.object_attributes.source_branch,
+    targetBranch: json.object_attributes.target_branch,
+    url: json.object_attributes.url,
+  });
 
   const gitlab = await gitlabClientFactory.forConnectorId(connectorId);
-  const gitlabAdapter = GitlabPullRequestAdapter.fromMergeRequestEvent(
+  const gitlabAdapter = new GitlabMergeRequestAdapter(
+    json.project.id,
+    json.object_attributes.iid,
     gitlab,
-    json,
   );
 
-  await pullRequestHandleOperation.execute(gitlabAdapter, project);
+  const { pullRequestHandleOperation } = reviewContainer({
+    mergeRequestId: mergeRequest.id,
+    gitMergeRequestAdapter: gitlabAdapter,
+    project,
+  });
+
+  await pullRequestHandleOperation.execute(mergeRequest.id);
 
   return NextResponse.json({});
 }

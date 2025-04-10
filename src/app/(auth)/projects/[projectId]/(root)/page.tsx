@@ -3,18 +3,20 @@ import { notFound } from "next/navigation";
 import { Main } from "@/components/ui/main";
 import { TitleSection } from "@/components/rich/titleSection";
 import { H1, HSub } from "@/components/ui/typography";
-import { ProjectReviewers } from "@/app/(auth)/projects/[id]/pageContent";
 
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
 import { ProjectAvatar } from "@/lib/avatar/project";
+import { ProjectReviewers } from "@/app/(auth)/projects/[projectId]/(root)/pageContent";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function ProjectPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ projectId: string }>;
 }) {
   const { projectService, reviewerService } = container.cradle;
-  const projectId = (await params).id;
+  const projectId = (await params).projectId;
 
   const [project, _reviewers] = await Promise.all([
     projectService.findById(projectId),
@@ -32,16 +34,17 @@ export default async function ProjectPage({
 
   return (
     <>
-      <BreadCrumbHelper items={["Home", "Projects", { label: project.name }]} />
+      <BreadCrumbHelper items={["Projects", { label: project.name }]} />
       <Main>
         <TitleSection>
-          <div className="flex gap-8">
-            <ProjectAvatar projectName={project.name} options={{ size: 80 }} />
+          <div className="flex items-center gap-4">
+            <ProjectAvatar projectName={project.name} options={{ size: 40 }} />
             <div className="flex flex-col justify-evenly">
               <H1>{project.name}</H1>
               <HSub>Manage your project reviewers</HSub>
             </div>
           </div>
+          <Link href={project.url}>go</Link>
         </TitleSection>
         <ProjectReviewers
           reviewers={reviewers}

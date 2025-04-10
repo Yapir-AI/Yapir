@@ -7,6 +7,9 @@ CREATE TYPE "AiProviderType" AS ENUM ('ANTHROPIC', 'OPENAI', 'OPENAI_LIKE', 'OLL
 -- CreateEnum
 CREATE TYPE "ReviewStatus" AS ENUM ('REVIEWED', 'PENDING', 'ERROR');
 
+-- CreateEnum
+CREATE TYPE "CommentLocation" AS ENUM ('OLD', 'NEW');
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
@@ -73,7 +76,7 @@ CREATE TABLE "GitProject" (
     "name" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
     "providerType" "GitProviderType" NOT NULL,
-    "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "GitProject_pkey" PRIMARY KEY ("id")
 );
@@ -84,7 +87,7 @@ CREATE TABLE "GithubConnector" (
     "slug" TEXT NOT NULL,
     "pem" TEXT NOT NULL,
     "webhookSecret" TEXT NOT NULL,
-    "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "GithubConnector_pkey" PRIMARY KEY ("id")
 );
@@ -97,7 +100,7 @@ CREATE TABLE "GitlabConnector" (
     "applicationSecret" TEXT NOT NULL,
     "groupName" TEXT,
     "displayName" TEXT NOT NULL,
-    "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "accessToken" TEXT,
     "refreshToken" TEXT,
     "expiresAt" TIMESTAMP(3),
@@ -107,19 +110,9 @@ CREATE TABLE "GitlabConnector" (
 );
 
 -- CreateTable
-CREATE TABLE "Instructions" (
-    "id" UUID NOT NULL,
-    "title" TEXT NOT NULL,
-    "content" TEXT NOT NULL DEFAULT '',
-
-    CONSTRAINT "Instructions_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "AiProvider" (
     "id" UUID NOT NULL,
     "type" "AiProviderType" NOT NULL,
-    "enabled" BOOLEAN NOT NULL DEFAULT false,
     "baseUrl" TEXT,
     "apiKey" TEXT,
     "model" TEXT NOT NULL,
@@ -128,18 +121,48 @@ CREATE TABLE "AiProvider" (
 );
 
 -- CreateTable
+CREATE TABLE "MergeRequest" (
+    "id" UUID NOT NULL,
+    "originId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "sourceBranch" TEXT NOT NULL,
+    "targetBranch" TEXT NOT NULL,
+    "authorName" TEXT NOT NULL,
+    "authorAvatarUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "projectId" UUID NOT NULL,
+
+    CONSTRAINT "MergeRequest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Review" (
     "id" UUID NOT NULL,
     "at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "messages" JSONB NOT NULL,
+    "diffs" JSONB NOT NULL,
     "status" "ReviewStatus" NOT NULL DEFAULT 'PENDING',
-    "pullNumber" BIGINT NOT NULL,
-    "pullUrl" TEXT NOT NULL,
-    "pullName" TEXT NOT NULL,
-    "projectId" UUID NOT NULL,
+    "errorMessage" TEXT,
     "reviewerId" UUID NOT NULL,
+    "mergeRequestId" UUID NOT NULL,
 
     CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Comment" (
+    "id" UUID NOT NULL,
+    "location" "CommentLocation" NOT NULL,
+    "path" TEXT NOT NULL,
+    "line" INTEGER NOT NULL,
+    "text" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "thumbsUp" INTEGER NOT NULL DEFAULT 0,
+    "thumbsDown" INTEGER NOT NULL DEFAULT 0,
+    "reviewId" UUID NOT NULL,
+
+    CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -147,6 +170,9 @@ CREATE TABLE "Reviewer" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "aiProviderId" UUID NOT NULL,
+    "systemPrompt" TEXT,
+    "systemPromptEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "useProjectInstructions" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Reviewer_pkey" PRIMARY KEY ("id")
 );
@@ -166,6 +192,9 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "MergeRequest_originId_projectId_key" ON "MergeRequest"("originId", "projectId");
+
+-- CreateIndex
 CREATE INDEX "_GitProjectToReviewer_B_index" ON "_GitProjectToReviewer"("B");
 
 -- AddForeignKey
@@ -175,10 +204,16 @@ ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "GitProject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "MergeRequest" ADD CONSTRAINT "MergeRequest_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "GitProject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_reviewerId_fkey" FOREIGN KEY ("reviewerId") REFERENCES "Reviewer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Review" ADD CONSTRAINT "Review_mergeRequestId_fkey" FOREIGN KEY ("mergeRequestId") REFERENCES "MergeRequest"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_reviewId_fkey" FOREIGN KEY ("reviewId") REFERENCES "Review"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Reviewer" ADD CONSTRAINT "Reviewer_aiProviderId_fkey" FOREIGN KEY ("aiProviderId") REFERENCES "AiProvider"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

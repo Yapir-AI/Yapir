@@ -11,10 +11,10 @@ export class GithubConnectorService {
   async listConnectors() {
     const installations = await this.prisma.githubConnector.findMany();
 
-    return installations.map(({ id, slug, creationDate }) => ({
+    return installations.map(({ id, slug, createdAt }) => ({
       id,
       slug,
-      creationDate,
+      createdAt,
     }));
   }
 
