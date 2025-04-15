@@ -77,7 +77,15 @@ export namespace PullRequestHandle {
   export const projectForReview = {
     reviewers: {
       include: {
-        aiProvider: true,
+        aiProvider: {
+          select: {
+            apiKey: true,
+            model: true,
+            baseUrl: true,
+            type: true,
+            id: true,
+          },
+        },
       },
     },
   } as const satisfies Prisma.GitProjectSelect;
