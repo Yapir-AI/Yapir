@@ -20,8 +20,6 @@ export async function GET(req: NextRequest) {
 
   const connector = await gitlabConnectorService.findById(id);
 
-  console.log({ connector });
-
   const json = await ky
     .post("oauth/token", {
       prefixUrl: connector.url,
