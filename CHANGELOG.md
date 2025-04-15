@@ -1,3 +1,13 @@
+## [0.9.1](https://github.com/yapir-ai/yapir/compare/v0.9.0...v0.9.1) (2025-04-15)
+
+
+### Bug Fixes
+
+* ai provider api key selection ([499b842](https://github.com/yapir-ai/yapir/commit/499b8422dd9ebd4074ca131965ca2f235a7c8f05))
+* removed oopsy log ([e0b2755](https://github.com/yapir-ai/yapir/commit/e0b2755bf3d298f3e25c5e46050a1b34250aaf0c))
+
+
+
 # [0.9.0](https://github.com/yapir-ai/yapir/compare/v0.8.1...v0.9.0) (2025-04-15)
 
 
@@ -34,15 +44,6 @@
 ### Bug Fixes
 
 * dark mode text color on chat ([f16ee04](https://github.com/yapir-ai/yapir/commit/f16ee0417e6a71e3659e87d57765389129605267))
-
-
-
-## [0.7.2](https://github.com/yapir-ai/yapir/compare/v0.7.1...v0.7.2) (2025-03-03)
-
-
-### Bug Fixes
-
-* gitlab refresh token bug on first refresh ([6cedd28](https://github.com/yapir-ai/yapir/commit/6cedd282980bfb2f2481804b52a6b2bd91cd7a28))
 
 
 
