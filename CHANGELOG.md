@@ -1,3 +1,13 @@
+# [0.9.0](https://github.com/yapir-ai/yapir/compare/v0.8.1...v0.9.0) (2025-04-15)
+
+
+### Features
+
+* new review integration ([a44f949](https://github.com/yapir-ai/yapir/commit/a44f9498ef4f01f136f6a821814833d40c24f387))
+* new theme & chat ([0137282](https://github.com/yapir-ai/yapir/commit/0137282a498e4f6b1f96b36d1c5f32882239b0b4))
+
+
+
 ## [0.8.1](https://github.com/yapir-ai/yapir/compare/v0.8.0...v0.8.1) (2025-04-01)
 
 
@@ -33,15 +43,6 @@
 ### Bug Fixes
 
 * gitlab refresh token bug on first refresh ([6cedd28](https://github.com/yapir-ai/yapir/commit/6cedd282980bfb2f2481804b52a6b2bd91cd7a28))
-
-
-
-## [0.7.1](https://github.com/yapir-ai/yapir/compare/v0.7.0...v0.7.1) (2025-03-03)
-
-
-### Bug Fixes
-
-* gitlab refresh token conccurency ([286e7bf](https://github.com/yapir-ai/yapir/commit/286e7bf818f10c922f68ad340a8746fd3836054e))
 
 
 
