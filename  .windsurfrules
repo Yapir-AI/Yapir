@@ -4,7 +4,7 @@ This project, YAPIR, is an AI-powered code reviewer that automatically analyzes 
  It connects to various AI providers (OpenAI, Anthropic, etc.) through a “reviewer” system,
  uses the code diffs to generate feedback, and posts comments on lines needing improvement.
  Users can manage their AI providers, define instructions, and configure custom prompts for each reviewer.
- The app uses Next.js on the frontend with a Bun/Node backend, and Prisma for database interactions.
+ The app uses Next.js, and Prisma for database interactions.
 
 # GENERAL OVERVIEW & ORGANIZATION
 
@@ -12,23 +12,12 @@ This project, YAPIR, is an AI-powered code reviewer that automatically analyzes 
 - Authentication logic is managed via `better-auth` (configuration in `lib/auth`).
 - Database interaction uses Prisma (`prismaClient` in `lib/db`).
 - We store domain logic in separate services within `src/lib/...` directories (for example, `lib/provider`, `lib/review`, `lib/instructions`, etc.).
-- Tests are not yet present, but any test logic must live under `tests/...` to keep the rest of the codebase tidy.
-
-# ENVIRONMENT & BUILD
-
-- Build pipeline is configured in the GitHub Actions workflow at `.github/workflows/create-release.yml`.
-- Docker builds use the multi-stage `Dockerfile` in the project root:
-  - `base` stage handles the Bun environment
-  - `install` stage caches dependencies
-  - `prerelease` stage compiles
-  - `release` stage copies artifacts and runs migrations at container startup
-- Provide any CI/CD changes in the same `.github/workflows` folder. Do not remove or alter existing steps without good reason.
 
 # BACKEND PATTERN & BEST PRACTICES
 
 - **Dependency Injection**: The project utilizes a typed dependency injection container via `lib/di/typedcontainer.ts`. Services in `lib/` are registered and resolved through this container to keep code decoupled and testable.
 - **Service Layer**: Each domain operation or business logic is encapsulated in its own service class under `src/lib/<domain>`. Example: `ReviewService`, `ProviderService`, etc.
-- **Server Actions**: For Next.js server actions (under `app/api` or the `actionClient` usage), always call `assertAuthenticated()` when needed to ensure security.
+- **Server Actions**: For Next.js server actions (under `app/api` or the `actionClient` usage), always call `assertAuthenticated()` if you dont use the actionClient when needed to ensure security.
 - **Error Handling**: Throw typed errors or use Next.js `forbidden()`, `notFound()`, etc. if there are domain or access issues. Avoid leaking secrets in error messages.
 - **Code Organization**: Keep domain logic in `lib/<domain>/service.ts` and route handlers in `app/api/<endpoint>/route.ts`. Don’t mix business logic into route files.
 
@@ -37,7 +26,7 @@ This project, YAPIR, is an AI-powered code reviewer that automatically analyzes 
 - Source code for UI flows is in `src/app/(auth)/(home)`, `src/app/(auth)/git`, `src/app/(auth)/providers`, etc.
 - All shared or generic UI components (Button, Input, etc.) live under `src/components/ui`.
 - We use Tailwind CSS with `@tailwindcss/typography`. Obey utility-class usage; do not add random CSS files if a Tailwind utility can handle it.
-- Prettier with the Tailwind plugin is the official code formatter. Always ensure your commits pass `npm run lint` or `npm run build` checks.
+- Avoid writing Tailwind styling in pages, styling from components should be kept and sufficent in most cases. 
 
 # LIB / SERVICE LAYER ORGANIZATION
 
@@ -59,13 +48,7 @@ This project, YAPIR, is an AI-powered code reviewer that automatically analyzes 
 - GitLab connectors live in `git/connectors/gitlab`.
 - Both maintain usage of “pullRequestAdapter” pattern in `git/model/`.
 - The universal `PullRequestHandle` is used to handle code review flow for any Git-based triggers.
-- For new Git integrations (e.g., Bitbucket), follow the same pattern in `git/connectors/bitbucket` with an adapter class.
-
-# TESTING & DEBUGGING
-
-- Current code does not have a `tests/` directory. If you add tests, place them in `tests/` with mirrors to the structure in `src/`.
-- Use `scripts/debugging_tools` or add new scripts under `scripts/` if specialized debugging is needed.
-- `console.log` usage is acceptable for small debugging steps but remove them if they clutter or leak secrets.
+- For new Git integrations (e.g., Bitbucket), follow the same pattern in `git/connectors/bitbucket` with an adapter class
 
 # DATA & STORAGE
 
@@ -90,7 +73,7 @@ This project, YAPIR, is an AI-powered code reviewer that automatically analyzes 
 # SERVER ACTIONS & SECURITY
 
 - Server actions use `next-safe-action` in `lib/safeAction/client.ts`.
-- Always assert authentication with `assertAuthenticated()` in server routes.
+- Always assert authentication with `assertAuthenticated()` in server api routes.
 - Avoid leaking secrets in logs or error messages. The `.env` files are ignored by default, never commit them.
 
 # AI PROVIDERS & REVIEWERS
@@ -105,3 +88,6 @@ This project, YAPIR, is an AI-powered code reviewer that automatically analyzes 
 - When suggesting changes, focus on code that directly impacts the function or logic.
 - Cross-check existing patterns in `src/components/ui/` to avoid re-inventing UI elements.
 - Adhere to these rules for consistent code reviews by Cascade.
+- Prefer composability and reusability. 
+- Write high quality typescript. Keep types implicit when possible, create proper type only to create a reusable contract. Avoid using any.
+- Never hardcode anything. 

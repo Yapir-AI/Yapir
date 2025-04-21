@@ -8,7 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ExternalLinkIcon, FileIcon } from "lucide-react";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type ReactNode, Suspense } from "react";
 import type { GitFileDiff } from "@/lib/git/parsing/model/GitFileDiff";
 import type { GitLineChange } from "@/lib/git/parsing/model/GitLineChange";
 import { cn } from "@/lib/utils";
@@ -175,11 +175,13 @@ async function File({
         <tbody className="w-full">
           {file.lineChanges.map((l) => (
             <Fragment key={`${l.oldLineNumber}-${l.newLineNumber}`}>
-              <FileLine
-                comments={{ newPathComments, oldPathComments }}
-                lang={fileType}
-                {...l}
-              />
+              <Suspense>
+                <FileLine
+                  comments={{ newPathComments, oldPathComments }}
+                  lang={fileType}
+                  {...l}
+                />
+              </Suspense>
               <LineComments
                 comments={{ newPathComments, oldPathComments }}
                 line={l}
