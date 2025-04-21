@@ -7,7 +7,7 @@ import { ReviewerCard } from "@/app/(auth)/reviewers/(root)/reviewerCard";
 import { Switch } from "@/components/ui/switch";
 import { toggleProjectReviewer } from "@/lib/project/action";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { H3 } from "@/components/ui/typography";
+import { H3, H3Sub } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 type ProjectReviewer = ReviewerListElement & {
@@ -28,7 +28,10 @@ export function ProjectReviewers({
 
   return (
     <div ref={ref} className="flex flex-col gap-4">
-      <H3>Project Reviewers</H3>
+      <div>
+        <H3>Reviewers</H3>
+        <H3Sub>Add Reviewers to your project</H3Sub>
+      </div>
       {activeReviewers > 1 && (
         <Alert variant="warning">
           <CircleAlert className="size-4" />
@@ -56,7 +59,7 @@ export function ProjectReviewerCard(
       {...reviewer}
       className={cn(
         "transition-all duration-1000",
-        !reviewer.enabled && "grayscale-75 contrast-[90%]",
+        !reviewer.enabled && "contrast-[90%] grayscale-75",
       )}
     >
       <Switch

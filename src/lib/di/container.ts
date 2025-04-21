@@ -18,7 +18,6 @@ import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 import { ReviewerCreate } from "@/lib/reviewer/operation/create";
 import { ReviewerUpdate } from "@/lib/reviewer/operation/update";
 import { ReviewerService } from "@/lib/reviewer/service";
-import { GitlabProjectService } from "@/lib/git/connectors/gitlab/projectService";
 import { ProjectService } from "@/lib/project/service";
 import { MergeRequestService } from "@/lib/mergeRequest/service";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
@@ -42,7 +41,6 @@ export const container = createTypedContainer({
   providerCreateOperation: asClass(ProviderCreate.Operation),
   providerUpdateOperation: asClass(ProviderUpdate.Operation),
   providerDeleteOperation: asClass(ProviderDelete.Operation),
-  gitlabProjectService: asClass(GitlabProjectService),
   mergeRequestService: asClass(MergeRequestService),
   reviewService: asClass(ReviewService),
   reviewerService: asClass(ReviewerService),

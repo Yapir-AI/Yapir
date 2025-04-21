@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import type { WebhookMergeRequestEventSchema } from "@gitbeaker/core";
 import { container, reviewContainer } from "@/lib/di/container";
 import { GitlabMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
+import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
+import projectForReview = PullRequestHandle.projectForReview;
 
 export async function POST(
   request: NextRequest,
@@ -17,10 +19,20 @@ export async function POST(
 
   const connectorId = (await params).connectorId;
 
-  const { gitlabClientFactory, gitlabProjectService, mergeRequestService } =
+  const { gitlabClientFactory, mergeRequestService, projectService } =
     container.cradle;
 
-  const project = await gitlabProjectService.getOrInitProject(json);
+  const project = await projectService.findOrCreate({
+    create: {
+      originId: json.project.id.toString(),
+      url: json.project.url,
+      name: json.project.name,
+      fullName: json.project.path_with_namespace,
+      providerType: "GITLAB",
+    },
+    include: projectForReview,
+  });
+
   const mergeRequest = await mergeRequestService.create({
     authorName: json.user.name,
     authorAvatarUrl: json.user.avatar_url,
@@ -33,6 +45,10 @@ export async function POST(
     targetBranch: json.object_attributes.target_branch,
     url: json.object_attributes.url,
   });
+
+  if (json.object_attributes.draft && project.ignoreDraft) {
+    return NextResponse.json({});
+  }
 
   const gitlab = await gitlabClientFactory.forConnectorId(connectorId);
   const gitlabAdapter = new GitlabMergeRequestAdapter(

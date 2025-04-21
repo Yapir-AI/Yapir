@@ -10,7 +10,6 @@ import { computeDiff } from "@/lib/git/parsing/diffUtils";
 import type { GitlabClient } from "@/lib/git/connectors/gitlab/clientFactory";
 import type { ExpandedMergeRequestSchema } from "@gitbeaker/core";
 import ignore from "ignore";
-import { gitlab } from "better-auth/social-providers";
 import { atob } from "node:buffer";
 
 export abstract class GitMergeRequestAdapter {

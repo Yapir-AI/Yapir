@@ -9,6 +9,8 @@ import { ProjectAvatar } from "@/lib/avatar/project";
 import { ProjectReviewers } from "@/app/(auth)/projects/[projectId]/(root)/pageContent";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ExternalLinkIcon } from "lucide-react";
+import { ProjectSettings } from "@/app/(auth)/projects/[projectId]/(root)/projectSettings";
 
 export default async function ProjectPage({
   params,
@@ -44,13 +46,20 @@ export default async function ProjectPage({
               <HSub>Manage your project reviewers</HSub>
             </div>
           </div>
-          <Link href={project.url}>go</Link>
+          <Button asChild variant="link" size="icon">
+            <Link target="_blank" href={project.url}>
+              <ExternalLinkIcon />
+            </Link>
+          </Button>
         </TitleSection>
-        <ProjectReviewers
-          reviewers={reviewers}
-          activeReviewers={activeReviewers}
-          projectId={projectId}
-        />
+        <div className="space-y-8">
+          <ProjectSettings {...project} />
+          <ProjectReviewers
+            reviewers={reviewers}
+            activeReviewers={activeReviewers}
+            projectId={projectId}
+          />
+        </div>
       </Main>
     </>
   );

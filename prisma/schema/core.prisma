@@ -6,8 +6,11 @@ model GitProject {
   fullName      String
   providerType  GitProviderType
   createdAt     DateTime        @default(now())
+  ignoreDraft   Boolean         @default(true)
   reviewers     Reviewer[]
   mergeRequests MergeRequest[]
+
+  @@unique([url, providerType])
 }
 
 model GithubConnector {

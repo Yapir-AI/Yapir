@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 export class ProjectService {
   private readonly prisma: PrismaClient;
@@ -25,30 +25,46 @@ export class ProjectService {
     });
   }
 
+  async findOrCreate<T extends Prisma.GitProjectInclude>({
+    create,
+    include,
+  }: {
+    create: Prisma.GitProjectCreateInput;
+    include: T;
+  }) {
+    return this.prisma.gitProject.upsert({
+      where: {
+        url_providerType: {
+          url: create.url,
+          providerType: create.providerType,
+        },
+      },
+      create,
+      update: {},
+      include,
+    });
+  }
+
   async toggleProjectReviewer({
     projectId,
     reviewerId,
     enable,
   }: ToggleProviderSchema) {
-    if (enable) {
-      await this.prisma.gitProject.update({
-        where: { id: projectId },
-        data: {
-          reviewers: {
-            connect: [{ id: reviewerId }],
-          },
-        },
-      });
-
-      return;
-    }
-
     await this.prisma.gitProject.update({
       where: { id: projectId },
       data: {
-        reviewers: {
-          disconnect: [{ id: reviewerId }],
-        },
+        reviewers: enable
+          ? { connect: [{ id: reviewerId }] }
+          : { disconnect: [{ id: reviewerId }] },
+      },
+    });
+  }
+
+  async toggleDraft({ projectId, ignore }: ToggleDraftSchema) {
+    await this.prisma.gitProject.update({
+      where: { id: projectId },
+      data: {
+        ignoreDraft: ignore,
       },
     });
   }
@@ -64,3 +80,9 @@ export const toggleProjectReviewerSchema = z.object({
   enable: z.boolean(),
 });
 type ToggleProviderSchema = z.infer<typeof toggleProjectReviewerSchema>;
+
+export const toggleDraftSchema = z.object({
+  projectId: z.string().uuid(),
+  ignore: z.boolean(),
+});
+type ToggleDraftSchema = z.infer<typeof toggleDraftSchema>;

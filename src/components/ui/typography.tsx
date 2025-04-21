@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 
 export function H1({ children }: { children?: ReactNode }) {
   return <h1 className="text-xl font-bold lg:text-3xl">{children}</h1>;
@@ -14,4 +14,8 @@ export function H3({ children }: { children?: ReactNode }) {
       {children}
     </h3>
   );
+}
+
+export function H3Sub({ children }: PropsWithChildren) {
+  return <p className="text-muted-foreground text-sm">{children}</p>;
 }

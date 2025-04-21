@@ -23,4 +23,16 @@ const Label = React.forwardRef<
 ));
 Label.displayName = LabelPrimitive.Root.displayName;
 
-export { Label };
+const LabelDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn("text-muted-foreground text-[0.8rem]", className)}
+    {...props}
+  />
+));
+
+LabelDescription.displayName = "LabelDescription";
+export { Label, LabelDescription };
