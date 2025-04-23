@@ -3,7 +3,6 @@ import { container } from "@/lib/di/container";
 import { App, Octokit } from "octokit";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
 import type { WebhookEventName } from "@octokit/webhooks-types";
-import { GithubPullRequestAdapter } from "@/lib/git/connectors/github/pullRequestAdapter";
 import type { GithubConnector } from "@prisma/client";
 
 export async function POST({ text, headers }: NextRequest) {
@@ -27,15 +26,7 @@ export async function POST({ text, headers }: NextRequest) {
       "pull_request.reopened",
       "pull_request.synchronize",
     ],
-    async (event) => {
-      const githubAdapter = new GithubPullRequestAdapter(
-        event,
-        // @ts-ignore fixme when implementing github
-        await octokit(),
-      );
-      //@ts-ignore TODO
-      return await pullRequestHandleOperation.execute(githubAdapter, undefined);
-    },
+    async (event) => {},
   );
 
   await github.webhooks.verifyAndReceive({

@@ -52,7 +52,7 @@ export default async function ProjectPage({
             </Link>
           </Button>
         </TitleSection>
-        <div className="space-y-8">
+        <div className="space-y-16">
           <ProjectSettings {...project} />
           <ProjectReviewers
             reviewers={reviewers}

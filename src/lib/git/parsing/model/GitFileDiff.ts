@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const gitFileDiffSchema = z
   .object({
+    id: z.string().uuid().optional().default(crypto.randomUUID()),
     lineChanges: z.array(gitLineChangeSchema),
     oldPath: z.string().optional(),
     newPath: z.string().optional(),
@@ -16,10 +17,10 @@ export const gitFileDiffSchema = z
   .transform((d) => ({
     ...d,
     toLLMString() {
-      let header: string;
-      if (d.isNew()) header = `created: ${d.newPath}`;
-      else if (d.isDeleted()) header = `deleted: ${d.oldPath}`;
-      else if (d.isRenamed()) header = `renamed: ${d.oldPath} -> ${d.newPath}`;
+      let header: string = `File ${d.id}\n`;
+      if (d.isNew()) header += `created: ${d.newPath}`;
+      else if (d.isDeleted()) header += `deleted: ${d.oldPath}`;
+      else if (d.isRenamed()) header += `renamed: ${d.oldPath} -> ${d.newPath}`;
       else header = `updated: ${d.newPath}`;
 
       const lines = d.lineChanges.map((line) => line.toLLMString()).join("\n");

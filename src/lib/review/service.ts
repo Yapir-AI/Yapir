@@ -12,13 +12,12 @@ export class ReviewService {
     this.prisma = opts.prisma;
   }
 
-  findById<T extends Prisma.ReviewInclude>(id: string, include: T) {
-    return this.prisma.review
-      .findUniqueOrThrow({
-        where: { id },
-        include,
-      })
-      .then((r) => ({ ...r, diffs: gitMergeRequestDiffs(r.diffs) }));
+  async findById<T extends Prisma.ReviewInclude>(id: string, include: T) {
+    const r = await this.prisma.review.findUniqueOrThrow({
+      where: { id },
+      include,
+    });
+    return { ...r, diffs: gitMergeRequestDiffs(r.diffs) };
   }
 
   listReviews() {

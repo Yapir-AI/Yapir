@@ -9,3 +9,9 @@ ALTER TABLE "GitProject" ADD COLUMN     "ignoreDraft" BOOLEAN NOT NULL DEFAULT t
 
 -- CreateIndex
 CREATE UNIQUE INDEX "GitProject_url_providerType_key" ON "GitProject"("url", "providerType");
+
+ALTER TABLE "Comment"
+    DROP COLUMN "path",
+    ADD COLUMN "fileId" UUID NOT NULL default gen_random_uuid();
+ALTER TABLE "Comment"
+    ALTER COLUMN  "fileId" DROP DEFAULT;

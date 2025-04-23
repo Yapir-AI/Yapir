@@ -98,7 +98,7 @@ export namespace PullRequestHandle {
     comments: z
       .array(
         z.object({
-          path: z.string().describe("file path"),
+          fileId: z.string().uuid().describe("The file ID"),
           line: z.number().describe("The line number"),
           text: z
             .string()
@@ -108,7 +108,7 @@ export namespace PullRequestHandle {
           location: z
             .enum(["OLD", "NEW"])
             .describe(
-              "If the comment is on the old or new line. Adapt file path accordingly",
+              "If the comment is on the old or new line. Use new for current",
             ),
         }),
       )

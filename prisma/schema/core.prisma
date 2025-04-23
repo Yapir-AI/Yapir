@@ -79,7 +79,7 @@ model Review {
 model Comment {
   id         String          @id @default(uuid(7)) @db.Uuid
   location   CommentLocation
-  path       String
+  fileId     String          @db.Uuid
   line       Int
   text       String
   createdAt  DateTime        @default(now())

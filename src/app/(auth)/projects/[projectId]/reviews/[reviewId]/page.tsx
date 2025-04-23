@@ -7,8 +7,20 @@ import { H1, HSub } from "@/components/ui/typography";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ExternalLinkIcon, FileIcon } from "lucide-react";
-import { Fragment, type ReactNode, Suspense } from "react";
+import {
+  ExternalLinkIcon,
+  FileDiffIcon,
+  FileIcon,
+  FileMinusIcon,
+  FilePlusIcon,
+  FileQuestionIcon,
+} from "lucide-react";
+import {
+  Fragment,
+  type PropsWithChildren,
+  type ReactNode,
+  Suspense,
+} from "react";
 import type { GitFileDiff } from "@/lib/git/parsing/model/GitFileDiff";
 import type { GitLineChange } from "@/lib/git/parsing/model/GitLineChange";
 import { cn } from "@/lib/utils";
@@ -18,39 +30,48 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { CommentFeedback } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/commentFeedback";
+import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
 
-type FilePath = string;
-type LineNumber = number;
-type LineComments = Record<LineNumber, Comment[]>;
-type FileComments = {
-  oldPathComments: LineComments;
-  newPathComments: LineComments;
-};
+type FileComments = Partial<Record<string, Comment[]>>;
 
-type CommentsByFile = Record<FilePath, FileComments>;
+function SideComments({
+  diffs,
+  comments,
+}: {
+  diffs: GitMergeRequestDiffs;
+  comments: FileComments;
+}) {
+  const getFile = (id: string) => diffs.fileDiffs.find((f) => f.id === id);
 
-function parseComments(comments: Comment[]): CommentsByFile {
-  const result: CommentsByFile = {};
+  return (
+    <div className="relative h-2 min-w-xs">
+      <div className="fixed max-w-xs divide-y rounded-xl border text-sm">
+        {Object.entries(comments).map(([fileId, comments]) => {
+          const file = getFile(fileId);
+          const fileName = file?.newPath ?? file?.oldPath ?? "Unmatched file";
 
-  comments.forEach((c) => {
-    if (!result[c.path]) {
-      result[c.path] = {
-        oldPathComments: {},
-        newPathComments: {},
-      };
-    }
-    const target =
-      c.location === "OLD"
-        ? result[c.path].oldPathComments
-        : result[c.path].newPathComments;
-
-    if (!target[c.line]) {
-      target[c.line] = [];
-    }
-    target[c.line].push(c);
-  });
-
-  return result;
+          return (
+            <Fragment key={fileId}>
+              <SideElement>
+                <div className="direction-rtl text-muted-foreground truncate">
+                  {fileName}
+                </div>
+              </SideElement>
+              {comments?.map((comment) => (
+                <a href={`#${comment.id}`} key={comment.id} className="group">
+                  <SideElement className="group-hover:bg-accent">
+                    <span className="line-clamp-2">
+                      <MarkdownRenderer>{comment.text}</MarkdownRenderer>
+                    </span>
+                  </SideElement>
+                </a>
+              ))}
+            </Fragment>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export default async function ReviewPage({
@@ -71,7 +92,11 @@ export default async function ReviewPage({
     comments: true,
   });
 
-  const comments = parseComments(review.comments);
+  const fileComments = Object.groupBy(review.comments, (c) => c.fileId);
+  const getFile = (id: string) =>
+    review.diffs.fileDiffs.find((f) => f.id === id);
+
+  // const comments = parseComments(review.comments);
 
   return (
     <>
@@ -101,36 +126,52 @@ export default async function ReviewPage({
             </Button>
           </div>
         </TitleSection>
-        <div className="flex flex-col gap-5 font-mono text-xs">
-          {review.diffs.fileDiffs.map((diff) => (
-            <File
-              {...diff}
-              reviewer={reviewer}
-              comments={comments}
-              key={"" + diff.oldPath + diff.newPath}
-            />
-          ))}
+        <div className="flex max-h-[80vh] items-start gap-4 overflow-y-auto">
+          <SideComments diffs={review.diffs} comments={fileComments} />
+          <div className="flex grow flex-col gap-5 font-mono text-xs">
+            {Object.entries(fileComments).map(([fileId, comments]) => {
+              const file = getFile(fileId);
+              return (
+                <File
+                  reviewer={reviewer}
+                  comments={comments ?? []}
+                  diff={file}
+                  key={fileId}
+                />
+              );
+            })}
+          </div>
         </div>
       </Main>
     </>
   );
 }
 
+function SideElement({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) {
+  return (
+    <div
+      className={cn(
+        "flex min-h-10 items-end px-4 py-4 pb-1 text-sm",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
 function LineComments({
   comments,
   reviewer,
-  line,
 }: {
-  comments: { newPathComments: LineComments; oldPathComments: LineComments };
+  comments: Comment[];
   reviewer: Reviewer;
-  line: GitLineChange;
 }) {
-  const lineComments = line.isRemoved()
-    ? comments.oldPathComments[line.oldLineNumber!]
-    : comments.newPathComments[line.newLineNumber!];
-
-  return lineComments?.map((c) => (
-    <tr key={c.id}>
+  return comments?.map((c) => (
+    <tr key={c.id} id={c.id}>
       <td
         colSpan={4}
         className="bg-card text-card-foreground border-y font-sans text-sm"
@@ -153,52 +194,75 @@ function LineComments({
 }
 
 async function File({
+  comments,
+  diff: file,
   reviewer,
-  ...file
-}: GitFileDiff & { comments: CommentsByFile; reviewer: Reviewer }) {
+}: {
+  comments: Comment[];
+  diff?: GitFileDiff;
+  reviewer: Reviewer;
+}) {
+  if (!file) {
+    return (
+      <div className="overflow-hidden rounded-xl border pb-4">
+        <div className="bg-muted flex flex-row items-center gap-2 p-4">
+          <FileQuestionIcon className="size-4" />
+          Unmatched file
+        </div>
+        <table>
+          <tbody>
+            <LineComments comments={comments} reviewer={reviewer} />
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   const fileType = (file.newPath ?? file.oldPath ?? "").split(".").pop() ?? "";
 
-  const newPathComments = file.newPath
-    ? (file.comments[file.newPath]?.newPathComments ?? {})
-    : {};
-  const oldPathComments = file.oldPath
-    ? (file.comments[file.oldPath]?.oldPathComments ?? {})
-    : {};
+  const commentsByLine = Object.groupBy(comments, (c) => c.line);
 
   return (
     <div
       key={file.newPath ?? "" + file.oldPath ?? ""}
-      className="overflow-hidden rounded-lg border"
+      className="grow overflow-hidden rounded-lg border"
     >
       <FileTitle {...file} />
       <table className="bg-back w-full dark:bg-white dark:text-black">
         <tbody className="w-full">
-          {file.lineChanges.map((l) => (
-            <Fragment key={`${l.oldLineNumber}-${l.newLineNumber}`}>
-              <Suspense>
-                <FileLine
-                  comments={{ newPathComments, oldPathComments }}
-                  lang={fileType}
-                  {...l}
+          {file.lineChanges.map((l) => {
+            const newLineComments =
+              (l.newLineNumber
+                ? commentsByLine[l.newLineNumber]?.filter(
+                    (c) => c.location === "NEW",
+                  )
+                : []) ?? [];
+            const oldLineComments =
+              (l.oldLineNumber
+                ? commentsByLine[l.oldLineNumber]?.filter(
+                    (c) => c.location === "OLD",
+                  )
+                : []) ?? [];
+
+            return (
+              <Fragment key={`${l.oldLineNumber}-${l.newLineNumber}`}>
+                <Suspense>
+                  <FileLine lang={fileType} {...l} />
+                </Suspense>
+                <LineComments
+                  comments={[...newLineComments, ...oldLineComments]}
+                  reviewer={reviewer}
                 />
-              </Suspense>
-              <LineComments
-                comments={{ newPathComments, oldPathComments }}
-                line={l}
-                reviewer={reviewer}
-              />
-            </Fragment>
-          ))}
+              </Fragment>
+            );
+          })}
         </tbody>
       </table>
     </div>
   );
 }
 
-async function FileLine({
-  comments,
-  ...line
-}: GitLineChange & { lang: string; comments: FileComments }) {
+async function FileLine({ ...line }: GitLineChange & { lang: string }) {
   const typeToPrefix: Record<GitLineChange["type"], string> = {
     added: "+",
     removed: "-",
@@ -244,8 +308,10 @@ async function FileLine({
 
 function FileTitle(file: GitFileDiff) {
   let content: ReactNode;
+  let Icon = FileDiffIcon;
 
   if (file.isNew()) {
+    Icon = FilePlusIcon;
     content = (
       <>
         <span className="text-success font-bold">created:</span>
@@ -253,6 +319,7 @@ function FileTitle(file: GitFileDiff) {
       </>
     );
   } else if (file.isDeleted()) {
+    Icon = FileMinusIcon;
     content = (
       <>
         <span className="text-destructive font-bold">deleted:</span>
@@ -271,7 +338,7 @@ function FileTitle(file: GitFileDiff) {
 
   return (
     <div className="bg-muted flex flex-row items-center gap-2 p-4">
-      <FileIcon className="size-4" />
+      <Icon className="size-4" />
       {content}
     </div>
   );
