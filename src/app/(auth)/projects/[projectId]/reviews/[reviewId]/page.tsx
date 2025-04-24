@@ -31,6 +31,12 @@ import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { CommentFeedback } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/commentFeedback";
 import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type FileComments = Partial<Record<string, Comment[]>>;
 
@@ -223,42 +229,48 @@ async function File({
   const commentsByLine = Object.groupBy(comments, (c) => c.line);
 
   return (
-    <div
+    <Accordion
+      type="multiple"
+      defaultValue={["file"]}
       key={file.newPath ?? "" + file.oldPath ?? ""}
       className="grow overflow-hidden rounded-lg border"
     >
-      <FileTitle {...file} />
-      <table className="bg-back w-full dark:bg-white dark:text-black">
-        <tbody className="w-full">
-          {file.lineChanges.map((l) => {
-            const newLineComments =
-              (l.newLineNumber
-                ? commentsByLine[l.newLineNumber]?.filter(
-                    (c) => c.location === "NEW",
-                  )
-                : []) ?? [];
-            const oldLineComments =
-              (l.oldLineNumber
-                ? commentsByLine[l.oldLineNumber]?.filter(
-                    (c) => c.location === "OLD",
-                  )
-                : []) ?? [];
+      <AccordionItem value="file">
+        <FileTitle {...file} />
+        <AccordionContent>
+          <table className="bg-back w-full text-xs dark:bg-white dark:text-black">
+            <tbody className="w-full">
+              {file.lineChanges.map((l) => {
+                const newLineComments =
+                  (l.newLineNumber
+                    ? commentsByLine[l.newLineNumber]?.filter(
+                        (c) => c.location === "NEW",
+                      )
+                    : []) ?? [];
+                const oldLineComments =
+                  (l.oldLineNumber
+                    ? commentsByLine[l.oldLineNumber]?.filter(
+                        (c) => c.location === "OLD",
+                      )
+                    : []) ?? [];
 
-            return (
-              <Fragment key={`${l.oldLineNumber}-${l.newLineNumber}`}>
-                <Suspense>
-                  <FileLine lang={fileType} {...l} />
-                </Suspense>
-                <LineComments
-                  comments={[...newLineComments, ...oldLineComments]}
-                  reviewer={reviewer}
-                />
-              </Fragment>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                return (
+                  <Fragment key={`${l.oldLineNumber}-${l.newLineNumber}`}>
+                    <Suspense>
+                      <FileLine lang={fileType} {...l} />
+                    </Suspense>
+                    <LineComments
+                      comments={[...newLineComments, ...oldLineComments]}
+                      reviewer={reviewer}
+                    />
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
 
@@ -337,9 +349,11 @@ function FileTitle(file: GitFileDiff) {
   } else content = <span>{file.newPath}</span>;
 
   return (
-    <div className="bg-muted flex flex-row items-center gap-2 p-4">
-      <Icon className="size-4" />
+    <AccordionTrigger className="bg-muted flex flex-row items-center gap-2 p-4 text-xs">
+      <div>
+        <Icon className="size-4 rotate-0" />
+      </div>
       {content}
-    </div>
+    </AccordionTrigger>
   );
 }
