@@ -31,7 +31,7 @@ export function useDebouncedMutation<
       }
 
       timeoutRef.current = window.setTimeout(() => {
-        if (latestVariablesRef.current) {
+        if (latestVariablesRef.current !== undefined) {
           mutation.mutate(latestVariablesRef.current);
         }
       }, delay);

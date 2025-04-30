@@ -78,6 +78,8 @@ CREATE TABLE "GitProject" (
     "providerType" "GitProviderType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ignoreDraft" BOOLEAN NOT NULL DEFAULT true,
+    "ignoreList"    TEXT,
+    "ignorePattern" TEXT,
     "connectorId" UUID NOT NULL,
 
     CONSTRAINT "GitProject_pkey" PRIMARY KEY ("id")

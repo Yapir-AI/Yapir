@@ -19,8 +19,12 @@ export async function POST(
 
   const connectorId = (await params).connectorId;
 
-  const { gitlabClientFactory, mergeRequestService, projectService } =
-    container.cradle;
+  const {
+    gitlabClientFactory,
+    mergeRequestService,
+    projectService,
+    ignoreService,
+  } = container.cradle;
 
   const project = await projectService.findOrCreate({
     create: {
@@ -47,7 +51,15 @@ export async function POST(
     url: json.object_attributes.url,
   });
 
-  if (json.object_attributes.draft && project.ignoreDraft) {
+  if (
+    ignoreService.isIgnored(project, {
+      isDraft: json.object_attributes.draft,
+      title: json.object_attributes.title,
+      username: json.user.username,
+      email: (json.user.email as string) ?? "",
+    })
+  ) {
+    console.log("Ignoring merge request...");
     return NextResponse.json({});
   }
 

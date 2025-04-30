@@ -7,6 +7,8 @@ model GitProject {
   providerType  GitProviderType
   createdAt     DateTime        @default(now())
   ignoreDraft   Boolean         @default(true)
+  ignoreList    String?
+  ignorePattern String?
   reviewers     Reviewer[]
   mergeRequests MergeRequest[]
   connectorId   String          @db.Uuid

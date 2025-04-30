@@ -60,11 +60,18 @@ export class ProjectService {
     });
   }
 
-  async toggleDraft({ projectId, ignore }: ToggleDraftSchema) {
+  async updateIgnoreSettings({
+    projectId,
+    ignore,
+    ignoreList,
+    ignorePattern,
+  }: UpdateIgnoreSchema) {
     await this.prisma.gitProject.update({
       where: { id: projectId },
       data: {
         ignoreDraft: ignore,
+        ignoreList,
+        ignorePattern,
       },
     });
   }
@@ -81,8 +88,10 @@ export const toggleProjectReviewerSchema = z.object({
 });
 type ToggleProviderSchema = z.infer<typeof toggleProjectReviewerSchema>;
 
-export const toggleDraftSchema = z.object({
+export const updateIgnoreSchema = z.object({
   projectId: z.string().uuid(),
-  ignore: z.boolean(),
+  ignore: z.boolean().optional(),
+  ignoreList: z.string().optional(),
+  ignorePattern: z.string().optional(),
 });
-type ToggleDraftSchema = z.infer<typeof toggleDraftSchema>;
+type UpdateIgnoreSchema = z.infer<typeof updateIgnoreSchema>;
