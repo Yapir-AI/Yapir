@@ -24,13 +24,17 @@ export function RunReviewButton({
 }) {
   const [open, setOpen] = useState(false);
 
-  const { mutate } = useMutation({
+  const runReview = () => {
+    toast.promise(mutateAsync(), {
+      loading: "Reviewing...",
+      success: "Review Complete",
+      error: "Review Failed",
+    });
+  };
+
+  const { mutateAsync } = useMutation({
     mutationFn: () => runGitlabReviewAction({ mergeRequestId }),
-    onMutate: () => {
-      setOpen(false);
-      toast.loading("Reviewing...");
-    },
-    onSuccess: () => toast.success("Review Complete"),
+    onMutate: () => setOpen(false),
   });
 
   return (
@@ -50,7 +54,7 @@ export function RunReviewButton({
           <DialogClose asChild>
             <Button variant="ghost">Cancel</Button>
           </DialogClose>
-          <Button type="button" onClick={() => mutate()}>
+          <Button type="button" onClick={runReview}>
             Review
           </Button>
         </DialogFooter>
