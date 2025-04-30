@@ -6,6 +6,7 @@ import { QueryProvider } from "@/lib/reactQuery/provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/rich/ThemeProvider";
+import { cookies } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,11 +23,13 @@ export const metadata: Metadata = {
   description: "You personal AI code reviewer.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -34,7 +37,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QueryProvider>
-            <SidebarProvider>
+            <SidebarProvider defaultOpen={defaultOpen}>
               <TooltipProvider>{children}</TooltipProvider>
             </SidebarProvider>
           </QueryProvider>
