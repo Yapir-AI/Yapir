@@ -8,6 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
+  CircleX,
   ExternalLinkIcon,
   FileDiffIcon,
   FileIcon,
@@ -37,6 +38,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type FileComments = Partial<Record<string, Comment[]>>;
 
@@ -132,6 +134,15 @@ export default async function ReviewPage({
             </Button>
           </div>
         </TitleSection>
+        {review.status === "ERROR" && (
+          <Alert className="mb-2" variant="destructive">
+            <CircleX />
+            <AlertTitle>Review Failed!</AlertTitle>
+            <AlertDescription>
+              {review.errorMessage ?? "An unknow error happened"}
+            </AlertDescription>
+          </Alert>
+        )}
         <div className="flex max-h-[80vh] items-start gap-4 overflow-y-auto">
           <SideComments diffs={review.diffs} comments={fileComments} />
           <div className="flex grow flex-col gap-5 font-mono text-xs">

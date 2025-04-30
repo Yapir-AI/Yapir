@@ -61,10 +61,10 @@ export namespace PullRequestHandle {
 
         const { comments } = object;
 
-        await this.gitMergeRequestAdapter.postNote({
-          content: `${reviewer.name} just [reviewed your code](${env.appUrl + routes.review(this.project.id, reviewId)}).`,
-        });
         await this.reviewService.completeReview(reviewId, comments);
+        await this.gitMergeRequestAdapter.postNote({
+          content: `${reviewer.name} just reviewed your code and found [${comments.length} issue(s)](${env.appUrl + routes.review(this.project.id, reviewId)})`,
+        });
       } catch (e) {
         let message: string | undefined;
         if (AISDKError.isInstance(e)) message = e.name + ": " + e.message;

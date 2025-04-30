@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
+import { gitlabConnectorConfigSchema } from "@/lib/git/connectors/gitlab/connectorService";
 
 export namespace GitlabConnectorCreate {
   export class Operation {
@@ -10,18 +11,28 @@ export namespace GitlabConnectorCreate {
     }
 
     async execute(request: Schema) {
-      await this.prisma.gitlabConnector.create({ data: request });
+      await this.prisma.gitConnector.create({
+        data: {
+          type: "GITLAB",
+          config: JSON.stringify(request),
+        },
+      });
     }
   }
 
-  export const schema = z.object({
-    url: z.string().describe("GitLab URL").default("https://gitlab.com"),
-    applicationId: z.string(),
-    applicationSecret: z.string(),
-    displayName: z.string(),
-    groupName: z.string().optional(),
-    redirectUri: z.string(),
-  });
+  export const schema = gitlabConnectorConfigSchema
+    .pick({
+      applicationId: true,
+      applicationSecret: true,
+      displayName: true,
+      redirectUri: true,
+      groupName: true,
+    })
+    .merge(
+      z.object({
+        url: z.string().describe("GitLab URL").default("https://gitlab.com"),
+      }),
+    );
 
   export type Schema = z.infer<typeof schema>;
 }

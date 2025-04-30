@@ -8,7 +8,6 @@ import { ProviderDelete } from "@/lib/provider/operation/delete";
 import { ProviderService } from "@/lib/provider/service";
 import { ModelService } from "@/lib/model/service";
 import { GitlabConnectorService } from "@/lib/git/connectors/gitlab/connectorService";
-import { GithubConnectorService } from "@/lib/git/connectors/github/connectorService";
 import { GitlabClientFactory } from "@/lib/git/connectors/gitlab/clientFactory";
 import { GitlabRepositoryConnect } from "@/lib/git/connectors/gitlab/operation/repositoryConnect";
 import { GitlabConnectorCreate } from "@/lib/git/connectors/gitlab/operation/connectorCreate";
@@ -27,7 +26,6 @@ export const container = createTypedContainer({
   prisma: asValue(prismaClient),
   modelService: asClass(ModelService),
   commentService: asClass(CommentService),
-  githubConnectorService: asClass(GithubConnectorService),
   gitlabConnectorService: asClass(GitlabConnectorService),
   gitlabClientFactory: asClass(GitlabClientFactory),
   gitlabRepositoryConnectOperation: asClass(GitlabRepositoryConnect.Operation),

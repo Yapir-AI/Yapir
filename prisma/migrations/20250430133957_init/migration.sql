@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "GitProviderType" AS ENUM ('GITHUB', 'GITLAB');
+CREATE TYPE "GitProviderType" AS ENUM ('GITLAB');
 
 -- CreateEnum
 CREATE TYPE "AiProviderType" AS ENUM ('ANTHROPIC', 'OPENAI', 'OPENAI_LIKE', 'OLLAMA', 'MISTRAL');
@@ -77,36 +77,20 @@ CREATE TABLE "GitProject" (
     "fullName" TEXT NOT NULL,
     "providerType" "GitProviderType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ignoreDraft" BOOLEAN NOT NULL DEFAULT true,
+    "connectorId" UUID NOT NULL,
 
     CONSTRAINT "GitProject_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "GithubConnector" (
-    "id" INTEGER NOT NULL,
-    "slug" TEXT NOT NULL,
-    "pem" TEXT NOT NULL,
-    "webhookSecret" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "GithubConnector_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "GitlabConnector" (
+CREATE TABLE "GitConnector" (
     "id" UUID NOT NULL,
-    "url" TEXT NOT NULL,
-    "applicationId" TEXT NOT NULL,
-    "applicationSecret" TEXT NOT NULL,
-    "groupName" TEXT,
-    "displayName" TEXT NOT NULL,
+    "type" "GitProviderType" NOT NULL,
+    "config" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "accessToken" TEXT,
-    "refreshToken" TEXT,
-    "expiresAt" TIMESTAMP(3),
-    "redirectUri" TEXT NOT NULL,
 
-    CONSTRAINT "GitlabConnector_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "GitConnector_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -154,7 +138,7 @@ CREATE TABLE "Review" (
 CREATE TABLE "Comment" (
     "id" UUID NOT NULL,
     "location" "CommentLocation" NOT NULL,
-    "path" TEXT NOT NULL,
+    "fileId" UUID NOT NULL,
     "line" INTEGER NOT NULL,
     "text" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -192,6 +176,9 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "GitProject_originId_connectorId_key" ON "GitProject"("originId", "connectorId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "MergeRequest_originId_projectId_key" ON "MergeRequest"("originId", "projectId");
 
 -- CreateIndex
@@ -202,6 +189,9 @@ ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "GitProject" ADD CONSTRAINT "GitProject_connectorId_fkey" FOREIGN KEY ("connectorId") REFERENCES "GitConnector"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MergeRequest" ADD CONSTRAINT "MergeRequest_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "GitProject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

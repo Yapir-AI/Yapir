@@ -34,9 +34,9 @@ export class ProjectService {
   }) {
     return this.prisma.gitProject.upsert({
       where: {
-        url_providerType: {
-          url: create.url,
-          providerType: create.providerType,
+        originId_connectorId: {
+          originId: create.originId,
+          connectorId: create.connector.connect!.id!,
         },
       },
       create,

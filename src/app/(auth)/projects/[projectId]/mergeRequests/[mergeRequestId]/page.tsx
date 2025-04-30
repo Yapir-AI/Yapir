@@ -12,6 +12,8 @@ import { ExternalLinkIcon, MessagesSquareIcon } from "lucide-react";
 import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import { CardTitle } from "@/components/ui/card";
 import { breadCrumbFactory } from "@/components/rich/BreadCrumbFactory";
+import { RunReviewButton } from "@/app/(auth)/projects/[projectId]/mergeRequests/RunReviewButton";
+import { cn } from "@/lib/utils";
 
 export default async function MergeRequestPage({
   params,
@@ -23,6 +25,7 @@ export default async function MergeRequestPage({
 
   const mergeRequest = await mergeRequestService.findById(mergeRequestId, {
     reviews: {
+      orderBy: { at: "asc" },
       include: { reviewer: true, _count: { select: { comments: true } } },
     },
     project: true,
@@ -53,9 +56,10 @@ export default async function MergeRequestPage({
               {formatDistanceToNow(mergeRequest.createdAt, { addSuffix: true })}
             </HSub>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
+            <RunReviewButton mergeRequestId={mergeRequest.id} />
             <Button variant="link" asChild size="icon">
-              <Link href={mergeRequest.url}>
+              <Link href={mergeRequest.url} target="_blank">
                 <ExternalLinkIcon />
               </Link>
             </Button>
@@ -68,15 +72,25 @@ export default async function MergeRequestPage({
               key={review.id}
               className="group"
             >
-              <div className="flex flex-row justify-between px-1 py-5">
-                <CardTitle className="flex items-center gap-2 group-hover:underline">
-                  <ReviewerAvatar
-                    reviewerName={review.reviewer.name}
-                    options={{ size: 30, radius: 60 }}
-                  />
-                  {review.reviewer.name}{" "}
-                  {formatDistanceToNow(review.at, { addSuffix: true })}
-                </CardTitle>
+              <div
+                className={cn(
+                  "flex flex-row justify-between px-1 py-5",
+                  review.status === "PENDING" && "animate-pulse",
+                )}
+              >
+                <div>
+                  <CardTitle className="flex items-center gap-2 group-hover:underline">
+                    <ReviewerAvatar
+                      reviewerName={review.reviewer.name}
+                      options={{ size: 30, radius: 60 }}
+                    />
+                    {review.reviewer.name}{" "}
+                    {review.status === "REVIEWED" &&
+                      formatDistanceToNow(review.at, { addSuffix: true })}
+                    {review.status === "ERROR" && "failed to review"}
+                    {review.status === "PENDING" && "is reviewing"}
+                  </CardTitle>
+                </div>
                 <Badge variant="outline">
                   <MessagesSquareIcon className="mr-2 size-4" />{" "}
                   {review._count.comments}

@@ -9,30 +9,18 @@ model GitProject {
   ignoreDraft   Boolean         @default(true)
   reviewers     Reviewer[]
   mergeRequests MergeRequest[]
+  connectorId   String          @db.Uuid
+  connector     GitConnector    @relation(fields: [connectorId], references: [id])
 
-  @@unique([url, providerType])
+  @@unique([originId, connectorId])
 }
 
-model GithubConnector {
-  id            Int      @id
-  slug          String
-  pem           String /// @encrypted
-  webhookSecret String /// @encrypted
-  createdAt     DateTime @default(now())
-}
-
-model GitlabConnector {
-  id                String    @id @default(uuid(7)) @db.Uuid
-  url               String
-  applicationId     String
-  applicationSecret String /// @encrypted
-  groupName         String?
-  displayName       String
-  createdAt         DateTime  @default(now())
-  accessToken       String? /// @encrypted
-  refreshToken      String? /// @encrypted
-  expiresAt         DateTime?
-  redirectUri       String
+model GitConnector {
+  id        String          @id @default(uuid(7)) @db.Uuid
+  type      GitProviderType
+  config    String /// @encrypted
+  createdAt DateTime        @default(now())
+  projects  GitProject[]
 }
 
 model AiProvider {
@@ -102,7 +90,6 @@ model Reviewer {
 }
 
 enum GitProviderType {
-  GITHUB
   GITLAB
 }
 

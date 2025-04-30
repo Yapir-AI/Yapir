@@ -24,6 +24,7 @@ export async function POST(
 
   const project = await projectService.findOrCreate({
     create: {
+      connector: { connect: { id: connectorId } },
       originId: json.project.id.toString(),
       url: json.project.url,
       name: json.project.name,

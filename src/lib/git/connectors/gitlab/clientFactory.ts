@@ -3,8 +3,10 @@ import ky from "ky";
 import { isBefore } from "date-fns/isBefore";
 import { differenceInSeconds } from "date-fns/differenceInSeconds";
 import { gitlabAuthResponseSchema } from "@/lib/git/connectors/gitlab/model/authResponseSchema";
-import type { GitlabConnectorService } from "@/lib/git/connectors/gitlab/connectorService";
-import type { GitlabConnector } from "@prisma/client";
+import type {
+  GitlabConnector,
+  GitlabConnectorService,
+} from "@/lib/git/connectors/gitlab/connectorService";
 
 export class GitlabClientFactory {
   private gitlabConnectorService: GitlabConnectorService;

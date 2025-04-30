@@ -20,20 +20,6 @@ export class ReviewService {
     return { ...r, diffs: gitMergeRequestDiffs(r.diffs) };
   }
 
-  listReviews() {
-    return this.prisma.review.findMany({
-      include: {
-        reviewer: {},
-      },
-      where: {
-        at: {
-          gte: startOfYesterday(),
-        },
-      },
-      orderBy: [{ at: "desc" }],
-    });
-  }
-
   async initReview({
     reviewerId,
     diffs,
@@ -75,7 +61,3 @@ export class ReviewService {
     });
   }
 }
-
-export type ReviewListElement = Awaited<
-  ReturnType<typeof ReviewService.prototype.listReviews>
->[number];
