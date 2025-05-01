@@ -22,6 +22,7 @@ import { MergeRequestService } from "@/lib/mergeRequest/service";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 import { CommentService } from "@/lib/comment/service";
 import { MergeRequestIgnoreService } from "@/lib/mergeRequest/ignoreService";
+import { StatsService } from "@/lib/stats/service";
 
 export const container = createTypedContainer({
   prisma: asValue(prismaClient),
@@ -46,6 +47,7 @@ export const container = createTypedContainer({
   reviewerService: asClass(ReviewerService),
   reviewerCreateOperation: asClass(ReviewerCreate.Operation),
   reviewerUpdateOperation: asClass(ReviewerUpdate.Operation),
+  statsService: asClass(StatsService),
 });
 
 export function reviewContainer({

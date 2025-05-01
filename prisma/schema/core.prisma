@@ -57,6 +57,8 @@ model Review {
   at             DateTime     @default(now())
   /// [GitMergeRequestDiffs]
   diffs          Json
+  addedLines     Int
+  removedLines   Int
   status         ReviewStatus @default(PENDING)
   errorMessage   String?
   reviewerId     String       @db.Uuid

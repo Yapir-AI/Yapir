@@ -13,16 +13,14 @@ export class ProjectService {
   }
 
   async findById(id: string) {
-    return this.prisma.gitProject.findUniqueOrThrow({
-      where: {
-        id: id,
-      },
-      include: {
-        reviewers: {
-          include: { aiProvider: { omit: { apiKey: true } } },
-        },
-      },
-    });
+    return this.prisma.gitProject.findUniqueOrThrow({ where: { id } });
+  }
+
+  async findByIdIncluding<T extends Prisma.GitProjectInclude>(
+    id: string,
+    include: T,
+  ) {
+    return this.prisma.gitProject.findUniqueOrThrow({ where: { id }, include });
   }
 
   async findOrCreate<T extends Prisma.GitProjectInclude>({

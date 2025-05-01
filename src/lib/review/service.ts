@@ -12,6 +12,10 @@ export class ReviewService {
     this.prisma = opts.prisma;
   }
 
+  get listReviews() {
+    return this.prisma.review.findMany;
+  }
+
   async findById<T extends Prisma.ReviewInclude>(id: string, include: T) {
     const r = await this.prisma.review.findUniqueOrThrow({
       where: { id },
@@ -29,9 +33,13 @@ export class ReviewService {
     mergeRequestId: string;
     diffs: GitMergeRequestDiffs;
   }) {
+    const { added, removed } = diffs.getChangedLines();
+
     const { id } = await this.prisma.review.create({
       data: {
         diffs: JSON.parse(JSON.stringify(diffs)),
+        addedLines: added,
+        removedLines: removed,
         status: "PENDING",
         reviewerId,
         mergeRequestId,

@@ -3,7 +3,7 @@
 import type { GitProject } from "@prisma/client";
 import { SidebarPortal } from "@/components/rich/AppSideBar";
 import { routes } from "@/lib/route";
-import { GitPullRequestIcon } from "lucide-react";
+import { CogIcon, GitPullRequestIcon } from "lucide-react";
 import { ProjectAvatar } from "@/lib/avatar/project";
 
 export function ProjectSidebar({ project }: { project: GitProject }) {
@@ -28,6 +28,11 @@ export function ProjectSidebar({ project }: { project: GitProject }) {
               title: "Merge Request",
               url: routes.mergeRequests(project.id),
               icon: GitPullRequestIcon,
+            },
+            {
+              title: "Settings",
+              url: routes.projectSettings(project.id),
+              icon: CogIcon,
             },
           ],
         },

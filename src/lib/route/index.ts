@@ -8,6 +8,8 @@ export const routes = {
   register: "/register",
   projects: "/",
   project: (id: string) => `/projects/${id}` as const,
+  projectSettings: (projectId: string) =>
+    `${routes.project(projectId)}/settings` as const,
   mergeRequests: (projectId: string) =>
     `${routes.project(projectId)}/mergeRequests` as const,
   mergeRequest: (projectId: string, mergeRequestId: string) =>

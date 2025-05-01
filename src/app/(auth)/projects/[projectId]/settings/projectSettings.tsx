@@ -35,9 +35,9 @@ export function ProjectSettings(project: GitProject) {
   });
 
   return (
-    <div className="flex max-w-2xl flex-col gap-4">
+    <div className="flex max-w-2xl flex-col gap-8">
       <div>
-        <H3>Settings</H3>
+        <H3>Ignore</H3>
         <H3Sub>
           Manage <span className="italic">{project.name}</span> configuration
         </H3Sub>
@@ -60,25 +60,25 @@ export function ProjectSettings(project: GitProject) {
       </Label>
       <Label className="flex w-full cursor-pointer flex-col justify-between gap-2">
         <p>Ignore Patterns:</p>
-        <LabelDescription>Regex patterns to ignore MRs.</LabelDescription>
         <Textarea
           defaultValue={project.ignorePattern ?? ""}
           onChange={(event) => updateIgnorePattern(event.target.value)}
           className="field-sizing-content"
           placeholder="/\b(?:chore|wip|no[\s_-]?ci)\b/i"
         />
+        <LabelDescription>Regex patterns to ignore MRs.</LabelDescription>
       </Label>
       <Label className="flex w-full cursor-pointer flex-col justify-between gap-2">
         <p>User Ignore list:</p>
-        <LabelDescription>
-          Comma separated list of usernames or email to ignore reviews from.
-        </LabelDescription>
         <Textarea
           defaultValue={project.ignoreList ?? ""}
           onChange={(event) => updateIgnoreList(event.target.value)}
           className="field-sizing-content"
           placeholder="bob@yapir.io,dependabot,renovate"
         />
+        <LabelDescription>
+          Comma separated list of usernames or email to ignore reviews from.
+        </LabelDescription>
       </Label>
     </div>
   );

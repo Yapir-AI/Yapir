@@ -9,6 +9,14 @@ export const gitMergeRequestDiffsSchema = z
     ...t,
     toLLMString: () =>
       t.fileDiffs.map((diff) => diff.toLLMString()).join("\n\n\n"),
+    getChangedLines: () => {
+      const changes = t.fileDiffs.flatMap((diff) => diff.lineChanges);
+      return {
+        added: changes.filter((line) => line.isAdded()).length,
+        removed: changes.filter((line) => line.isRemoved()).length,
+        unchanged: changes.filter((line) => line.isUnchanged()).length,
+      };
+    },
   }));
 
 export type GitMergeRequestDiffs = z.infer<typeof gitMergeRequestDiffsSchema>;

@@ -78,7 +78,7 @@ CREATE TABLE "GitProject" (
     "providerType" "GitProviderType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ignoreDraft" BOOLEAN NOT NULL DEFAULT true,
-    "ignoreList"    TEXT,
+    "ignoreList" TEXT,
     "ignorePattern" TEXT,
     "connectorId" UUID NOT NULL,
 
@@ -128,6 +128,8 @@ CREATE TABLE "Review" (
     "id" UUID NOT NULL,
     "at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "diffs" JSONB NOT NULL,
+    "addedLines" INTEGER NOT NULL,
+    "removedLines" INTEGER NOT NULL,
     "status" "ReviewStatus" NOT NULL DEFAULT 'PENDING',
     "errorMessage" TEXT,
     "reviewerId" UUID NOT NULL,
