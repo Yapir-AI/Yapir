@@ -52,32 +52,30 @@ function SideComments({
   const getFile = (id: string) => diffs.fileDiffs.find((f) => f.id === id);
 
   return (
-    <div className="relative h-2 min-w-xs">
-      <div className="fixed max-w-xs divide-y rounded-xl border text-sm">
-        {Object.entries(comments).map(([fileId, comments]) => {
-          const file = getFile(fileId);
-          const fileName = file?.newPath ?? file?.oldPath ?? "Unmatched file";
+    <div className="h-fit max-w-xs min-w-xs divide-y overflow-y-auto rounded border text-sm">
+      {Object.entries(comments).map(([fileId, comments]) => {
+        const file = getFile(fileId);
+        const fileName = file?.newPath ?? file?.oldPath ?? "Unmatched file";
 
-          return (
-            <Fragment key={fileId}>
-              <SideElement>
-                <div className="direction-rtl text-muted-foreground truncate">
-                  {fileName}
-                </div>
-              </SideElement>
-              {comments?.map((comment) => (
-                <a href={`#${comment.id}`} key={comment.id} className="group">
-                  <SideElement className="group-hover:bg-accent">
-                    <span className="line-clamp-2">
-                      <MarkdownRenderer>{comment.text}</MarkdownRenderer>
-                    </span>
-                  </SideElement>
-                </a>
-              ))}
-            </Fragment>
-          );
-        })}
-      </div>
+        return (
+          <Fragment key={fileId}>
+            <SideElement>
+              <div className="direction-rtl text-muted-foreground truncate">
+                {fileName}
+              </div>
+            </SideElement>
+            {comments?.map((comment) => (
+              <a href={`#${comment.id}`} key={comment.id} className="group">
+                <SideElement className="group-hover:bg-accent">
+                  <span className="line-clamp-2">
+                    <MarkdownRenderer>{comment.text}</MarkdownRenderer>
+                  </span>
+                </SideElement>
+              </a>
+            ))}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
@@ -143,9 +141,9 @@ export default async function ReviewPage({
             </AlertDescription>
           </Alert>
         )}
-        <div className="flex max-h-[80vh] items-start gap-4 overflow-y-auto">
+        <div className="flex max-h-full gap-4">
           <SideComments diffs={review.diffs} comments={fileComments} />
-          <div className="flex grow flex-col gap-5 font-mono text-xs">
+          <div className="flex grow flex-col gap-5 overflow-y-auto pb-4 font-mono text-xs">
             {Object.entries(fileComments).map(([fileId, comments]) => {
               const file = getFile(fileId);
               return (
@@ -221,7 +219,7 @@ async function File({
 }) {
   if (!file) {
     return (
-      <div className="overflow-hidden rounded-xl border pb-4">
+      <div className="rounded-xl border pb-4">
         <div className="bg-muted flex flex-row items-center gap-2 p-4">
           <FileQuestionIcon className="size-4" />
           Unmatched file
@@ -244,7 +242,7 @@ async function File({
       type="multiple"
       defaultValue={["file"]}
       key={file.newPath ?? "" + file.oldPath ?? ""}
-      className="grow overflow-hidden rounded-lg border"
+      className="max-h-fit grow rounded border"
     >
       <AccordionItem value="file">
         <FileTitle {...file} />
@@ -360,7 +358,7 @@ function FileTitle(file: GitFileDiff) {
   } else content = <span>{file.newPath}</span>;
 
   return (
-    <AccordionTrigger className="bg-muted flex flex-row items-center gap-2 p-4 text-xs">
+    <AccordionTrigger className="bg-muted flex flex-row items-center gap-2 rounded-t p-4 text-xs">
       <div>
         <Icon className="size-4 rotate-0" />
       </div>

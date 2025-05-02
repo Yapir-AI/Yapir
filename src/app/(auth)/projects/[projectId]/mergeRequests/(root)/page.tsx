@@ -2,7 +2,7 @@ import { container } from "@/lib/di/container";
 import { Main } from "@/components/ui/main";
 import { TitleSection } from "@/components/rich/titleSection";
 import { GitBranchIcon, GitPullRequestIcon } from "lucide-react";
-import { CardDescription, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -43,30 +43,28 @@ export default async function ProjectMergeRequestsPage({
             </div>
           </div>
         </TitleSection>
-        <div className="divide-y">
+        <div className="mx-auto max-w-3xl">
           {mergeRequests.map((mr) => (
-            <Link
-              href={routes.mergeRequest(projectId, mr.id)}
-              key={mr.id}
-              className="grid w-full grid-cols-2 px-1 py-5"
-            >
-              <CardTitle className="line-clamp-1">{mr.name}</CardTitle>
-              <div className="flex items-center justify-end gap-2">
-                <p>{mr.authorName}</p>
-                <Avatar>
-                  <AvatarImage src={mr.authorAvatarUrl ?? undefined} />
-                  <AvatarFallback>{mr.authorName.at(0)}</AvatarFallback>
-                </Avatar>
-              </div>
-              <CardDescription>
-                <GitBranchIcon className="mr-2 inline-block size-4" />
-                {mr.sourceBranch} {"->"} {mr.targetBranch}
-              </CardDescription>
-              <CardDescription className="justify-self-end">
-                {formatDistanceToNow(mr.createdAt.toLocaleDateString(), {
-                  addSuffix: true,
-                })}
-              </CardDescription>
+            <Link href={routes.mergeRequest(projectId, mr.id)} key={mr.id}>
+              <Card className="grid w-full grid-cols-2 px-4 py-6">
+                <CardTitle className="line-clamp-1">{mr.name}</CardTitle>
+                <div className="flex items-center justify-end gap-2">
+                  <p>{mr.authorName}</p>
+                  <Avatar>
+                    <AvatarImage src={mr.authorAvatarUrl ?? undefined} />
+                    <AvatarFallback>{mr.authorName.at(0)}</AvatarFallback>
+                  </Avatar>
+                </div>
+                <CardDescription>
+                  <GitBranchIcon className="mr-2 inline-block size-4" />
+                  {mr.sourceBranch} {"->"} {mr.targetBranch}
+                </CardDescription>
+                <CardDescription className="justify-self-end">
+                  {formatDistanceToNow(mr.createdAt.toLocaleDateString(), {
+                    addSuffix: true,
+                  })}
+                </CardDescription>
+              </Card>
             </Link>
           ))}
         </div>

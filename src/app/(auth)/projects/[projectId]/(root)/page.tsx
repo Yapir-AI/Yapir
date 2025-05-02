@@ -94,7 +94,6 @@ function CommentRate({
   previousCommentPerLine,
 }: Pick<ProjectStats, "currentCommentPerLine" | "previousCommentPerLine">) {
   const evolution = currentCommentPerLine - previousCommentPerLine;
-  console.log({ previousCommentPerLine });
 
   return (
     <Card className="from-primary/20 to-accent col-span-3 flex min-h-64 flex-col justify-between bg-linear-to-bl p-8">

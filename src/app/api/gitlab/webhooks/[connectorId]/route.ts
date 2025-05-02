@@ -59,7 +59,6 @@ export async function POST(
       email: (json.user.email as string) ?? "",
     })
   ) {
-    console.log("Ignoring merge request...");
     return NextResponse.json({});
   }
 

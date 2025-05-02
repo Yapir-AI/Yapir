@@ -328,12 +328,11 @@ const SidebarInset = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"main">
 >(({ className, ...props }, ref) => {
-  const { state } = useSidebar();
   return (
     <main
       ref={ref}
       className={cn(
-        "bg-background relative flex max-h-[calc(100dvh-4rem)] min-h-[calc(100dvh-4rem)] flex-1 flex-col rounded-xl px-10 py-8",
+        "bg-background relative flex max-h-[calc(100dvh-4rem)] min-h-[calc(100dvh-4rem)] flex-1 rounded-xl px-10 py-8",
         "overflow-y-auto md:m-2 md:mt-0 md:ml-0 md:rounded-xl md:shadow-sm md:peer-data-[state=collapsed]:ml-2",
         className,
       )}

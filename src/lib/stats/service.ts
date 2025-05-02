@@ -104,18 +104,6 @@ export class StatsService {
     const changedLines = (_sum.addedLines ?? 0) + (_sum.removedLines ?? 0);
     if (changedLines === 0) return 0;
 
-    console.log(
-      "Found changed lines: ",
-      changedLines,
-      " for ",
-      commentCount,
-      " comments. In period: ",
-      from,
-      " to ",
-      to,
-      "",
-    );
-
     return this.round((commentCount / changedLines) * 100);
   };
 

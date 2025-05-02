@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ExternalLinkIcon, MessagesSquareIcon } from "lucide-react";
 import { ReviewerAvatar } from "@/lib/avatar/reviewer";
-import { CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { breadCrumbFactory } from "@/components/rich/BreadCrumbFactory";
 import { RunReviewButton } from "@/app/(auth)/projects/[projectId]/mergeRequests/RunReviewButton";
 import { cn } from "@/lib/utils";
@@ -65,16 +65,16 @@ export default async function MergeRequestPage({
             </Button>
           </div>
         </TitleSection>
-        <div className="flex flex-col gap-2 divide-y">
+        <div className="mx-auto flex max-w-3xl flex-col gap-2 divide-y">
           {mergeRequest.reviews.reverse().map((review) => (
             <Link
               href={routes.review(projectId, review.id)}
               key={review.id}
               className="group"
             >
-              <div
+              <Card
                 className={cn(
-                  "flex flex-row justify-between px-1 py-5",
+                  "flex flex-row justify-between px-4 py-6",
                   review.status === "PENDING" && "animate-pulse",
                 )}
               >
@@ -95,7 +95,7 @@ export default async function MergeRequestPage({
                   <MessagesSquareIcon className="mr-2 size-4" />{" "}
                   {review._count.comments}
                 </Badge>
-              </div>
+              </Card>
             </Link>
           ))}
         </div>

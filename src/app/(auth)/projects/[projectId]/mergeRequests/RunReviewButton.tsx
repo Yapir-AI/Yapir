@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { RotateCwIcon } from "lucide-react";
 
 export function RunReviewButton({
   mergeRequestId,
@@ -40,7 +41,10 @@ export function RunReviewButton({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Review</Button>
+        <Button>
+          <RotateCwIcon />
+          Review
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
