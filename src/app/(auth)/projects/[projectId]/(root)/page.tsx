@@ -19,8 +19,6 @@ import { Suspense } from "react";
 import { RecentReviews } from "@/app/(auth)/projects/[projectId]/(root)/recentReviews";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AvatarBackground } from "@/lib/avatar";
-import { glass } from "@dicebear/collection";
 import type { ProjectStats } from "@/lib/stats/service";
 import { cn } from "@/lib/utils";
 import type { Reviewer } from "@prisma/client";
@@ -45,9 +43,9 @@ export default async function ProjectPage({
   return (
     <>
       <BreadCrumbHelper items={["Projects", { label: project.name }]} />
-      <Main className="max-w-5xl space-y-10">
-        <div className="grid grid-cols-10 gap-2">
-          <Card className="col-span-4 row-span-2 flex flex-col gap-6 p-6">
+      <Main className="max-w-5xl space-y-3">
+        <div className="grid grid-cols-10 gap-3">
+          <Card className="from-primary/5 to-card col-span-4 row-span-2 flex flex-col gap-6 bg-gradient-to-t p-6">
             <div className="flex items-center justify-between">
               <Badge variant="secondary">{project.connector.type}</Badge>
               <Button asChild variant="link" size="icon">
@@ -65,20 +63,20 @@ export default async function ProjectPage({
               <CardDescription>{project.fullName}</CardDescription>
             </div>
             <div className="mt-6 mb-1 flex justify-evenly">
-              <Badge variant="outline" className="gap-2">
+              <Badge variant="outline" className="bg-background gap-2">
                 <GitPullRequestIcon className="size-3" />{" "}
                 {stats.mergeRequestCount}
               </Badge>
-              <Badge variant="outline" className="gap-2">
+              <Badge variant="outline" className="bg-background gap-2">
                 <SquarePenIcon className="size-3" /> {stats.reviewCount}
               </Badge>
-              <Badge variant="outline" className="gap-2">
+              <Badge variant="outline" className="bg-background gap-2">
                 <MessageSquareIcon className="size-3" /> {stats.commentCount}
               </Badge>
             </div>
           </Card>
           <CommentRate {...stats} />
-          <ThumbsUpRate projectName={project.name} {...stats} />
+          <ThumbsUpRate {...stats} />
           <Reviewers reviewers={project.reviewers} projectId={projectId} />
         </div>
         <Suspense>
@@ -96,7 +94,7 @@ function CommentRate({
   const evolution = currentCommentPerLine - previousCommentPerLine;
 
   return (
-    <Card className="from-primary/20 to-accent col-span-3 flex min-h-64 flex-col justify-between bg-linear-to-bl p-8">
+    <Card className="from-primary/5 to-card col-span-3 flex min-h-64 flex-col justify-between bg-gradient-to-t p-8">
       <div className="flex items-center justify-between">
         <CardTitle>Comment rate</CardTitle>
         <MessagesSquareIcon className="text-muted-foreground size-5" />
@@ -112,30 +110,19 @@ function CommentRate({
 function ThumbsUpRate({
   currentThumbsUpRate,
   previousThumbsUpRate,
-  projectName,
-}: Pick<ProjectStats, "currentThumbsUpRate" | "previousThumbsUpRate"> & {
-  projectName: string;
-}) {
+}: Pick<ProjectStats, "currentThumbsUpRate" | "previousThumbsUpRate">) {
   const evolution = currentThumbsUpRate - previousThumbsUpRate;
 
   return (
-    <Card className="col-span-3 overflow-hidden">
-      <AvatarBackground
-        style={glass}
-        options={{ seed: projectName }}
-        className="flex h-full flex-col justify-between p-8"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Thumbs up rate</CardTitle>
-          </div>
-          <ThumbsUpIcon className="text-muted-foreground size-5" />
-        </div>
-        <div>
-          <CardTitle className="text-4xl">{currentThumbsUpRate}%</CardTitle>
-          <Evolution value={evolution} suffix="%" />
-        </div>
-      </AvatarBackground>
+    <Card className="from-primary/5 to-card col-span-3 flex min-h-64 flex-col justify-between bg-gradient-to-t p-8">
+      <div className="flex items-center justify-between">
+        <CardTitle>Thumbs up rate</CardTitle>
+        <ThumbsUpIcon className="text-muted-foreground size-5" />
+      </div>
+      <div>
+        <CardTitle className="text-4xl">{currentThumbsUpRate}%</CardTitle>
+        <Evolution value={evolution} suffix="%" />
+      </div>
     </Card>
   );
 }
@@ -160,7 +147,7 @@ function Reviewers({
   projectId: string;
 }) {
   return (
-    <Card className="col-span-6 flex items-center gap-4 px-6 py-4">
+    <Card className="from-primary/5 to-card col-span-6 flex items-center gap-4 bg-gradient-to-t px-6 py-4">
       <div>
         <CardTitle>Reviewers on project</CardTitle>
         <CardDescription>{reviewers.length} active reviewers</CardDescription>

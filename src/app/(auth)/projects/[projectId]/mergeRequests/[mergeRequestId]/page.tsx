@@ -14,6 +14,11 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { breadCrumbFactory } from "@/components/rich/BreadCrumbFactory";
 import { RunReviewButton } from "@/app/(auth)/projects/[projectId]/mergeRequests/RunReviewButton";
 import { cn } from "@/lib/utils";
+import {
+  CardList,
+  CardListItem,
+  CardListTitle,
+} from "@/components/ui/card-list";
 
 export default async function MergeRequestPage({
   params,
@@ -44,7 +49,7 @@ export default async function MergeRequestPage({
         ]}
       />
 
-      <Main>
+      <Main className="max-w-5xl">
         <TitleSection>
           <div>
             <H1>{mergeRequest.name}</H1>
@@ -65,40 +70,37 @@ export default async function MergeRequestPage({
             </Button>
           </div>
         </TitleSection>
-        <div className="mx-auto flex max-w-3xl flex-col gap-2 divide-y">
+        <CardList>
+          <CardListTitle>Reviews</CardListTitle>
           {mergeRequest.reviews.reverse().map((review) => (
-            <Link
+            <CardListItem
               href={routes.review(projectId, review.id)}
               key={review.id}
-              className="group"
+              className={cn(
+                "flex flex-row justify-between",
+                review.status === "PENDING" && "animate-pulse",
+              )}
             >
-              <Card
-                className={cn(
-                  "flex flex-row justify-between px-4 py-6",
-                  review.status === "PENDING" && "animate-pulse",
-                )}
-              >
-                <div>
-                  <CardTitle className="flex items-center gap-2 group-hover:underline">
-                    <ReviewerAvatar
-                      reviewerName={review.reviewer.name}
-                      options={{ size: 30, radius: 60 }}
-                    />
-                    {review.reviewer.name}{" "}
-                    {review.status === "REVIEWED" &&
-                      formatDistanceToNow(review.at, { addSuffix: true })}
-                    {review.status === "ERROR" && "failed to review"}
-                    {review.status === "PENDING" && "is reviewing"}
-                  </CardTitle>
-                </div>
-                <Badge variant="outline">
-                  <MessagesSquareIcon className="mr-2 size-4" />{" "}
-                  {review._count.comments}
-                </Badge>
-              </Card>
-            </Link>
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <ReviewerAvatar
+                    reviewerName={review.reviewer.name}
+                    options={{ size: 30, radius: 60 }}
+                  />
+                  {review.reviewer.name}{" "}
+                  {review.status === "REVIEWED" &&
+                    formatDistanceToNow(review.at, { addSuffix: true })}
+                  {review.status === "ERROR" && "failed to review"}
+                  {review.status === "PENDING" && "is reviewing"}
+                </CardTitle>
+              </div>
+              <Badge variant="outline">
+                <MessagesSquareIcon className="mr-2 size-4" />{" "}
+                {review._count.comments}
+              </Badge>
+            </CardListItem>
           ))}
-        </div>
+        </CardList>
       </Main>
     </>
   );

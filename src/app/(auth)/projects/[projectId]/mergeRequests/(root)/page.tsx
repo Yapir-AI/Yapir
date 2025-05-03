@@ -10,6 +10,11 @@ import { routes } from "@/lib/route";
 import { H1, HSub } from "@/components/ui/typography";
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
 import { breadCrumbFactory } from "@/components/rich/BreadCrumbFactory";
+import {
+  CardList,
+  CardListItem,
+  CardListTitle,
+} from "@/components/ui/card-list";
 
 export default async function ProjectMergeRequestsPage({
   params,
@@ -33,7 +38,7 @@ export default async function ProjectMergeRequestsPage({
           breadCrumbFactory.mergeRequests({ projectId }),
         ]}
       />
-      <Main>
+      <Main className="max-w-5xl">
         <TitleSection>
           <div className="flex items-center gap-4">
             <GitPullRequestIcon size={40} className="text-muted-foreground" />
@@ -43,31 +48,34 @@ export default async function ProjectMergeRequestsPage({
             </div>
           </div>
         </TitleSection>
-        <div className="mx-auto max-w-3xl">
+        <CardList>
+          <CardListTitle>Last 10 Merge Requests</CardListTitle>
           {mergeRequests.map((mr) => (
-            <Link href={routes.mergeRequest(projectId, mr.id)} key={mr.id}>
-              <Card className="grid w-full grid-cols-2 px-4 py-6">
-                <CardTitle className="line-clamp-1">{mr.name}</CardTitle>
-                <div className="flex items-center justify-end gap-2">
-                  <p>{mr.authorName}</p>
-                  <Avatar>
-                    <AvatarImage src={mr.authorAvatarUrl ?? undefined} />
-                    <AvatarFallback>{mr.authorName.at(0)}</AvatarFallback>
-                  </Avatar>
-                </div>
-                <CardDescription>
-                  <GitBranchIcon className="mr-2 inline-block size-4" />
-                  {mr.sourceBranch} {"->"} {mr.targetBranch}
-                </CardDescription>
-                <CardDescription className="justify-self-end">
-                  {formatDistanceToNow(mr.createdAt.toLocaleDateString(), {
-                    addSuffix: true,
-                  })}
-                </CardDescription>
-              </Card>
-            </Link>
+            <CardListItem
+              className="grid grid-cols-2"
+              href={routes.mergeRequest(projectId, mr.id)}
+              key={mr.id}
+            >
+              <CardTitle className="line-clamp-1">{mr.name}</CardTitle>
+              <div className="flex items-center justify-end gap-2">
+                <p>{mr.authorName}</p>
+                <Avatar>
+                  <AvatarImage src={mr.authorAvatarUrl ?? undefined} />
+                  <AvatarFallback>{mr.authorName.at(0)}</AvatarFallback>
+                </Avatar>
+              </div>
+              <CardDescription>
+                <GitBranchIcon className="mr-2 inline-block size-4" />
+                {mr.sourceBranch} {"->"} {mr.targetBranch}
+              </CardDescription>
+              <CardDescription className="justify-self-end">
+                {formatDistanceToNow(mr.createdAt, {
+                  addSuffix: true,
+                })}
+              </CardDescription>
+            </CardListItem>
           ))}
-        </div>
+        </CardList>
       </Main>
     </>
   );
