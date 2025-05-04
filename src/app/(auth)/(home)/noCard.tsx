@@ -5,6 +5,7 @@ import { type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GradientCard } from "@/components/ui/gradientCard";
 import { CardList, CardListTitle } from "@/components/ui/card-list";
+import { H3 } from "@/components/ui/typography";
 
 export function NoCard({
   href,
@@ -23,13 +24,15 @@ export function NoCard({
     <Link href={href}>
       <GradientCard
         className={cn(
-          "shadow-primary/80 items-center justify-between gap-8",
-          !enabled && "opacity-50",
+          "items-center justify-between gap-8 pb-8",
+          enabled ? "shadow-primary/80" : "opacity-50",
         )}
       >
-        <CardTitle className="self-start">{title}</CardTitle>
+        <CardTitle className="self-start">
+          <H3>{title}</H3>
+        </CardTitle>
         <Icon className="stroke-primary-400 animate-in zoom-in size-16 duration-1000" />
-        <CardDescription className="animate-bounce">
+        <CardDescription className={cn(enabled && "animate-bounce")}>
           {description}
         </CardDescription>
       </GradientCard>
@@ -52,11 +55,11 @@ export function NoCardList({
 }) {
   return (
     <Link href={href} className={cn(!enabled && "opacity-50")}>
-      <CardList className="shadow-primary/80">
+      <CardList className={cn(enabled && "shadow-primary/80")}>
         <CardListTitle>{title}</CardListTitle>
         <div className="flex h-full flex-col items-center justify-evenly gap-8 p-8">
           <Icon className="stroke-primary-400 animate-in zoom-in size-16 duration-1000" />
-          <CardDescription className="animate-bounce">
+          <CardDescription className={cn(enabled && "animate-bounce")}>
             {description}
           </CardDescription>
         </div>

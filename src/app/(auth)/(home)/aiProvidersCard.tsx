@@ -57,7 +57,7 @@ export const NoProvidersCard = () => (
     enabled={true}
     href={routes.providers}
     Icon={BrainIcon}
-    title="No AI providers"
+    title="AI Providers"
     description={"Connect your AI providers."}
   />
 );

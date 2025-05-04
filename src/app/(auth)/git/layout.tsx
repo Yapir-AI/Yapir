@@ -13,7 +13,7 @@ export default function GitLayout({ children }: { children: ReactNode }) {
         <TitleSection>
           <div>
             <H1>Git Apps</H1>
-            <HSub>Manage the app installation on GitHub</HSub>
+            <HSub>Manage your Git Connections</HSub>
           </div>
           <AddGitButton />
         </TitleSection>

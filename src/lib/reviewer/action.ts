@@ -5,6 +5,7 @@ import { ReviewerCreate } from "@/lib/reviewer/operation/create";
 import { revalidatePath } from "next/cache";
 import { routes } from "@/lib/route";
 import { ReviewerUpdate } from "@/lib/reviewer/operation/update";
+import { redirect } from "next/navigation";
 
 const revalidateReviewers = () => revalidatePath(routes.reviewers);
 const revalidateReviewer = (id: string) => revalidatePath(routes.reviewer(id));
@@ -14,7 +15,7 @@ export const createReviewer = actionClient
   .action(async ({ parsedInput, ctx: { reviewerCreateOperation } }) => {
     const id = await reviewerCreateOperation.execute(parsedInput);
     revalidateReviewers();
-    return id;
+    redirect(routes.reviewer(id));
   });
 
 export const updateReviewer = actionClient

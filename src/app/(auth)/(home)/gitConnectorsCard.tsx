@@ -65,7 +65,7 @@ export const NoGitConnectorsCard = ({ step }: { step: OnboardingStep }) => (
     href={routes.git}
     Icon={GitBranchIcon}
     enabled={step === "CONNECTORS"}
-    title="No Git connectors"
+    title="Git Connectors"
     description={"Connect your Git repositories."}
   />
 );

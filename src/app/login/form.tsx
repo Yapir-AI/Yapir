@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
+import { routes } from "@/lib/route";
 
 export const schema = z.object({
   email: z.string().email(),
@@ -23,7 +24,7 @@ export function LoginForm() {
     mutationFn: (values: LoginSchema) =>
       authClient.signIn.email(values, {
         onError: ({ error }) => setError(error.message),
-        onSuccess: () => router.push("/"),
+        onSuccess: () => router.push(routes.home),
       }),
   });
 
@@ -47,7 +48,7 @@ export function LoginForm() {
       }}
       onSubmit={(values) => login(values)}
     >
-      <p className="text-[0.8rem] font-medium text-destructive">{error}</p>
+      <p className="text-destructive text-[0.8rem] font-medium">{error}</p>
       <AutoFormSubmit
         className={cn("w-full", isPending && "animate-pulse")}
         disabled={isPending}

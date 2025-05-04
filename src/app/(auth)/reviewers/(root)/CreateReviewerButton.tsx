@@ -59,9 +59,9 @@ export function CreateReviewerButton({
               fieldType: "autocomplete",
               inputProps: {
                 //@ts-expect-error todo proper typing
-                options: providers.map(({ name, id }) => ({
+                options: providers.map(({ name, id, type }) => ({
                   value: id,
-                  label: name,
+                  label: type,
                 })),
                 allowCustomValues: false,
                 heading: "AI Provider",

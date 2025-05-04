@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { H3 } from "@/components/ui/typography";
 import type { YapirRoute } from "@/lib/route";
@@ -42,5 +42,24 @@ export function CardListItem({
     >
       {children}
     </Link>
+  );
+}
+
+export function EmptyCardList({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "relative flex min-h-96 flex-col items-center justify-center gap-2 text-center",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }

@@ -25,7 +25,7 @@ export function RegisterForm() {
           name: "admin",
         },
         {
-          onSuccess: () => router.push(routes.providers),
+          onSuccess: () => router.push(routes.home),
         },
       ),
   });
