@@ -38,8 +38,8 @@
   --card-foreground: var(--base-800);
   --popover: var(--color-white);
   --popover-foreground: var(--base-800);
-  --primary: var(--primary-300);
-  --primary-foreground: var(--color-black);
+  --primary: var(--primary-500);
+  --primary-foreground: var(--color-white);
   --secondary: var(--base-100);
   --secondary-foreground: var(--base-800);
   --muted: var(--base-50);

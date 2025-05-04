@@ -23,11 +23,13 @@ import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapt
 import { CommentService } from "@/lib/comment/service";
 import { MergeRequestIgnoreService } from "@/lib/mergeRequest/ignoreService";
 import { StatsService } from "@/lib/stats/service";
+import { ConnectorService } from "@/lib/git/connectors/service";
 
 export const container = createTypedContainer({
   prisma: asValue(prismaClient),
   modelService: asClass(ModelService),
   commentService: asClass(CommentService),
+  connectorService: asClass(ConnectorService),
   gitlabConnectorService: asClass(GitlabConnectorService),
   gitlabClientFactory: asClass(GitlabClientFactory),
   gitlabRepositoryConnectOperation: asClass(GitlabRepositoryConnect.Operation),

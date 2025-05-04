@@ -12,16 +12,13 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
 import { DeleteProviderButton } from "@/app/(auth)/providers/deleteProviderButton";
+import { providerConfigs } from "@/lib/provider/model/configs";
 
 export function ProviderCard({
-  icon,
-  defaultUrl,
-  name,
-  apiKeyPrefix,
-  modelSuggestions,
   model,
   id,
   baseUrl,
+  type,
 }: ProviderListElement) {
   const formSchema = z.object({
     baseUrl: z
@@ -33,6 +30,9 @@ export function ProviderCard({
     model: z.string().optional().default(model),
   });
 
+  const { Icon, defaultUrl, name, apiKeyPrefix, modelSuggestions } =
+    providerConfigs[type];
+
   const update = updateProvider.bind(null, id);
 
   return (
@@ -40,7 +40,7 @@ export function ProviderCard({
       <Card className={cn("p-8")}>
         <AccordionTrigger>
           <CardTitle className={cn("text-xl transition-all duration-500")}>
-            {icon}
+            <Icon className="mr-2 inline-block" />
             {name}
           </CardTitle>
           <Badge

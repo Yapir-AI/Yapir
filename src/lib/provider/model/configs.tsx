@@ -10,9 +10,10 @@ import {
 } from "@/lib/provider/model/suggestions";
 import { MistralIcon } from "@/components/icons/mistral";
 import { AiProviderType } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 export type ProviderConfig = {
-  icon: ReactNode;
+  Icon: ({ className }: { className: string }) => ReactNode;
   name: string;
   defaultUrl: string;
   apiKeyPrefix: string | undefined;
@@ -21,35 +22,35 @@ export type ProviderConfig = {
 
 export const providerConfigs = {
   ANTHROPIC: {
-    icon: <AnthropicIcon className="mr-2 inline-block" />,
+    Icon: ({ className }) => <AnthropicIcon className={cn(className)} />,
     name: "Anthropic",
     defaultUrl: "https://api.anthropic.com/v1",
     apiKeyPrefix: "sk-ant-",
     modelSuggestions: anthropicModels,
   },
   OPENAI: {
-    icon: <OpenAiIcon className="mr-2 inline-block" />,
+    Icon: ({ className }) => <OpenAiIcon className={cn(className)} />,
     name: "OpenAI",
     defaultUrl: "https://api.openai.com/v1",
     apiKeyPrefix: "sk-proj",
     modelSuggestions: openAiModels,
   },
   OPENAI_LIKE: {
-    icon: <OpenAiIcon className="mr-2 inline-block" />,
+    Icon: ({ className }) => <OpenAiIcon className={cn(className)} />,
     name: "OpenAI - Compatible",
     defaultUrl: "https://api.openai.com/v1",
     modelSuggestions: [],
     apiKeyPrefix: undefined,
   },
   OLLAMA: {
-    icon: <OllamaIcon className="mr-2 inline-block" />,
+    Icon: ({ className }) => <OllamaIcon className={cn(className)} />,
     name: "Ollama",
     defaultUrl: "http://localhost:11434",
     modelSuggestions: ollamaModels,
     apiKeyPrefix: undefined,
   },
   MISTRAL: {
-    icon: <MistralIcon className="mr-2 inline-block" />,
+    Icon: ({ className }) => <MistralIcon className={cn(className)} />,
     name: "Mistral",
     defaultUrl: "https://api.mistral.ai/v1",
     modelSuggestions: mistralModels,

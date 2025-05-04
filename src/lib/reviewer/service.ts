@@ -1,7 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import type { YapirPrismaClient } from "@/lib/db";
 
 export class ReviewerService {
-  private readonly prisma: PrismaClient;
+  private readonly prisma: YapirPrismaClient;
 
   constructor({ prisma }: { prisma: PrismaClient }) {
     this.prisma = prisma;
@@ -25,6 +26,8 @@ export class ReviewerService {
   }
 }
 
-export type ReviewerListElement = Awaited<
+export type ReviewersList = Awaited<
   ReturnType<typeof ReviewerService.prototype.listReviewers>
->[number];
+>;
+
+export type ReviewerListElement = ReviewersList[number];

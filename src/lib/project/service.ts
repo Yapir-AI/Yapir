@@ -8,8 +8,8 @@ export class ProjectService {
     this.prisma = prisma;
   }
 
-  listProjects() {
-    return this.prisma.gitProject.findMany();
+  get listProjects() {
+    return this.prisma.gitProject.findMany;
   }
 
   async findById(id: string) {
@@ -75,9 +75,11 @@ export class ProjectService {
   }
 }
 
-export type ProjectListElement = Awaited<
+export type ProjectPage = Awaited<
   ReturnType<typeof ProjectService.prototype.listProjects>
->[number];
+>;
+
+export type ProjectListElement = ProjectPage[number];
 
 export const toggleProjectReviewerSchema = z.object({
   projectId: z.string().uuid(),

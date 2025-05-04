@@ -21,8 +21,9 @@ import { ProjectCard } from "@/lib/project/components/projectCard";
 import { SystemPrompt } from "@/app/(auth)/reviewers/[id]/SystemPrompt";
 import Link from "next/link";
 import { routes } from "@/lib/route";
-import type { Reviewer } from "@prisma/client";
+import type { AiProviderType, Reviewer } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
+import { providerConfigs } from "@/lib/provider/model/configs";
 
 export default async function ReviewerPage({
   params,
@@ -82,7 +83,7 @@ function ProviderSelect({
 }: {
   currentProviderId: string;
   reviewerId: string;
-  providers: { id: string; name: string }[];
+  providers: { id: string; type: AiProviderType }[];
 }) {
   async function updateProvider(providerId: string) {
     "use server";
@@ -103,7 +104,7 @@ function ProviderSelect({
         <SelectContent>
           {providers.map((provider) => (
             <SelectItem key={provider.id} value={provider.id}>
-              {provider.name}
+              {providerConfigs[provider.type].name}
             </SelectItem>
           ))}
         </SelectContent>
@@ -117,7 +118,7 @@ function Projects(reviewer: ReviewerWithProviderAndProjects) {
     <div className="flex flex-col gap-4">
       <H3>Associated Projects</H3>
       {reviewer.projects.length === 0 && (
-        <span className="mt-2 text-center text-sm text-muted-foreground">
+        <span className="text-muted-foreground mt-2 text-center text-sm">
           <p>No associated projects yet</p>
           <Link className="hover:underline" href={routes.projects}>
             Go to projects
@@ -144,7 +145,7 @@ function ProjectInstructions(reviewer: Reviewer) {
     <div className="flex items-center justify-between">
       <div className="space-y-4">
         <H3>Project Instructions</H3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           When enabled, the reviewer will use the{" "}
           <span className="italic">.yapir/instructions.md </span>
           file in the review.
