@@ -1,3 +1,12 @@
+## [0.10.4](https://github.com/yapir-ai/yapir/compare/v0.10.3...v0.10.4) (2025-05-22)
+
+
+### Bug Fixes
+
+* ignores for real ([2c7727b](https://github.com/yapir-ai/yapir/commit/2c7727bfe6e51044d1538215be3f42d00721c4d4))
+
+
+
 ## [0.10.3](https://github.com/yapir-ai/yapir/compare/v0.10.2...v0.10.3) (2025-05-22)
 
 
@@ -41,16 +50,6 @@
 * fixes & use cardlist on project page ([8d7f0cd](https://github.com/yapir-ai/yapir/commit/8d7f0cd1c393a80aab9cc93db62daefcae577f33))
 * home page ([212e0fc](https://github.com/yapir-ai/yapir/commit/212e0fce9e7cce149d46295191e846eaa9da6497))
 * list of comments with navigation on review page ([f7c4ae9](https://github.com/yapir-ai/yapir/commit/f7c4ae9643328b3ea7f3a1369ce7d3e229490f7c))
-
-
-
-## [0.9.1](https://github.com/yapir-ai/yapir/compare/v0.9.0...v0.9.1) (2025-04-15)
-
-
-### Bug Fixes
-
-* ai provider api key selection ([499b842](https://github.com/yapir-ai/yapir/commit/499b8422dd9ebd4074ca131965ca2f235a7c8f05))
-* removed oopsy log ([e0b2755](https://github.com/yapir-ai/yapir/commit/e0b2755bf3d298f3e25c5e46050a1b34250aaf0c))
 
 
 
