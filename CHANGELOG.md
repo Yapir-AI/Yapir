@@ -1,3 +1,12 @@
+## [0.10.1](https://github.com/yapir-ai/yapir/compare/v0.10.0...v0.10.1) (2025-05-22)
+
+
+### Bug Fixes
+
+* sidebar tsc ([1fa6a18](https://github.com/yapir-ai/yapir/commit/1fa6a1828dda5c983ff3990c561606aacde072af))
+
+
+
 # [0.10.0](https://github.com/yapir-ai/yapir/compare/v0.9.1...v0.10.0) (2025-05-22)
 
 
@@ -43,17 +52,6 @@
 ### Bug Fixes
 
 * actually use whole files in prompts ([af03e72](https://github.com/yapir-ai/yapir/commit/af03e72965ff5839b79b2c82fb46f3572144f7f7))
-
-
-
-# [0.8.0](https://github.com/yapir-ai/yapir/compare/v0.7.3...v0.8.0) (2025-03-31)
-
-
-### Features
-
-* added sentry integration ([d74c357](https://github.com/yapir-ai/yapir/commit/d74c35773956a162b08bf72d5a2771ce6168dfcd))
-* better project avatar ([ae505a5](https://github.com/yapir-ai/yapir/commit/ae505a579416de1788ebf1b7d7e065621319fc04))
-* include complete files in reviews ([b532747](https://github.com/yapir-ai/yapir/commit/b53274748b71a2533b3cc44b1f51518a68e9c0ab))
 
 
 
