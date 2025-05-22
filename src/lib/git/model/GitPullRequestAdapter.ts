@@ -25,9 +25,10 @@ export abstract class GitMergeRequestAdapter {
 
   async getDiffs(): Promise<GitMergeRequestDiffs> {
     const changes = await this.getChangedFiles();
+    const ignore = await this.ignore;
 
     const changesPromise = changes
-      .filter((e) => this.isNotIgnored(e))
+      .filter((e) => !this.isIgnored({ newPath: e.newPath, ignore }))
       .map(({ oldPath, newPath }) => {
         return {
           oldPath,
@@ -58,8 +59,8 @@ export abstract class GitMergeRequestAdapter {
     }
   }
 
-  private async isNotIgnored({ newPath }: { newPath?: string }) {
-    return !newPath || !(await this.ignore).ignores(newPath);
+  private isIgnored({ newPath, ignore }: { newPath?: string; ignore: Ignore }) {
+    return !newPath || ignore.ignores(newPath);
   }
 
   private get ignore() {
