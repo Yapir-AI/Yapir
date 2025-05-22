@@ -1,3 +1,12 @@
+## [0.10.2](https://github.com/yapir-ai/yapir/compare/v0.10.1...v0.10.2) (2025-05-22)
+
+
+### Bug Fixes
+
+* chart tsc ([298ef22](https://github.com/yapir-ai/yapir/commit/298ef22ddf5664ac13a613ce4af2d2e179836c9b))
+
+
+
 ## [0.10.1](https://github.com/yapir-ai/yapir/compare/v0.10.0...v0.10.1) (2025-05-22)
 
 
@@ -43,15 +52,6 @@
 
 * new review integration ([a44f949](https://github.com/yapir-ai/yapir/commit/a44f9498ef4f01f136f6a821814833d40c24f387))
 * new theme & chat ([0137282](https://github.com/yapir-ai/yapir/commit/0137282a498e4f6b1f96b36d1c5f32882239b0b4))
-
-
-
-## [0.8.1](https://github.com/yapir-ai/yapir/compare/v0.8.0...v0.8.1) (2025-04-01)
-
-
-### Bug Fixes
-
-* actually use whole files in prompts ([af03e72](https://github.com/yapir-ai/yapir/commit/af03e72965ff5839b79b2c82fb46f3572144f7f7))
 
 
 
