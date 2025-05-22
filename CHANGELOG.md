@@ -1,3 +1,12 @@
+## [0.10.3](https://github.com/yapir-ai/yapir/compare/v0.10.2...v0.10.3) (2025-05-22)
+
+
+### Bug Fixes
+
+* ignores ([532f707](https://github.com/yapir-ai/yapir/commit/532f70706a3ad0f6bcee9e80a8f1a514e07c2674))
+
+
+
 ## [0.10.2](https://github.com/yapir-ai/yapir/compare/v0.10.1...v0.10.2) (2025-05-22)
 
 
@@ -42,16 +51,6 @@
 
 * ai provider api key selection ([499b842](https://github.com/yapir-ai/yapir/commit/499b8422dd9ebd4074ca131965ca2f235a7c8f05))
 * removed oopsy log ([e0b2755](https://github.com/yapir-ai/yapir/commit/e0b2755bf3d298f3e25c5e46050a1b34250aaf0c))
-
-
-
-# [0.9.0](https://github.com/yapir-ai/yapir/compare/v0.8.1...v0.9.0) (2025-04-15)
-
-
-### Features
-
-* new review integration ([a44f949](https://github.com/yapir-ai/yapir/commit/a44f9498ef4f01f136f6a821814833d40c24f387))
-* new theme & chat ([0137282](https://github.com/yapir-ai/yapir/commit/0137282a498e4f6b1f96b36d1c5f32882239b0b4))
 
 
 
