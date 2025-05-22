@@ -1,12 +1,22 @@
 import { Main } from "@/components/ui/main";
 import type { ReactNode } from "react";
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
+import { TitleSection } from "@/components/rich/titleSection";
+import { H1, HSub } from "@/components/ui/typography";
 
 export default function ProjectsLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <BreadCrumbHelper items={["Projects"]} />
-      <Main className="max-w-5xl">{children}</Main>
+      <Main className="max-w-5xl">
+        <TitleSection>
+          <div>
+            <H1>Projects</H1>
+            <HSub>Projects represents your Git repositories.</HSub>
+          </div>
+        </TitleSection>
+        {children}
+      </Main>
     </>
   );
 }

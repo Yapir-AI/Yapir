@@ -30,7 +30,7 @@ export async function POST(
     create: {
       connector: { connect: { id: connectorId } },
       originId: json.project.id.toString(),
-      url: json.project.url,
+      url: json.project.web_url,
       name: json.project.name,
       fullName: json.project.path_with_namespace,
       providerType: "GITLAB",

@@ -1,7 +1,5 @@
 import { container } from "@/lib/di/container";
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { EmptyCard } from "@/components/rich/emptyCard";
-import { ProjectCard } from "@/lib/project/components/projectCard";
 import {
   CardList,
   CardListTitle,

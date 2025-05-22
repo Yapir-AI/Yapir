@@ -31,7 +31,12 @@ export function NoCard({
         <CardTitle className="self-start">
           <H3>{title}</H3>
         </CardTitle>
-        <Icon className="stroke-primary-400 animate-in zoom-in size-16 duration-1000" />
+        <Icon
+          className={cn(
+            "stroke-primary-400 zoom-in size-16 duration-1000",
+            enabled && "animate-in",
+          )}
+        />
         <CardDescription className={cn(enabled && "animate-bounce")}>
           {description}
         </CardDescription>
@@ -58,7 +63,12 @@ export function NoCardList({
       <CardList className={cn(enabled && "shadow-primary/80")}>
         <CardListTitle>{title}</CardListTitle>
         <div className="flex h-full flex-col items-center justify-evenly gap-8 p-8">
-          <Icon className="stroke-primary-400 animate-in zoom-in size-16 duration-1000" />
+          <Icon
+            className={cn(
+              "stroke-primary-400 zoom-in size-16 duration-1000",
+              enabled && "animate-in",
+            )}
+          />
           <CardDescription className={cn(enabled && "animate-bounce")}>
             {description}
           </CardDescription>

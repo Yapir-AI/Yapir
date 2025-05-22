@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import type { Reviewer } from "@prisma/client";
 import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import { routes } from "@/lib/route";
+import { GradientCard } from "@/components/ui/gradientCard";
 
 export default async function ProjectPage({
   params,
@@ -147,25 +148,24 @@ function Reviewers({
   projectId: string;
 }) {
   return (
-    <Card className="from-primary/5 to-card col-span-6 flex items-center gap-4 bg-gradient-to-t px-6 py-4">
-      <div>
-        <CardTitle>Reviewers on project</CardTitle>
-        <CardDescription>{reviewers.length} active reviewers</CardDescription>
-      </div>
-      <div className="grow" />
-      <div className="gap flex flex-row-reverse">
-        {reviewers.reverse().map((r) => (
-          <ReviewerAvatar
-            className="-ml-5 rounded-full border"
-            key={r.id}
-            reviewerName={r.name}
-            options={{ size: 35, radius: 100 }}
-          />
-        ))}
-      </div>
-      <Link href={routes.projectSettings(projectId)}>
-        <CogIcon className="text-muted-foreground" />
-      </Link>
-    </Card>
+    <Link href={routes.projectSettings(projectId)} className="col-span-6">
+      <GradientCard className="flex flex-row items-center gap-4">
+        <div>
+          <CardTitle>Reviewers on project</CardTitle>
+          <CardDescription>{reviewers.length} active reviewers</CardDescription>
+        </div>
+        <div className="grow" />
+        <div className="gap flex w-fit shrink-0 flex-row-reverse">
+          {reviewers.reverse().map((r) => (
+            <ReviewerAvatar
+              className="-ml-5 min-w-10 rounded-full border"
+              key={r.id}
+              reviewerName={r.name}
+              options={{ size: 35, radius: 100 }}
+            />
+          ))}
+        </div>
+      </GradientCard>
+    </Link>
   );
 }

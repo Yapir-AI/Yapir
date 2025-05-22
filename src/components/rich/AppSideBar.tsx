@@ -15,21 +15,16 @@ import {
 import {
   BotMessageSquare,
   BrainIcon,
-  FileCog,
   FolderGit2,
   GitBranchIcon,
   HomeIcon,
   type LucideIcon,
-  NotebookPenIcon,
 } from "lucide-react";
 import packageJson from "@/../package.json";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Route } from "next";
 import { routes, type YapirRoute } from "@/lib/route";
-import { type ReactElement, useEffect, useState } from "react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { createPortal } from "react-dom";
+import { type ReactElement } from "react";
 
 const navGroups: NavGroup[] = [
   {
@@ -46,8 +41,6 @@ const navGroups: NavGroup[] = [
     ],
   },
 ];
-
-const SIDE_BAR_CONTENT_ID = "sidebar-portal-content";
 
 function useActivePathName() {
   const pathname = usePathname();
@@ -71,8 +64,6 @@ function useActivePathName() {
 }
 
 export function AppSideBar() {
-  const [ref] = useAutoAnimate();
-
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -93,7 +84,6 @@ export function AppSideBar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <div suppressHydrationWarning id={SIDE_BAR_CONTENT_ID} ref={ref} />
         <AppSideBarGroups navGroups={navGroups} />
       </SidebarContent>
       <SidebarRail />
@@ -129,32 +119,12 @@ function AppSideBarGroups({ navGroups }: { navGroups: NavGroup[] }) {
   ));
 }
 
-export function SidebarPortal({ navGroups }: { navGroups: NavGroup[] }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  if (mounted) {
-    const sidebarContainer = document.getElementById(SIDE_BAR_CONTENT_ID);
-    if (!sidebarContainer) return null;
-
-    return createPortal(
-      <AppSideBarGroups navGroups={navGroups} />,
-      sidebarContainer,
-    );
-  }
-
-  return null;
-}
-
 type NavGroup = {
   title: string;
   items: {
     title: string;
     url: YapirRoute;
+    exact?: boolean;
     icon: LucideIcon | (() => ReactElement);
     strict?: boolean;
   }[];
