@@ -9,7 +9,7 @@ import {
 import { computeDiff } from "@/lib/git/parsing/diffUtils";
 import type { GitlabClient } from "@/lib/git/connectors/gitlab/clientFactory";
 import type { ExpandedMergeRequestSchema } from "@gitbeaker/core";
-import ignore from "ignore";
+import ignore, { type Ignore } from "ignore";
 import { atob } from "node:buffer";
 
 export abstract class GitMergeRequestAdapter {
@@ -17,12 +17,11 @@ export abstract class GitMergeRequestAdapter {
     Pick<GitFileDiff, "newPath" | "oldPath">[]
   >;
 
+  private _ignore: Promise<Ignore> | undefined = undefined;
+
   abstract postNote({ content }: { content: string }): Promise<void>;
 
-  protected abstract getFileContent(
-    path: string,
-    type: "base" | "head",
-  ): Promise<string>;
+  abstract getFileContent(path: string, type: "base" | "head"): Promise<string>;
 
   async getDiffs(): Promise<GitMergeRequestDiffs> {
     const changes = await this.getChangedFiles();
@@ -63,9 +62,14 @@ export abstract class GitMergeRequestAdapter {
     return !newPath || !(await this.ignore).ignores(newPath);
   }
 
-  private ignore = this.getFileContent(".yapir/.ignore", "head")
-    .catch(() => "")
-    .then((content) => ignore().add(content));
+  private get ignore() {
+    if (!this._ignore) {
+      this._ignore = this.getFileContent(".yapir/.ignore", "head")
+        .catch(() => "")
+        .then((content) => ignore().add(content).add(".yapir"));
+    }
+    return this._ignore;
+  }
 }
 
 export class GitlabMergeRequestAdapter extends GitMergeRequestAdapter {
@@ -93,7 +97,7 @@ export class GitlabMergeRequestAdapter extends GitMergeRequestAdapter {
     }));
   }
 
-  protected override async getFileContent(
+  override async getFileContent(
     path: string,
     type: "base" | "head",
   ): Promise<string> {
