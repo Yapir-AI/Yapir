@@ -196,7 +196,7 @@ export function Chat({
     <ChatContainer className={className}>
       {isEmpty && append && suggestions ? (
         <PromptSuggestions
-          label="Try these prompts ✨"
+          label="Talk to your codebase ✨"
           append={append}
           suggestions={suggestions}
         />
@@ -256,16 +256,16 @@ export function ChatMessages({
       onScroll={handleScroll}
       onTouchStart={handleTouchStart}
     >
-      <div className="max-w-full [grid-column:1/1] [grid-row:1/1]">
+      <div className="[grid-column:1/1] [grid-row:1/1] max-w-full">
         {children}
       </div>
 
       {!shouldAutoScroll && (
-        <div className="pointer-events-none flex flex-1 items-end justify-end [grid-column:1/1] [grid-row:1/1]">
+        <div className="pointer-events-none [grid-column:1/1] [grid-row:1/1] flex flex-1 items-end justify-end">
           <div className="sticky bottom-0 left-0 flex w-full justify-end">
             <Button
               onClick={scrollToBottom}
-              className="pointer-events-auto h-8 w-8 rounded-full ease-in-out animate-in fade-in-0 slide-in-from-bottom-1"
+              className="animate-in fade-in-0 slide-in-from-bottom-1 pointer-events-auto h-8 w-8 rounded-full ease-in-out"
               size="icon"
               variant="ghost"
             >
