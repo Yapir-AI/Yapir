@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { startOfYesterday } from "date-fns/startOfYesterday";
 import {
   gitMergeRequestDiffs,
   type GitMergeRequestDiffs,
@@ -25,11 +24,11 @@ export class ReviewService {
   }
 
   async initReview({
-    reviewerId,
+    reviewerIds,
     diffs,
     mergeRequestId,
   }: {
-    reviewerId: string;
+    reviewerIds: string[];
     mergeRequestId: string;
     diffs: GitMergeRequestDiffs;
   }) {
@@ -41,8 +40,10 @@ export class ReviewService {
         addedLines: added,
         removedLines: removed,
         status: "PENDING",
-        reviewerId,
         mergeRequestId,
+        reviewers: {
+          connect: reviewerIds.map((id) => ({ id })),
+        },
       },
     });
 
@@ -51,20 +52,30 @@ export class ReviewService {
 
   async completeReview(
     reviewId: string,
-    comments: Prisma.CommentCreateWithoutReviewInput[],
+    comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],
   ) {
     return this.prisma.review.update({
       data: {
         status: "REVIEWED",
-        comments: { create: comments },
+        comments: {
+          create: comments,
+        },
       },
       where: { id: reviewId },
     });
   }
 
-  async failReview(reviewId: string, message?: string) {
+  async failReview(
+    reviewId: string,
+    comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],
+    message?: string,
+  ) {
     return this.prisma.review.update({
-      data: { status: "ERROR", errorMessage: message },
+      data: {
+        status: "ERROR",
+        errorMessage: message,
+        comments: { create: comments },
+      },
       where: { id: reviewId },
     });
   }

@@ -7,6 +7,7 @@ import type { Prisma } from "@prisma/client";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 import { routes } from "@/lib/route";
 import { env } from "@/lib/env";
+import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
 
 export namespace PullRequestHandle {
   export class Operation {
@@ -31,46 +32,83 @@ export namespace PullRequestHandle {
     }
 
     async execute(mergeRequestId: string) {
-      await Promise.all(
-        this.project.reviewers.map((reviewer) =>
-          this.review(reviewer, mergeRequestId),
-        ),
-      );
-    }
-
-    async review(
-      reviewer: ProjectForReview["reviewers"][number],
-      mergeRequestId: string,
-    ) {
+      // Create a single review with all reviewers
       const diffs = await this.gitMergeRequestAdapter.getDiffs();
-      const model = this.modelService.toModel(reviewer.aiProvider);
-      const prompt = await this.promptService.createPrompt(reviewer, diffs);
 
       const reviewId = await this.reviewService.initReview({
-        reviewerId: reviewer.id,
+        reviewerIds: this.project.reviewers.map((r) => r.id),
         mergeRequestId,
         diffs,
       });
 
-      try {
-        const { object } = await generateObject({
-          model: model,
-          schema: reviewSchema,
-          messages: prompt,
-        });
+      // Process each reviewer in parallel
+      const reviewResults = await Promise.allSettled(
+        this.project.reviewers.map((reviewer) =>
+          this.processReviewer(reviewer, diffs),
+        ),
+      );
 
-        const { comments } = object;
+      // Check if all reviewers succeeded
+      const allSucceeded = reviewResults.every(
+        (result) => result.status === "fulfilled",
+      );
+      const allComments = reviewResults
+        .filter((result) => result.status === "fulfilled")
+        .flatMap((result) => result.value);
 
-        await this.reviewService.completeReview(reviewId, comments);
+      if (allSucceeded) {
+        await this.reviewService.completeReview(reviewId, allComments);
+
+        // Post summary note
+        const reviewerNames = this.project.reviewers
+          .map((r) => r.name)
+          .join(", ");
         await this.gitMergeRequestAdapter.postNote({
-          content: `${reviewer.name} just reviewed your code and found [${comments.length} issue(s)](${env.appUrl + routes.review(this.project.id, reviewId)})`,
+          content: `${reviewerNames} reviewed your code and found [${allComments.length} issue(s)](${env.appUrl + routes.review(this.project.id, reviewId)})`,
         });
-      } catch (e) {
-        let message: string | undefined;
-        if (AISDKError.isInstance(e)) message = e.name + ": " + e.message;
-        await this.reviewService.failReview(reviewId, message);
-        throw e;
+      } else {
+        // Collect error messages
+        const errorMessages = reviewResults
+          .filter(
+            (result): result is PromiseRejectedResult =>
+              result.status === "rejected",
+          )
+          .map((result) => {
+            if (AISDKError.isInstance(result.reason)) {
+              return result.reason.name + ": " + result.reason.message;
+            }
+            return String(result.reason);
+          });
+
+        await this.reviewService.failReview(
+          reviewId,
+          allComments,
+          errorMessages.join("; "),
+        );
       }
+    }
+
+    async processReviewer(
+      reviewer: ProjectForReview["reviewers"][number],
+      diffs: GitMergeRequestDiffs,
+    ) {
+      const model = this.modelService.toModel(reviewer.aiProvider);
+      const prompt = await this.promptService.createPrompt(reviewer, diffs);
+
+      const { object } = await generateObject({
+        model: model,
+        schema: reviewSchema,
+        messages: prompt,
+      });
+
+      // Add reviewerId to each comment
+      const commentsWithReviewer: Prisma.CommentUncheckedCreateWithoutReviewInput[] =
+        object.comments.map((comment) => ({
+          ...comment,
+          reviewerId: reviewer.id,
+        }));
+
+      return commentsWithReviewer;
     }
   }
 

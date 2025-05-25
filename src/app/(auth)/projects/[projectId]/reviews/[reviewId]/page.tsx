@@ -88,15 +88,14 @@ export default async function ReviewPage({
   const { reviewService } = container.cradle;
   const { reviewId } = await params;
 
-  const {
-    reviewer,
-    mergeRequest: { project, ...mergeRequest },
-    ...review
-  } = await reviewService.findById(reviewId, {
-    reviewer: true,
+  const review = await reviewService.findById(reviewId, {
+    reviewers: true,
     mergeRequest: { include: { project: true } },
-    comments: true,
+    comments: { include: { reviewer: true } },
   });
+
+  const { reviewers, mergeRequest, comments } = review;
+  const { project } = mergeRequest;
 
   const fileComments = Object.groupBy(review.comments, (c) => c.fileId);
   const getFile = (id: string) =>
@@ -112,7 +111,9 @@ export default async function ReviewPage({
           breadCrumbFactory.project(project),
           breadCrumbFactory.mergeRequests(mergeRequest),
           breadCrumbFactory.mergeRequest(mergeRequest),
-          breadCrumbFactory.review(reviewer),
+          breadCrumbFactory.review({
+            name: reviewers.map((r) => r.name).join(", "),
+          }),
         ]}
       />
       <Main>
@@ -120,7 +121,7 @@ export default async function ReviewPage({
           <div>
             <H1>{mergeRequest.name}</H1>
             <HSub>
-              Reviewed by {reviewer.name} -{" "}
+              Reviewed by {reviewers.map((r) => r.name).join(", ")} -{" "}
               {formatDistanceToNow(review.at, { addSuffix: true })}
             </HSub>
           </div>
@@ -147,12 +148,7 @@ export default async function ReviewPage({
             {Object.entries(fileComments).map(([fileId, comments]) => {
               const file = getFile(fileId);
               return (
-                <File
-                  reviewer={reviewer}
-                  comments={comments ?? []}
-                  diff={file}
-                  key={fileId}
-                />
+                <File comments={comments ?? []} diff={file} key={fileId} />
               );
             })}
           </div>
@@ -180,10 +176,8 @@ function SideElement({
 
 function LineComments({
   comments,
-  reviewer,
 }: {
-  comments: Comment[];
-  reviewer: Reviewer;
+  comments: (Comment & { reviewer: Reviewer })[];
 }) {
   return comments?.map((c) => (
     <tr key={c.id} id={c.id}>
@@ -193,10 +187,10 @@ function LineComments({
       >
         <CardHeader className="flex flex-row items-center gap-3 space-y-0">
           <ReviewerAvatar
-            reviewerName={reviewer.name}
+            reviewerName={c.reviewer.name}
             options={{ size: 35, radius: 100 }}
           />
-          <CardTitle>{reviewer.name}</CardTitle>
+          <CardTitle>{c.reviewer.name}</CardTitle>
           <div className="grow" />
           <CommentFeedback {...c} />
         </CardHeader>
@@ -211,11 +205,9 @@ function LineComments({
 async function File({
   comments,
   diff: file,
-  reviewer,
 }: {
-  comments: Comment[];
+  comments: (Comment & { reviewer: Reviewer })[];
   diff?: GitFileDiff;
-  reviewer: Reviewer;
 }) {
   if (!file) {
     return (
@@ -226,7 +218,7 @@ async function File({
         </div>
         <table>
           <tbody>
-            <LineComments comments={comments} reviewer={reviewer} />
+            <LineComments comments={comments} />
           </tbody>
         </table>
       </div>
@@ -270,7 +262,6 @@ async function File({
                     </Suspense>
                     <LineComments
                       comments={[...newLineComments, ...oldLineComments]}
-                      reviewer={reviewer}
                     />
                   </Fragment>
                 );

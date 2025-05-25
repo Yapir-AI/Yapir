@@ -35,7 +35,12 @@ const navGroups: NavGroup[] = [
   {
     title: "Settings",
     items: [
-      { title: "Projects", url: routes.projects, icon: FolderGit2 },
+      {
+        title: "Projects",
+        url: routes.projects,
+        icon: FolderGit2,
+        strict: true,
+      },
       { title: "Reviewers", url: routes.reviewers, icon: BotMessageSquare },
       {
         title: "Git Connections",

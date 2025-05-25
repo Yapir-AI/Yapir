@@ -31,7 +31,7 @@ export default async function MergeRequestPage({
   const mergeRequest = await mergeRequestService.findById(mergeRequestId, {
     reviews: {
       orderBy: { at: "asc" },
-      include: { reviewer: true, _count: { select: { comments: true } } },
+      include: { reviewers: true, _count: { select: { comments: true } } },
     },
     project: true,
   });
@@ -83,11 +83,17 @@ export default async function MergeRequestPage({
             >
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <ReviewerAvatar
-                    reviewerName={review.reviewer.name}
-                    options={{ size: 30, radius: 60 }}
-                  />
-                  {review.reviewer.name}{" "}
+                  <div className="flex -space-x-2">
+                    {review.reviewers.slice(0, 3).map((reviewer) => (
+                      <ReviewerAvatar
+                        key={reviewer.id}
+                        reviewerName={reviewer.name}
+                        options={{ size: 30, radius: 60 }}
+                        className="border-background rounded-full border"
+                      />
+                    ))}
+                  </div>
+                  {review.reviewers.map((r) => r.name).join(", ")}{" "}
                   {review.status === "REVIEWED" &&
                     formatDistanceToNow(review.at, { addSuffix: true })}
                   {review.status === "ERROR" && "failed to review"}

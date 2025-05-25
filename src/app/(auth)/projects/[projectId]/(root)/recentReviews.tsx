@@ -14,7 +14,7 @@ import {
 const listRecentReviews = async (projectId: string) =>
   container.cradle.reviewService.listReviews({
     include: {
-      reviewer: true,
+      reviewers: true,
       _count: { select: { comments: true } },
       mergeRequest: true,
     },
@@ -67,11 +67,17 @@ function ReviewCard(props: ReviewCardProps) {
         {props.mergeRequest.targetBranch}
       </div>
       <div className="text-muted-foreground flex items-center gap-2 text-sm">
-        <ReviewerAvatar
-          reviewerName={props.reviewer.name}
-          options={{ radius: 50, size: 25 }}
-        />
-        <p>{props.reviewer.name}</p>
+        <div className="flex -space-x-2">
+          {props.reviewers.slice(0, 3).map((reviewer, index) => (
+            <ReviewerAvatar
+              key={reviewer.id}
+              reviewerName={reviewer.name}
+              options={{ radius: 50, size: 25 }}
+              className="rounded-full border"
+            />
+          ))}
+        </div>
+        <p>{props.reviewers.map((r) => r.name).join(", ")}</p>
         <div></div>
         <div className="flex items-center gap-2">
           <MessageSquareIcon className="size-4" />

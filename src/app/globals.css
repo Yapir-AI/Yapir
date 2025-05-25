@@ -59,7 +59,7 @@
   --chart-3: var(--primary-400);
   --chart-4: var(--primary-300);
   --chart-5: var(--primary-100);
-  --radius: 0.1rem;
+  --radius: 0.2rem;
   --sidebar: var(--base-100);
   --sidebar-foreground: var(--base-800);
   --sidebar-primary: var(--primary-300);

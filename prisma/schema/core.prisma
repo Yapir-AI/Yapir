@@ -61,11 +61,10 @@ model Review {
   removedLines   Int
   status         ReviewStatus @default(PENDING)
   errorMessage   String?
-  reviewerId     String       @db.Uuid
-  reviewer       Reviewer     @relation(fields: [reviewerId], references: [id])
   mergeRequestId String       @db.Uuid
   mergeRequest   MergeRequest @relation(fields: [mergeRequestId], references: [id])
   comments       Comment[]
+  reviewers      Reviewer[]
 }
 
 model Comment {
@@ -79,6 +78,8 @@ model Comment {
   thumbsDown Int             @default(0)
   reviewId   String          @db.Uuid
   review     Review          @relation(fields: [reviewId], references: [id])
+  reviewerId String          @db.Uuid
+  reviewer   Reviewer        @relation(fields: [reviewerId], references: [id])
 }
 
 model Reviewer {
@@ -91,6 +92,7 @@ model Reviewer {
   useProjectInstructions Boolean      @default(true)
   projects               GitProject[]
   reviews                Review[]
+  comments               Comment[]
 }
 
 enum GitProviderType {
