@@ -10,6 +10,9 @@ CREATE TYPE "ReviewStatus" AS ENUM ('REVIEWED', 'PENDING', 'ERROR');
 -- CreateEnum
 CREATE TYPE "CommentLocation" AS ENUM ('OLD', 'NEW');
 
+-- CreateEnum
+CREATE TYPE "ReviewNoteType" AS ENUM ('TECHNICAL_SUMMARY', 'GENERAL_ASSESSMENT');
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
@@ -132,7 +135,6 @@ CREATE TABLE "Review" (
     "removedLines" INTEGER NOT NULL,
     "status" "ReviewStatus" NOT NULL DEFAULT 'PENDING',
     "errorMessage" TEXT,
-    "reviewerId" UUID NOT NULL,
     "mergeRequestId" UUID NOT NULL,
 
     CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
@@ -149,8 +151,21 @@ CREATE TABLE "Comment" (
     "thumbsUp" INTEGER NOT NULL DEFAULT 0,
     "thumbsDown" INTEGER NOT NULL DEFAULT 0,
     "reviewId" UUID NOT NULL,
+    "reviewerId" UUID NOT NULL,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ReviewNote" (
+    "id" UUID NOT NULL,
+    "type" "ReviewNoteType" NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reviewId" UUID NOT NULL,
+    "reviewerId" UUID NOT NULL,
+
+    CONSTRAINT "ReviewNote_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -173,6 +188,14 @@ CREATE TABLE "_GitProjectToReviewer" (
     CONSTRAINT "_GitProjectToReviewer_AB_pkey" PRIMARY KEY ("A","B")
 );
 
+-- CreateTable
+CREATE TABLE "_ReviewToReviewer" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
+
+    CONSTRAINT "_ReviewToReviewer_AB_pkey" PRIMARY KEY ("A","B")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
@@ -186,7 +209,13 @@ CREATE UNIQUE INDEX "GitProject_originId_connectorId_key" ON "GitProject"("origi
 CREATE UNIQUE INDEX "MergeRequest_originId_projectId_key" ON "MergeRequest"("originId", "projectId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "ReviewNote_reviewId_reviewerId_type_key" ON "ReviewNote"("reviewId", "reviewerId", "type");
+
+-- CreateIndex
 CREATE INDEX "_GitProjectToReviewer_B_index" ON "_GitProjectToReviewer"("B");
+
+-- CreateIndex
+CREATE INDEX "_ReviewToReviewer_B_index" ON "_ReviewToReviewer"("B");
 
 -- AddForeignKey
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -201,13 +230,19 @@ ALTER TABLE "GitProject" ADD CONSTRAINT "GitProject_connectorId_fkey" FOREIGN KE
 ALTER TABLE "MergeRequest" ADD CONSTRAINT "MergeRequest_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "GitProject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_reviewerId_fkey" FOREIGN KEY ("reviewerId") REFERENCES "Reviewer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_mergeRequestId_fkey" FOREIGN KEY ("mergeRequestId") REFERENCES "MergeRequest"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_reviewId_fkey" FOREIGN KEY ("reviewId") REFERENCES "Review"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_reviewerId_fkey" FOREIGN KEY ("reviewerId") REFERENCES "Reviewer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ReviewNote" ADD CONSTRAINT "ReviewNote_reviewId_fkey" FOREIGN KEY ("reviewId") REFERENCES "Review"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ReviewNote" ADD CONSTRAINT "ReviewNote_reviewerId_fkey" FOREIGN KEY ("reviewerId") REFERENCES "Reviewer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Reviewer" ADD CONSTRAINT "Reviewer_aiProviderId_fkey" FOREIGN KEY ("aiProviderId") REFERENCES "AiProvider"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -217,3 +252,9 @@ ALTER TABLE "_GitProjectToReviewer" ADD CONSTRAINT "_GitProjectToReviewer_A_fkey
 
 -- AddForeignKey
 ALTER TABLE "_GitProjectToReviewer" ADD CONSTRAINT "_GitProjectToReviewer_B_fkey" FOREIGN KEY ("B") REFERENCES "Reviewer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ReviewToReviewer" ADD CONSTRAINT "_ReviewToReviewer_A_fkey" FOREIGN KEY ("A") REFERENCES "Review"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ReviewToReviewer" ADD CONSTRAINT "_ReviewToReviewer_B_fkey" FOREIGN KEY ("B") REFERENCES "Reviewer"("id") ON DELETE CASCADE ON UPDATE CASCADE;

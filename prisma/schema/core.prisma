@@ -64,6 +64,7 @@ model Review {
   mergeRequestId String       @db.Uuid
   mergeRequest   MergeRequest @relation(fields: [mergeRequestId], references: [id])
   comments       Comment[]
+  reviewNotes    ReviewNote[]
   reviewers      Reviewer[]
 }
 
@@ -82,6 +83,19 @@ model Comment {
   reviewer   Reviewer        @relation(fields: [reviewerId], references: [id])
 }
 
+model ReviewNote {
+  id         String         @id @default(uuid(7)) @db.Uuid
+  type       ReviewNoteType
+  content    String
+  createdAt  DateTime       @default(now())
+  reviewId   String         @db.Uuid
+  review     Review         @relation(fields: [reviewId], references: [id])
+  reviewerId String         @db.Uuid
+  reviewer   Reviewer       @relation(fields: [reviewerId], references: [id])
+
+  @@unique([reviewId, reviewerId, type])
+}
+
 model Reviewer {
   id                     String       @id @default(uuid(7)) @db.Uuid
   name                   String
@@ -93,6 +107,7 @@ model Reviewer {
   projects               GitProject[]
   reviews                Review[]
   comments               Comment[]
+  reviewNotes            ReviewNote[]
 }
 
 enum GitProviderType {
@@ -116,4 +131,9 @@ enum ReviewStatus {
 enum CommentLocation {
   OLD
   NEW
+}
+
+enum ReviewNoteType {
+  TECHNICAL_SUMMARY
+  GENERAL_ASSESSMENT
 }

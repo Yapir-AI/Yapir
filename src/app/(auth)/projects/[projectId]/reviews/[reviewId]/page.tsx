@@ -31,6 +31,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { CommentFeedback } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/commentFeedback";
+import { ReviewNotes } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/reviewNotes";
 import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
 import {
   Accordion,
@@ -92,6 +93,7 @@ export default async function ReviewPage({
     reviewers: true,
     mergeRequest: { include: { project: true } },
     comments: { include: { reviewer: true } },
+    reviewNotes: { include: { reviewer: true } },
   });
 
   const { reviewers, mergeRequest, comments } = review;
@@ -142,6 +144,9 @@ export default async function ReviewPage({
             </AlertDescription>
           </Alert>
         )}
+        
+        <ReviewNotes reviewNotes={review.reviewNotes} />
+        
         <div className="flex max-h-full gap-4">
           <SideComments diffs={review.diffs} comments={fileComments} />
           <div className="flex grow flex-col gap-5 overflow-y-auto pb-4 font-mono text-xs">

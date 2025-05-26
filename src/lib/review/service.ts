@@ -53,6 +53,7 @@ export class ReviewService {
   async completeReview(
     reviewId: string,
     comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],
+    reviewNotes?: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[],
   ) {
     return this.prisma.review.update({
       data: {
@@ -60,6 +61,11 @@ export class ReviewService {
         comments: {
           create: comments,
         },
+        ...(reviewNotes && {
+          reviewNotes: {
+            create: reviewNotes,
+          },
+        }),
       },
       where: { id: reviewId },
     });
@@ -69,12 +75,18 @@ export class ReviewService {
     reviewId: string,
     comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],
     message?: string,
+    reviewNotes?: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[],
   ) {
     return this.prisma.review.update({
       data: {
         status: "ERROR",
         errorMessage: message,
         comments: { create: comments },
+        ...(reviewNotes && {
+          reviewNotes: {
+            create: reviewNotes,
+          },
+        }),
       },
       where: { id: reviewId },
     });

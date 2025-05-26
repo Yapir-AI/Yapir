@@ -52,12 +52,29 @@ export namespace PullRequestHandle {
       const allSucceeded = reviewResults.every(
         (result) => result.status === "fulfilled",
       );
-      const allComments = reviewResults
-        .filter((result) => result.status === "fulfilled")
-        .flatMap((result) => result.value);
+
+      const successfulResults = reviewResults.filter(
+        (
+          result,
+        ): result is PromiseFulfilledResult<{
+          comments: any[];
+          reviewNotes: any[];
+        }> => result.status === "fulfilled",
+      );
+
+      const allComments = successfulResults.flatMap(
+        (result) => result.value.comments,
+      );
+      const allReviewNotes = successfulResults.flatMap(
+        (result) => result.value.reviewNotes,
+      );
 
       if (allSucceeded) {
-        await this.reviewService.completeReview(reviewId, allComments);
+        await this.reviewService.completeReview(
+          reviewId,
+          allComments,
+          allReviewNotes,
+        );
 
         // Post summary note
         const reviewerNames = this.project.reviewers
@@ -84,6 +101,7 @@ export namespace PullRequestHandle {
           reviewId,
           allComments,
           errorMessages.join("; "),
+          allReviewNotes,
         );
       }
     }
@@ -108,7 +126,22 @@ export namespace PullRequestHandle {
           reviewerId: reviewer.id,
         }));
 
-      return commentsWithReviewer;
+      // Create review notes
+      const reviewNotes: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[] =
+        [
+          {
+            type: "TECHNICAL_SUMMARY",
+            content: object.technicalSummary,
+            reviewerId: reviewer.id,
+          },
+          {
+            type: "GENERAL_ASSESSMENT",
+            content: object.generalAssessment,
+            reviewerId: reviewer.id,
+          },
+        ];
+
+      return { comments: commentsWithReviewer, reviewNotes };
     }
   }
 
@@ -150,6 +183,16 @@ export namespace PullRequestHandle {
             ),
         }),
       )
-      .describe("The list of comments"),
+      .describe("The list of inline comments for specific lines of code"),
+    technicalSummary: z
+      .string()
+      .describe(
+        "Provide a high-level technical overview of this change from a system design perspective. Focus on the big picture: What is this change trying to accomplish? How does it fit into the larger system architecture? Are there any significant technical trade-offs or design decisions? Consider scalability, maintainability, and integration with existing systems. Avoid nitpicking individual lines of code or specific user guidelines - instead think about the overall technical approach and whether it's sound.",
+      ),
+    generalAssessment: z
+      .string()
+      .describe(
+        "Give your overall professional assessment as if you were a senior engineer reviewing this for production readiness. What's your gut feeling about this change? Any new library introduced? Does it feel well thought out and ready to ship? Are there any red flags or areas of concern from a business or user impact perspective? Consider the bigger picture: does this change align with good engineering practices and does it move the product in the right direction? Be honest about your confidence level in this implementation.",
+      ),
   });
 }
