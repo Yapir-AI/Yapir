@@ -62,6 +62,8 @@ export class PromptService {
     "- Write comments per aspect, on the proper file line.\n" +
     "- Only comment on issues - correct aspects do not need comments.\n" +
     "- Use Github Flavored Markdown syntax.\n" +
+    "- Do not suggest adding comment or documentation unless code is non trivial.\n" +
+    "- Do not comment en trailing blank line.\n" +
     "\n" +
     "Important Constraints:\n" +
     "- Provide feedback based solely on the code changes presented.\n" +

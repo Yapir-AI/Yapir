@@ -25,7 +25,7 @@ export const gitFileDiffSchema = z
       if (d.isNew()) header += `created: ${d.newPath}`;
       else if (d.isDeleted()) header += `deleted: ${d.oldPath}`;
       else if (d.isRenamed()) header += `renamed: ${d.oldPath} -> ${d.newPath}`;
-      else header = `updated: ${d.newPath}`;
+      else header += `updated: ${d.newPath}`;
 
       const lines = d.lineChanges.map((line) => line.toLLMString()).join("\n");
 

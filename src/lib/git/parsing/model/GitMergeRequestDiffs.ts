@@ -17,6 +17,13 @@ export const gitMergeRequestDiffsSchema = z
         unchanged: changes.filter((line) => line.isUnchanged()).length,
       };
     },
+    getFile: (fileId: string) => {
+      return (
+        t.fileDiffs.find((diff) => diff.id === fileId) ??
+        t.fileDiffs.find((diff) => diff.newPath === fileId) ??
+        t.fileDiffs.find((diff) => diff.oldPath === fileId)
+      );
+    },
   }));
 
 export type GitMergeRequestDiffs = z.infer<typeof gitMergeRequestDiffsSchema>;

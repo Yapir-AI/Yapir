@@ -91,6 +91,7 @@ export namespace PullRequestHandle {
               result.status === "rejected",
           )
           .map((result) => {
+            console.warn(result);
             if (AISDKError.isInstance(result.reason)) {
               return result.reason.name + ": " + result.reason.message;
             }
@@ -169,7 +170,7 @@ export namespace PullRequestHandle {
     comments: z
       .array(
         z.object({
-          fileId: z.string().uuid().describe("The file ID"),
+          fileId: z.string().describe("The file ID - uuid format"),
           line: z.number().describe("The line number"),
           text: z
             .string()

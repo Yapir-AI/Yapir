@@ -11,7 +11,6 @@ import {
   CircleX,
   ExternalLinkIcon,
   FileDiffIcon,
-  FileIcon,
   FileMinusIcon,
   FilePlusIcon,
   FileQuestionIcon,
@@ -27,7 +26,12 @@ import type { GitLineChange } from "@/lib/git/parsing/model/GitLineChange";
 import { cn } from "@/lib/utils";
 import { codeToHtml } from "shiki";
 import type { Comment, Reviewer } from "@prisma/client";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { CommentFeedback } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/commentFeedback";
@@ -40,6 +44,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { EmptyCard } from "@/components/rich/emptyCard";
 
 type FileComments = Partial<Record<string, Comment[]>>;
 
@@ -50,12 +55,10 @@ function SideComments({
   diffs: GitMergeRequestDiffs;
   comments: FileComments;
 }) {
-  const getFile = (id: string) => diffs.fileDiffs.find((f) => f.id === id);
-
   return (
-    <div className="h-fit max-w-xs min-w-xs divide-y overflow-y-auto rounded border text-sm">
+    <div className="max-h-full max-w-xs min-w-xs divide-y overflow-y-auto rounded border text-sm">
       {Object.entries(comments).map(([fileId, comments]) => {
-        const file = getFile(fileId);
+        const file = diffs.getFile(fileId);
         const fileName = file?.newPath ?? file?.oldPath ?? "Unmatched file";
 
         return (
@@ -100,10 +103,6 @@ export default async function ReviewPage({
   const { project } = mergeRequest;
 
   const fileComments = Object.groupBy(review.comments, (c) => c.fileId);
-  const getFile = (id: string) =>
-    review.diffs.fileDiffs.find((f) => f.id === id);
-
-  // const comments = parseComments(review.comments);
 
   return (
     <>
@@ -144,20 +143,27 @@ export default async function ReviewPage({
             </AlertDescription>
           </Alert>
         )}
-        
+
         <ReviewNotes reviewNotes={review.reviewNotes} />
-        
-        <div className="flex max-h-full gap-4">
-          <SideComments diffs={review.diffs} comments={fileComments} />
-          <div className="flex grow flex-col gap-5 overflow-y-auto pb-4 font-mono text-xs">
-            {Object.entries(fileComments).map(([fileId, comments]) => {
-              const file = getFile(fileId);
-              return (
-                <File comments={comments ?? []} diff={file} key={fileId} />
-              );
-            })}
+
+        {comments.length ? (
+          <div className="flex max-h-full gap-4 pb-6">
+            <SideComments diffs={review.diffs} comments={fileComments} />
+            <div className="flex grow flex-col gap-5 overflow-y-auto font-mono text-xs">
+              {Object.entries(fileComments).map(([fileId, comments]) => {
+                const file = review.diffs.getFile(fileId);
+                return (
+                  <File comments={comments ?? []} diff={file} key={fileId} />
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ) : (
+          <EmptyCard>
+            <CardTitle>No Comments.</CardTitle>
+            <CardDescription>This review had no comments...</CardDescription>
+          </EmptyCard>
+        )}
       </Main>
     </>
   );
@@ -239,7 +245,7 @@ async function File({
       type="multiple"
       defaultValue={["file"]}
       key={file.newPath ?? "" + file.oldPath ?? ""}
-      className="max-h-fit grow rounded border"
+      className="max-h-fit rounded border"
     >
       <AccordionItem value="file">
         <FileTitle {...file} />

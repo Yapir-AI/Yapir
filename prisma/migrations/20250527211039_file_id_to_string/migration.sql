@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Comment" ALTER COLUMN "fileId" SET DATA TYPE TEXT;
