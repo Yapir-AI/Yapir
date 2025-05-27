@@ -3,7 +3,11 @@ import { z } from "zod";
 
 export const gitFileDiffSchema = z
   .object({
-    id: z.string().uuid().optional().default(crypto.randomUUID()),
+    id: z
+      .string()
+      .uuid()
+      .optional()
+      .default(() => crypto.randomUUID()),
     lineChanges: z.array(gitLineChangeSchema),
     oldPath: z.string().optional(),
     newPath: z.string().optional(),
