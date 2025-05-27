@@ -1,3 +1,12 @@
+## [0.11.1](https://github.com/yapir-ai/yapir/compare/v0.11.0...v0.11.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* uuid generator ([0e853d1](https://github.com/yapir-ai/yapir/commit/0e853d1b68ddf9b9a946af6da9b9b1ca54181cc5))
+
+
+
 # [0.11.0](https://github.com/yapir-ai/yapir/compare/v0.10.4...v0.11.0) (2025-05-26)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * chart tsc ([298ef22](https://github.com/yapir-ai/yapir/commit/298ef22ddf5664ac13a613ce4af2d2e179836c9b))
-
-
-
-## [0.10.1](https://github.com/yapir-ai/yapir/compare/v0.10.0...v0.10.1) (2025-05-22)
-
-
-### Bug Fixes
-
-* sidebar tsc ([1fa6a18](https://github.com/yapir-ai/yapir/commit/1fa6a1828dda5c983ff3990c561606aacde072af))
 
 
 
