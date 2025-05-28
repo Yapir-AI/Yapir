@@ -308,7 +308,7 @@ async function FileLine({ ...line }: GitLineChange & { lang: string }) {
     <>
       <tr
         className={cn(
-          "*:px-2 *:pb-1",
+          "*:px-2 *:pb-1 *:align-top",
           line.isRemoved() && "bg-red-100!",
           line.isAdded() && "bg-green-100!",
         )}
@@ -320,10 +320,9 @@ async function FileLine({ ...line }: GitLineChange & { lang: string }) {
         <td className="w-1 p-0">
           <span className="select-none">{typeToPrefix[line.type]} </span>
         </td>
-        <td
-          className="text-shiki-light bg-shiki-light-bg dark:text-shiki-dark dark:bg-shiki-dark-bg pl-0!"
-          dangerouslySetInnerHTML={{ __html: out }}
-        />
+        <td className="text-shiki-light bg-shiki-light-bg dark:text-shiki-dark dark:bg-shiki-dark-bg pl-0! [&_pre]:break-words [&_pre]:whitespace-pre-wrap">
+          <p dangerouslySetInnerHTML={{ __html: out }}></p>
+        </td>
       </tr>
     </>
   );
