@@ -1,3 +1,12 @@
+## [0.11.3](https://github.com/yapir-ai/yapir/compare/v0.11.2...v0.11.3) (2025-05-28)
+
+
+### Bug Fixes
+
+* long line causing issues to comments ([362ebce](https://github.com/yapir-ai/yapir/commit/362ebcedded834ab374afcb884ec83d0b571d054))
+
+
+
 ## [0.11.2](https://github.com/yapir-ai/yapir/compare/v0.11.1...v0.11.2) (2025-05-27)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * ignores for real ([2c7727b](https://github.com/yapir-ai/yapir/commit/2c7727bfe6e51044d1538215be3f42d00721c4d4))
-
-
-
-## [0.10.3](https://github.com/yapir-ai/yapir/compare/v0.10.2...v0.10.3) (2025-05-22)
-
-
-### Bug Fixes
-
-* ignores ([532f707](https://github.com/yapir-ai/yapir/commit/532f70706a3ad0f6bcee9e80a8f1a514e07c2674))
 
 
 
