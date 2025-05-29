@@ -3,11 +3,28 @@ import type { PromptService } from "@/lib/prompt/service";
 import type { ModelService } from "@/lib/model/service";
 import { AISDKError, generateObject } from "ai";
 import { z } from "zod";
-import type { Prisma } from "@prisma/client";
+import {
+  type NoteDefinition,
+  type Prisma,
+  type Reviewer,
+  type ReviewStatus,
+} from "@prisma/client";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 import { routes } from "@/lib/route";
 import { env } from "@/lib/env";
 import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
+
+type ReviewerResult = { reviewer: Reviewer } & (
+  | {
+      success: true;
+      comments: Prisma.CommentUncheckedCreateWithoutReviewInput[];
+      reviewNotes: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[];
+    }
+  | {
+      success: false;
+      error: string;
+    }
+);
 
 export namespace PullRequestHandle {
   export class Operation {
@@ -42,113 +59,173 @@ export namespace PullRequestHandle {
       });
 
       // Process each reviewer in parallel
-      const reviewResults = await Promise.allSettled(
+      const reviewResults = await Promise.all(
         this.project.reviewers.map((reviewer) =>
           this.processReviewer(reviewer, diffs),
         ),
       );
 
-      // Check if all reviewers succeeded
-      const allSucceeded = reviewResults.every(
-        (result) => result.status === "fulfilled",
-      );
+      // Separate successful results from errors
+      const allComments: Prisma.CommentUncheckedCreateWithoutReviewInput[] = [];
+      const allReviewNotes: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[] =
+        [];
+      const errorMessages: string[] = [];
 
-      const successfulResults = reviewResults.filter(
-        (
-          result,
-        ): result is PromiseFulfilledResult<{
-          comments: any[];
-          reviewNotes: any[];
-        }> => result.status === "fulfilled",
-      );
+      for (const result of reviewResults) {
+        if (result.success) {
+          allComments.push(...result.comments);
+          allReviewNotes.push(...result.reviewNotes);
+        } else {
+          errorMessages.push(result.error);
+        }
+      }
 
-      const allComments = successfulResults.flatMap(
-        (result) => result.value.comments,
-      );
-      const allReviewNotes = successfulResults.flatMap(
-        (result) => result.value.reviewNotes,
-      );
+      let status: ReviewStatus = "REVIEWED";
 
-      if (allSucceeded) {
-        await this.reviewService.completeReview(
-          reviewId,
-          allComments,
-          allReviewNotes,
-        );
+      if (errorMessages.length > 0) {
+        status = "ERROR";
+      }
 
-        // Post summary note
-        const reviewerNames = this.project.reviewers
-          .map((r) => r.name)
-          .join(", ");
-        await this.gitMergeRequestAdapter.postNote({
-          content: `${reviewerNames} reviewed your code and found [${allComments.length} issue(s)](${env.appUrl + routes.review(this.project.id, reviewId)})`,
-        });
-      } else {
-        // Collect error messages
-        const errorMessages = reviewResults
-          .filter(
-            (result): result is PromiseRejectedResult =>
-              result.status === "rejected",
-          )
-          .map((result) => {
-            console.warn(result);
-            if (AISDKError.isInstance(result.reason)) {
-              return result.reason.name + ": " + result.reason.message;
-            }
-            return String(result.reason);
+      await this.reviewService.updateReview({
+        data: {
+          status,
+          comments: { create: allComments },
+          reviewNotes: { create: allReviewNotes },
+        },
+        where: { id: reviewId },
+      });
+
+      await this.postReviewSummary({ results: reviewResults, reviewId });
+    }
+
+    private async processReviewer(
+      reviewer: ProjectForReview["reviewers"][number],
+      diffs: GitMergeRequestDiffs,
+    ): Promise<ReviewerResult> {
+      try {
+        const model = this.modelService.toModel(reviewer.aiProvider);
+        const prompt = await this.promptService.createPrompt(reviewer, diffs);
+
+        let schema = reviewSchema;
+        if (reviewer.noteDefinitions.length > 0) {
+          schema = schema.extend({
+            notes: this.createNoteSchema(reviewer.noteDefinitions),
           });
+        }
 
-        await this.reviewService.failReview(
-          reviewId,
-          allComments,
-          errorMessages.join("; "),
-          allReviewNotes,
+        const { object } = await generateObject({
+          model: model,
+          schema,
+          messages: prompt,
+        });
+
+        const commentsWithReviewer: Prisma.CommentUncheckedCreateWithoutReviewInput[] =
+          object.comments.map((comment) => ({
+            ...comment,
+            reviewerId: reviewer.id,
+          }));
+
+        const reviewNotes = this.parseResultNotes(
+          object,
+          reviewer.noteDefinitions,
+          reviewer.id,
         );
+
+        return {
+          success: true,
+          reviewer,
+          comments: commentsWithReviewer,
+          reviewNotes,
+        };
+      } catch (error) {
+        console.warn(`Error processing reviewer ${reviewer.name}:`, error);
+
+        let errorMessage: string;
+        if (AISDKError.isInstance(error)) {
+          errorMessage = `${error.name}: ${error.message}`;
+        } else {
+          errorMessage = String(error);
+        }
+
+        return {
+          reviewer,
+          success: false,
+          error: errorMessage,
+        };
       }
     }
 
-    async processReviewer(
-      reviewer: ProjectForReview["reviewers"][number],
-      diffs: GitMergeRequestDiffs,
-    ) {
-      const model = this.modelService.toModel(reviewer.aiProvider);
-      const prompt = await this.promptService.createPrompt(reviewer, diffs);
+    private async postReviewSummary({
+      results,
+      reviewId,
+    }: {
+      results: ReviewerResult[];
+      reviewId: string;
+    }) {
+      const reviewUrl = env.appUrl + routes.review(this.project.id, reviewId);
 
-      const { object } = await generateObject({
-        model: model,
-        schema: reviewSchema,
-        messages: prompt,
+      const messages = results
+        .map((result) => ({
+          reviewer: result.reviewer.name,
+          message: result.success
+            ? `Wrote ${result.comments.length} comments`
+            : "❌ " + result.error,
+        }))
+        .map((r) => `${r.reviewer}: ${r.message}`)
+        .join("\n\n");
+
+      await this.gitMergeRequestAdapter.postNote({
+        content: `[Yapir review completed](${reviewUrl}):\n\n` + messages,
+      });
+    }
+
+    private parseResultNotes(
+      review: z.infer<typeof reviewSchema>,
+      notesDefinitions: NoteDefinition[],
+      reviewerId: string,
+    ): Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[] {
+      const result = noteSchema.safeParse(review);
+      if (!result.success) {
+        console.warn("Unable to parse review notes", result.error);
+        return [];
+      }
+
+      const response = result.data.notes;
+      if (!response) return [];
+
+      const notes: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[] = [];
+
+      notesDefinitions.forEach((def) => {
+        const content = response[def.tag];
+        notes.push({
+          content,
+          reviewerId,
+          noteDefinitionId: def.id,
+        });
       });
 
-      // Add reviewerId to each comment
-      const commentsWithReviewer: Prisma.CommentUncheckedCreateWithoutReviewInput[] =
-        object.comments.map((comment) => ({
-          ...comment,
-          reviewerId: reviewer.id,
-        }));
+      return notes;
+    }
 
-      // Create review notes
-      const reviewNotes: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[] =
-        [
-          {
-            type: "TECHNICAL_SUMMARY",
-            content: object.technicalSummary,
-            reviewerId: reviewer.id,
-          },
-          {
-            type: "GENERAL_ASSESSMENT",
-            content: object.generalAssessment,
-            reviewerId: reviewer.id,
-          },
-        ];
+    private createNoteSchema(notesDefinitions: NoteDefinition[]) {
+      let notes = z.object({});
 
-      return { comments: commentsWithReviewer, reviewNotes };
+      notesDefinitions.forEach((def) => {
+        notes = notes.extend({
+          [def.tag]: z.string().describe(def.systemPrompt),
+        });
+      });
+
+      return notes.describe(
+        "Overall global notes. Do not relate directly to comments.",
+      );
     }
   }
 
   export const projectForReview = {
     reviewers: {
       include: {
+        noteDefinitions: true,
         aiProvider: {
           select: {
             apiKey: true,
@@ -165,6 +242,10 @@ export namespace PullRequestHandle {
   export type ProjectForReview = Prisma.GitProjectGetPayload<{
     include: typeof projectForReview;
   }>;
+
+  const noteSchema = z.object({
+    notes: z.record(z.string()).optional(),
+  });
 
   const reviewSchema = z.object({
     comments: z
@@ -185,15 +266,15 @@ export namespace PullRequestHandle {
         }),
       )
       .describe("The list of inline comments for specific lines of code"),
-    technicalSummary: z
-      .string()
-      .describe(
-        "Provide a high-level technical overview of this change from a system design perspective. Focus on the big picture: What is this change trying to accomplish? How does it fit into the larger system architecture? Are there any significant technical trade-offs or design decisions? Consider scalability, maintainability, and integration with existing systems. Avoid nitpicking individual lines of code or specific user guidelines - instead think about the overall technical approach and whether it's sound.",
-      ),
-    generalAssessment: z
-      .string()
-      .describe(
-        "Give your overall professional assessment as if you were a senior engineer reviewing this for production readiness. What's your gut feeling about this change? Any new library introduced? Does it feel well thought out and ready to ship? Are there any red flags or areas of concern from a business or user impact perspective? Consider the bigger picture: does this change align with good engineering practices and does it move the product in the right direction? Be honest about your confidence level in this implementation.",
-      ),
+    // technicalSummary: z
+    //   .string()
+    //   .describe(
+    //     "Provide a high-level technical overview of this change from a system design perspective. Focus on the big picture: What is this change trying to accomplish? How does it fit into the larger system architecture? Are there any significant technical trade-offs or design decisions? Consider scalability, maintainability, and integration with existing systems. Avoid nitpicking individual lines of code or specific user guidelines - instead think about the overall technical approach and whether it's sound.",
+    //   ),
+    // generalAssessment: z
+    //   .string()
+    //   .describe(
+    //     "Give your overall professional assessment as if you were a senior engineer reviewing this for production readiness. What's your gut feeling about this change? Any new library introduced? Does it feel well thought out and ready to ship? Are there any red flags or areas of concern from a business or user impact perspective? Consider the bigger picture: does this change align with good engineering practices and does it move the product in the right direction? Be honest about your confidence level in this implementation.",
+    //   ),
   });
 }

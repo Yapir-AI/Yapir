@@ -67,8 +67,8 @@ export class PromptService {
     "\n" +
     "Important Constraints:\n" +
     "- Provide feedback based solely on the code changes presented.\n" +
-    "- Make no assumptions about the rest of the application, unseen code, or overall application design.\n" +
-    "- You can only comment on changed lines. Unchanged lines are provided solely for context.\n" +
+    "- Make no assumptions about the rest of the application, unseen code, external configuration or overall application design.\n" +
+    "- You can only comment on changed lines (+ / -). Unchanged lines are provided solely for context.\n" +
     "- Focus only on what is explicitly visible in the provided code.\n" +
     "\n" +
     "Before formulating your final response, work through the following steps:\n" +

@@ -50,6 +50,10 @@ export class ReviewService {
     return id;
   }
 
+  get updateReview() {
+    return this.prisma.review.update;
+  }
+
   async completeReview(
     reviewId: string,
     comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],

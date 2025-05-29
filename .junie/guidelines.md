@@ -40,29 +40,12 @@ The app uses Next.js, and Prisma for database interactions.
     - `prompt/` → Logic to build or transform text prompts for AI usage
     - `review/` → Code review orchestrations, saving review records, and final statuses
     - `project/` → Managing references to “Projects” (repositories)
-- Keep logic domain-specific. If you create a new domain (like “billing”), create `src/lib/billing/`.
-
-# GIT CONNECTORS & PULL REQUEST REVIEWS
-
-- GitHub connectors live in `git/connectors/github`.
-- GitLab connectors live in `git/connectors/gitlab`.
-- Both maintain usage of “pullRequestAdapter” pattern in `git/model/`.
-- The universal `PullRequestHandle` is used to handle code review flow for any Git-based triggers.
-- For new Git integrations (e.g., Bitbucket), follow the same pattern in `git/connectors/bitbucket` with an adapter class
-
-# DATA & STORAGE
-
-- Prisma migrations exist in `prisma/migrations`.  Migrations must be done using `prisma migrate dev` or `db push` as needed.
-- Any new table definitions or changes must reflect in the relevant `prisma/schema/*.prisma` file.
-- The `Instructions` table stores global instructions for code review; see `lib/instructions/service.ts` for usage.
-- `CHANGELOG.md` is automatically updated by the conventional commits Action in GitHub workflows.
+- Keep logic domain-specific. If you create a new domain (like “billing”), create `src/lib/billing/`. s.
 
 # CODE STYLE & LINTING
 
 - Use Prettier for formatting. No exceptions unless there’s a known conflict.
 - Maintain a consistent approach to TypeScript’s strict mode. Avoid `any` as a catch-all.
-- For React components, use functional components and avoid class-based unless absolutely necessary.
-- Use `React.forwardRef` for advanced or library-wrapped components to maintain accessibility or composition.
 
 # FRONTEND ROUTING & BEST PRACTICES
 
@@ -74,20 +57,16 @@ The app uses Next.js, and Prisma for database interactions.
 
 - Server actions use `next-safe-action` in `lib/safeAction/client.ts`.
 - Always assert authentication with `assertAuthenticated()` in server api routes.
-- Avoid leaking secrets in logs or error messages. The `.env` files are ignored by default, never commit them.
+- Avoid leaking secrets in logs or error messages.
 
-# AI PROVIDERS & REVIEWERS
+# Stack
+- This project uses bun
+- shadcn components
+- tailwindcss
 
-- AI provider definitions are in `aiProvider` table (see `providerService`).
-- Each reviewer references a single `aiProvider` and can optionally have a custom system prompt.
-- When adding new AI logic (like Mistral or specialized usage), place that logic in `lib/provider/model`.
-
-# CASCADE TIPS
-
-- For deep code navigations, remember to look at cross-references in `lib` subfolders.
-- When suggesting changes, focus on code that directly impacts the function or logic.
-- Cross-check existing patterns in `src/components/ui/` to avoid re-inventing UI elements.
-- Adhere to these rules for consistent code reviews by Cascade.
-- Prefer composability and reusability.
-- Write high quality typescript. Keep types implicit when possible, create proper type only to create a reusable contract. Avoid using any.
-- Never hardcode anything. 
+# General guidelines
+- Avoid using direct UI styling in templating, components styling should suffice. Stick to layout/structure
+- DRY components when possible
+- Inline the props type for short ones
+- typescript always
+- Avoid `any` and `as`

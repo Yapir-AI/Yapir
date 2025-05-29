@@ -14,6 +14,7 @@ import { MistralIcon } from "@/components/icons/mistral";
 import { AiProviderType } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { DeepseekIcon } from "@/components/icons/deepseek";
+import { GoogleGenerativeIcon } from "@/components/icons/googleGenerative";
 
 export type ProviderConfig = {
   Icon: ({ className }: { className: string }) => ReactNode;
@@ -67,7 +68,7 @@ export const providerConfigs = {
     apiKeyPrefix: "sk-",
   },
   GOOGLE_GENERATIVE: {
-    Icon: ({ className }) => <OpenAiIcon className={cn(className)} />,
+    Icon: ({ className }) => <GoogleGenerativeIcon className={cn(className)} />,
     name: "Google AI Studio",
     defaultUrl: "https://generativelanguage.googleapis.com/v1beta/v1",
     modelSuggestions: googleGenerativeModels,

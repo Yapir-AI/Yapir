@@ -96,7 +96,7 @@ export default async function ReviewPage({
     reviewers: true,
     mergeRequest: { include: { project: true } },
     comments: { include: { reviewer: true } },
-    reviewNotes: { include: { reviewer: true } },
+    reviewNotes: { include: { reviewer: true, noteDefinition: true } },
   });
 
   const { reviewers, mergeRequest, comments } = review;
@@ -117,7 +117,7 @@ export default async function ReviewPage({
           }),
         ]}
       />
-      <Main>
+      <Main className="space-y-10">
         <TitleSection>
           <div>
             <H1>{mergeRequest.name}</H1>

@@ -83,31 +83,44 @@ model Comment {
   reviewer   Reviewer        @relation(fields: [reviewerId], references: [id])
 }
 
-model ReviewNote {
-  id         String         @id @default(uuid(7)) @db.Uuid
-  type       ReviewNoteType
-  content    String
-  createdAt  DateTime       @default(now())
-  reviewId   String         @db.Uuid
-  review     Review         @relation(fields: [reviewId], references: [id])
-  reviewerId String         @db.Uuid
-  reviewer   Reviewer       @relation(fields: [reviewerId], references: [id])
+model NoteDefinition {
+  id           String       @id @default(uuid(7)) @db.Uuid
+  title        String
+  tag          String       @unique
+  systemPrompt String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  reviewers    Reviewer[]
+  reviewNotes  ReviewNote[]
+}
 
-  @@unique([reviewId, reviewerId, type])
+model ReviewNote {
+  id               String         @id @default(uuid(7)) @db.Uuid
+  content          String
+  createdAt        DateTime       @default(now())
+  reviewId         String         @db.Uuid
+  review           Review         @relation(fields: [reviewId], references: [id])
+  reviewerId       String         @db.Uuid
+  reviewer         Reviewer       @relation(fields: [reviewerId], references: [id])
+  noteDefinitionId String         @db.Uuid
+  noteDefinition   NoteDefinition @relation(fields: [noteDefinitionId], references: [id])
+
+  @@unique([reviewId, reviewerId, noteDefinitionId])
 }
 
 model Reviewer {
-  id                     String       @id @default(uuid(7)) @db.Uuid
+  id                     String           @id @default(uuid(7)) @db.Uuid
   name                   String
-  aiProviderId           String       @db.Uuid
-  aiProvider             AiProvider   @relation(fields: [aiProviderId], references: [id])
+  aiProviderId           String           @db.Uuid
+  aiProvider             AiProvider       @relation(fields: [aiProviderId], references: [id])
   systemPrompt           String?
-  systemPromptEnabled    Boolean      @default(false)
-  useProjectInstructions Boolean      @default(true)
+  systemPromptEnabled    Boolean          @default(false)
+  useProjectInstructions Boolean          @default(true)
   projects               GitProject[]
   reviews                Review[]
   comments               Comment[]
   reviewNotes            ReviewNote[]
+  noteDefinitions        NoteDefinition[]
 }
 
 enum GitProviderType {
