@@ -5,7 +5,13 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
-import { type KeyboardEvent, useCallback, useRef, useState } from "react";
+import {
+  type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Check, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -45,6 +51,10 @@ export const AutoComplete = ({
   const [selected, setSelected] = useState<Option>(value as Option);
   const [inputValue, setInputValue] = useState<string>(value?.label || "");
   const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
+
+  useEffect(() => {
+    setFilteredOptions(options);
+  }, [options]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -138,7 +148,7 @@ export const AutoComplete = ({
       <div className="relative mt-1">
         <div
           className={cn(
-            "absolute top-0 z-10 w-full rounded-xl bg-background outline-hidden animate-in fade-in-0 zoom-in-95",
+            "bg-background animate-in fade-in-0 zoom-in-95 absolute top-0 z-10 w-full rounded-xl outline-hidden",
             isOpen ? "block" : "hidden",
           )}
         >
@@ -202,7 +212,7 @@ export const AutoComplete = ({
             ) : null}
 
             {!isLoading && filteredOptions.length === 0 && !showCustomOption ? (
-              <CommandPrimitive.Empty className="select-none rounded-sm px-2 py-3 text-center text-sm">
+              <CommandPrimitive.Empty className="rounded-sm px-2 py-3 text-center text-sm select-none">
                 {emptyMessage}
               </CommandPrimitive.Empty>
             ) : null}

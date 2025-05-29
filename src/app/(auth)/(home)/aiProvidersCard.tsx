@@ -42,12 +42,12 @@ export function AiProvidersCard({
 }
 
 function ProviderElement({ type }: { type: AiProviderType }) {
-  const Icon = providerConfigs[type].Icon;
+  const { Icon, name } = providerConfigs[type];
 
   return (
     <div className="flex flex-col items-center gap-4">
       <Icon className="fill-primary/70 size-16" />
-      <Badge variant="outline">{type}</Badge>
+      <Badge variant="outline">{name}</Badge>
     </div>
   );
 }

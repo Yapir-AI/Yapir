@@ -120,6 +120,8 @@ enum AiProviderType {
   OPENAI_LIKE
   OLLAMA
   MISTRAL
+  DEEPSEEK
+  GOOGLE_GENERATIVE
 }
 
 enum ReviewStatus {

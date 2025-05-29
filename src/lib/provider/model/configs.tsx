@@ -4,6 +4,8 @@ import { OpenAiIcon } from "@/components/icons/openai";
 import { OllamaIcon } from "@/components/icons/ollama";
 import {
   anthropicModels,
+  deepseekModels,
+  googleGenerativeModels,
   mistralModels,
   ollamaModels,
   openAiModels,
@@ -11,6 +13,7 @@ import {
 import { MistralIcon } from "@/components/icons/mistral";
 import { AiProviderType } from "@prisma/client";
 import { cn } from "@/lib/utils";
+import { DeepseekIcon } from "@/components/icons/deepseek";
 
 export type ProviderConfig = {
   Icon: ({ className }: { className: string }) => ReactNode;
@@ -56,6 +59,18 @@ export const providerConfigs = {
     modelSuggestions: mistralModels,
     apiKeyPrefix: undefined,
   },
+  DEEPSEEK: {
+    Icon: ({ className }) => <DeepseekIcon className={cn(className)} />,
+    name: "DeepSeek",
+    defaultUrl: "https://api.deepseek.com",
+    modelSuggestions: deepseekModels,
+    apiKeyPrefix: "sk-",
+  },
+  GOOGLE_GENERATIVE: {
+    Icon: ({ className }) => <OpenAiIcon className={cn(className)} />,
+    name: "Google AI Studio",
+    defaultUrl: "https://generativelanguage.googleapis.com/v1beta/v1",
+    modelSuggestions: googleGenerativeModels,
+    apiKeyPrefix: "AIzaSy",
+  },
 } as const satisfies Record<AiProviderType, ProviderConfig>;
-
-const a = AiProviderType;
