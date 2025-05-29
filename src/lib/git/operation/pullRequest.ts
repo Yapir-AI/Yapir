@@ -17,6 +17,7 @@ import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeReque
 type ReviewerResult = { reviewer: Reviewer } & (
   | {
       success: true;
+      summary: string;
       comments: Prisma.CommentUncheckedCreateWithoutReviewInput[];
       reviewNotes: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[];
     }
@@ -132,6 +133,7 @@ export namespace PullRequestHandle {
         );
 
         return {
+          summary: object.summary,
           success: true,
           reviewer,
           comments: commentsWithReviewer,
@@ -168,14 +170,22 @@ export namespace PullRequestHandle {
         .map((result) => ({
           reviewer: result.reviewer.name,
           message: result.success
-            ? `Wrote ${result.comments.length} comments`
+            ? `${result.comments.length} comments`
             : "❌ " + result.error,
+          summary: result.success ? result.summary : undefined,
         }))
-        .map((r) => `${r.reviewer}: ${r.message}`)
+        .map(
+          (r) =>
+            `**${r.reviewer}** - ${r.message}` +
+            (r.summary ? `\n>${r.summary}` : ""),
+        )
         .join("\n\n");
 
       await this.gitMergeRequestAdapter.postNote({
-        content: `[Yapir review completed](${reviewUrl}):\n\n` + messages,
+        content:
+          `## Yapir review\n\n` +
+          messages +
+          `\n\n[see complete review](${reviewUrl})`,
       });
     }
 
@@ -266,15 +276,10 @@ export namespace PullRequestHandle {
         }),
       )
       .describe("The list of inline comments for specific lines of code"),
-    // technicalSummary: z
-    //   .string()
-    //   .describe(
-    //     "Provide a high-level technical overview of this change from a system design perspective. Focus on the big picture: What is this change trying to accomplish? How does it fit into the larger system architecture? Are there any significant technical trade-offs or design decisions? Consider scalability, maintainability, and integration with existing systems. Avoid nitpicking individual lines of code or specific user guidelines - instead think about the overall technical approach and whether it's sound.",
-    //   ),
-    // generalAssessment: z
-    //   .string()
-    //   .describe(
-    //     "Give your overall professional assessment as if you were a senior engineer reviewing this for production readiness. What's your gut feeling about this change? Any new library introduced? Does it feel well thought out and ready to ship? Are there any red flags or areas of concern from a business or user impact perspective? Consider the bigger picture: does this change align with good engineering practices and does it move the product in the right direction? Be honest about your confidence level in this implementation.",
-    //   ),
+    summary: z
+      .string()
+      .describe(
+        "Short funny summary of the review to publish on the PR. One sentence max. Ex: 'Great job around the code, I like it!' or 'The security really needs to be improved, oopsie!' or 'Just a little thing and we're good to go!'",
+      ),
   });
 }
