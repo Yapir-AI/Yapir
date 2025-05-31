@@ -8,9 +8,8 @@ import { assertAuthenticated } from "@/lib/auth/check";
 import { container, reviewContainer } from "@/lib/di/container";
 import { routes } from "@/lib/route";
 import { z } from "zod";
-import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 import { GitlabMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
-import projectForReview = PullRequestHandle.projectForReview;
+import { projectForReview } from "@/lib/review/types";
 
 export const createGitlabConnector = actionClient
   .schema(GitlabConnectorCreate.schema)
@@ -53,13 +52,12 @@ export const runGitlabReviewAction = actionClient
         Number(mergeRequest.originId),
         gitlab,
       );
-      const { pullRequestHandleOperation } = reviewContainer({
-        mergeRequestId: mergeRequest.id,
+      const { reviewOperation } = reviewContainer({
         gitMergeRequestAdapter: gitlabAdapter,
         project: mergeRequest.project,
       });
 
-      await pullRequestHandleOperation.execute(mergeRequest.id);
+      await reviewOperation.execute({ mergeRequestId: mergeRequest.id });
       revalidatePath(
         routes.mergeRequest(mergeRequest.project.id, mergeRequest.id),
       );

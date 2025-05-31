@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { WebhookMergeRequestEventSchema } from "@gitbeaker/core";
 import { container, reviewContainer } from "@/lib/di/container";
 import { GitlabMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
-import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
-import projectForReview = PullRequestHandle.projectForReview;
+import { projectForReview } from "@/lib/review/types";
 
 export async function POST(
   request: NextRequest,
@@ -69,13 +68,12 @@ export async function POST(
     gitlab,
   );
 
-  const { pullRequestHandleOperation } = reviewContainer({
-    mergeRequestId: mergeRequest.id,
+  const { reviewOperation } = reviewContainer({
     gitMergeRequestAdapter: gitlabAdapter,
     project,
   });
 
-  await pullRequestHandleOperation.execute(mergeRequest.id);
+  await reviewOperation.execute({ mergeRequestId: mergeRequest.id });
 
   return NextResponse.json({});
 }

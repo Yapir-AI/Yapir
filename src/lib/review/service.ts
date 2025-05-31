@@ -53,46 +53,4 @@ export class ReviewService {
   get updateReview() {
     return this.prisma.review.update;
   }
-
-  async completeReview(
-    reviewId: string,
-    comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],
-    reviewNotes?: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[],
-  ) {
-    return this.prisma.review.update({
-      data: {
-        status: "REVIEWED",
-        comments: {
-          create: comments,
-        },
-        ...(reviewNotes && {
-          reviewNotes: {
-            create: reviewNotes,
-          },
-        }),
-      },
-      where: { id: reviewId },
-    });
-  }
-
-  async failReview(
-    reviewId: string,
-    comments: Prisma.CommentUncheckedCreateWithoutReviewInput[],
-    message?: string,
-    reviewNotes?: Prisma.ReviewNoteUncheckedCreateWithoutReviewInput[],
-  ) {
-    return this.prisma.review.update({
-      data: {
-        status: "ERROR",
-        errorMessage: message,
-        comments: { create: comments },
-        ...(reviewNotes && {
-          reviewNotes: {
-            create: reviewNotes,
-          },
-        }),
-      },
-      where: { id: reviewId },
-    });
-  }
 }

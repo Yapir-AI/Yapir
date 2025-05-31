@@ -13,7 +13,6 @@ import { GitlabRepositoryConnect } from "@/lib/git/connectors/gitlab/operation/r
 import { GitlabConnectorCreate } from "@/lib/git/connectors/gitlab/operation/connectorCreate";
 import { GitlabConnectorRepositoryList } from "@/lib/git/connectors/gitlab/operation/connectorRepositoryList";
 import { PromptService } from "@/lib/prompt/service";
-import { PullRequestHandle } from "@/lib/git/operation/pullRequest";
 import { ReviewerCreate } from "@/lib/reviewer/operation/create";
 import { ReviewerUpdate } from "@/lib/reviewer/operation/update";
 import { ReviewerService } from "@/lib/reviewer/service";
@@ -24,6 +23,16 @@ import { CommentService } from "@/lib/comment/service";
 import { MergeRequestIgnoreService } from "@/lib/mergeRequest/ignoreService";
 import { StatsService } from "@/lib/stats/service";
 import { ConnectorService } from "@/lib/git/connectors/service";
+import type { ProjectForReview } from "@/lib/review/types";
+import { ReviewOperation } from "@/lib/review/operation";
+import { FetchDiffStep } from "@/lib/review/steps/fetchDiffStep";
+import { ReviewLifecycleSteps } from "@/lib/review/steps/reviewLifecycleSteps";
+import { GetModelStep } from "@/lib/review/steps/getModelStep";
+import { CreatePromptStep } from "@/lib/review/steps/createPromptStep";
+import { CreateSchemaStep } from "@/lib/review/steps/createSchemaStep";
+import { CustomNoteSteps } from "@/lib/review/steps/customNoteSteps";
+import { GenerateObjectStep } from "@/lib/review/steps/generateObjectStep";
+import { PostReviewSummaryStep } from "@/lib/review/steps/postReviewSummaryStep";
 
 export const container = createTypedContainer({
   prisma: asValue(prismaClient),
@@ -53,21 +62,23 @@ export const container = createTypedContainer({
 });
 
 export function reviewContainer({
-  mergeRequestId,
   gitMergeRequestAdapter,
   project,
 }: {
-  mergeRequestId: string;
   gitMergeRequestAdapter: GitMergeRequestAdapter;
-  project: PullRequestHandle.ProjectForReview;
+  project: ProjectForReview;
 }) {
   return container
     .createScope()
-    .register(
-      "pullRequestHandleOperation",
-      asClass(PullRequestHandle.Operation),
-    )
-    .register("mergeRequestId", asValue(mergeRequestId))
+    .register("reviewOperation", asClass(ReviewOperation))
+    .register("fetchDiffStep", asClass(FetchDiffStep))
+    .register("reviewLifecycleSteps", asClass(ReviewLifecycleSteps))
+    .register("getModelStep", asClass(GetModelStep))
+    .register("createPromptStep", asClass(CreatePromptStep))
+    .register("createSchemaStep", asClass(CreateSchemaStep))
+    .register("customNoteSteps", asClass(CustomNoteSteps))
+    .register("generateObjectStep", asClass(GenerateObjectStep))
+    .register("postReviewSummaryStep", asClass(PostReviewSummaryStep))
     .register("gitMergeRequestAdapter", asValue(gitMergeRequestAdapter))
     .register("project", asValue(project)).cradle;
 }

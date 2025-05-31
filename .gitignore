@@ -45,3 +45,4 @@ seed.sql
 
 # Sentry Config File
 .env.sentry-build-plugin
+error-context-log.json
