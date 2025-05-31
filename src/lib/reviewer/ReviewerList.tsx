@@ -2,6 +2,7 @@ import {
   CardList,
   CardListItem,
   CardListTitle,
+  EmptyCardList,
 } from "@/components/ui/card-list";
 import { routes } from "@/lib/route";
 import type { ReviewersList } from "@/lib/reviewer/service";
@@ -12,13 +13,16 @@ import { providerConfigs } from "@/lib/provider/model/configs";
 export function ReviewerList({
   reviewers,
   className,
+  title,
 }: {
+  title?: string;
   reviewers: ReviewersList;
   className?: string;
 }) {
   return (
     <CardList className={className}>
-      <CardListTitle>Reviewers</CardListTitle>
+      <CardListTitle>{title ?? "Reviewers"}</CardListTitle>
+      {reviewers.length === 0 && <EmptyCardList>No Reviewers</EmptyCardList>}
       {reviewers.map((reviewer) => {
         const { name: providerName } =
           providerConfigs[reviewer.aiProvider.type];

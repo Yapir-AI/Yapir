@@ -18,6 +18,8 @@ export const routes = {
     `${routes.mergeRequests(projectId)}/${mergeRequestId}` as const,
   review: (projectId: string, reviewId: string) =>
     `${routes.project(projectId)}/reviews/${reviewId}` as const,
+  notes: "/notes",
+  note: (id: string) => `${routes.notes}/${id}` as const,
 } as const;
 
 export type YapirRoute = {

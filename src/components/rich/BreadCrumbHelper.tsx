@@ -26,6 +26,7 @@ const breadCrumbs = {
   Instructions: routes.settings,
   Git: routes.git,
   Providers: routes.providers,
+  Notes: routes.notes,
 } as const satisfies Record<string, YapirRoute>;
 type BreadCrumbs = typeof breadCrumbs;
 type BreadCrumbKey = keyof BreadCrumbs;

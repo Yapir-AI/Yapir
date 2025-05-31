@@ -33,6 +33,7 @@ import { CreateSchemaStep } from "@/lib/review/steps/createSchemaStep";
 import { CustomNoteSteps } from "@/lib/review/steps/customNoteSteps";
 import { GenerateObjectStep } from "@/lib/review/steps/generateObjectStep";
 import { PostReviewSummaryStep } from "@/lib/review/steps/postReviewSummaryStep";
+import { NoteService } from "@/lib/note/service";
 
 export const container = createTypedContainer({
   prisma: asValue(prismaClient),
@@ -54,6 +55,7 @@ export const container = createTypedContainer({
   providerUpdateOperation: asClass(ProviderUpdate.Operation),
   providerDeleteOperation: asClass(ProviderDelete.Operation),
   mergeRequestService: asClass(MergeRequestService),
+  noteService: asClass(NoteService),
   reviewService: asClass(ReviewService),
   reviewerService: asClass(ReviewerService),
   reviewerCreateOperation: asClass(ReviewerCreate.Operation),

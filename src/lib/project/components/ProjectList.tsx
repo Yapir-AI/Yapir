@@ -11,13 +11,15 @@ import { ProjectAvatar } from "@/lib/avatar/project";
 export function ProjectList({
   projects,
   className,
+  title,
 }: {
+  title?: string;
   projects: ProjectPage;
   className?: string;
 }) {
   return (
     <CardList className={className}>
-      <CardListTitle>Projects</CardListTitle>
+      <CardListTitle>{title ?? "Projects"}</CardListTitle>
       {projects.map((project) => (
         <CardListItem
           href={routes.project(project.id)}

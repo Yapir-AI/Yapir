@@ -15,7 +15,6 @@ import {
 import {
   BotMessageSquare,
   BrainIcon,
-  FileCog,
   FolderGit2,
   GitBranchIcon,
   HomeIcon,
@@ -25,7 +24,6 @@ import {
 import packageJson from "@/../package.json";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Route } from "next";
 import { routes, type YapirRoute } from "@/lib/route";
 import { type ReactElement, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -42,6 +40,7 @@ const navGroups: NavGroup[] = [
         strict: true,
       },
       { title: "Reviewers", url: routes.reviewers, icon: BotMessageSquare },
+      { title: "Notes", url: routes.notes, icon: NotebookPenIcon },
       {
         title: "Git Connections",
         url: routes.git,

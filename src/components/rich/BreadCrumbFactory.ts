@@ -26,4 +26,5 @@ export const breadCrumbFactory = {
   }),
 
   review: ({ name }: { name: string }) => ({ label: name + "'s Review" }),
+  note: ({ title }: { title: string }) => ({ label: title }),
 } as const satisfies Record<string, (props: any) => BreadCrumbItem>;

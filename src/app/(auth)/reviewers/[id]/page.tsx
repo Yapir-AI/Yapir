@@ -24,6 +24,10 @@ import { routes } from "@/lib/route";
 import type { AiProviderType, Reviewer } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
 import { providerConfigs } from "@/lib/provider/model/configs";
+import { ProjectList } from "@/lib/project/components/ProjectList";
+import { Notes } from "@/app/(auth)/reviewers/[id]/Notes";
+import { NoteList } from "@/app/(auth)/notes/page";
+import { Suspense } from "react";
 
 export default async function ReviewerPage({
   params,
@@ -34,7 +38,10 @@ export default async function ReviewerPage({
   const reviewerId = await params.then((p) => p.id);
 
   const [reviewer, providers] = await Promise.all([
-    await reviewerService.findById(reviewerId, reviewerWithProviderAndProjects),
+    await reviewerService.findById(reviewerId, {
+      ...reviewerWithProviderAndProjects,
+      noteDefinitions: true,
+    }),
     await providerService.listProviders(),
   ]);
 
@@ -61,6 +68,9 @@ export default async function ReviewerPage({
           <div className="space-y-10 lg:col-span-2">
             <ProjectInstructions {...reviewer} />
             <SystemPrompt {...reviewer} />
+            <Suspense>
+              <Notes reviewerId={reviewer.id} />
+            </Suspense>
           </div>
           <div className="space-y-10">
             <ProviderSelect
@@ -68,7 +78,10 @@ export default async function ReviewerPage({
               reviewerId={reviewerId}
               currentProviderId={reviewer.aiProviderId}
             />
-            <Projects {...reviewer} />
+            <ProjectList
+              projects={reviewer.projects}
+              title="Associated Projects"
+            />
           </div>
         </div>
       </Main>
@@ -109,25 +122,6 @@ function ProviderSelect({
           ))}
         </SelectContent>
       </Select>
-    </div>
-  );
-}
-
-function Projects(reviewer: ReviewerWithProviderAndProjects) {
-  return (
-    <div className="flex flex-col gap-4">
-      <H3>Associated Projects</H3>
-      {reviewer.projects.length === 0 && (
-        <span className="text-muted-foreground mt-2 text-center text-sm">
-          <p>No associated projects yet</p>
-          <Link className="hover:underline" href={routes.projects}>
-            Go to projects
-          </Link>
-        </span>
-      )}
-      {reviewer.projects.map((project) => (
-        <ProjectCard key={project.id} {...project} />
-      ))}
     </div>
   );
 }

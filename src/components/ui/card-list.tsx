@@ -1,4 +1,4 @@
-import type { PropsWithChildren, ReactNode } from "react";
+import React, { type PropsWithChildren, type ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { H3 } from "@/components/ui/typography";
 import type { YapirRoute } from "@/lib/route";
@@ -10,7 +10,9 @@ export function CardList({
   className,
 }: PropsWithChildren<{ className?: string }>) {
   return (
-    <Card className={cn("flex flex-col divide-y", className)}>{children}</Card>
+    <Card className={cn("flex h-fit max-h-fit flex-col divide-y", className)}>
+      {children}
+    </Card>
   );
 }
 
@@ -34,14 +36,23 @@ export function CardListItem({
   children,
   href,
   className,
-}: PropsWithChildren<{ href: YapirRoute; className?: string }>) {
+  Action,
+}: PropsWithChildren<{
+  href: YapirRoute;
+  className?: string;
+  Action?: () => React.ReactElement;
+}>) {
   return (
-    <Link
-      href={href}
-      className={cn("hover:bg-accent px-6 py-3 last:rounded-b-xl", className)}
-    >
-      {children}
-    </Link>
+    <div className="hover:bg-accent flex flex-row items-center gap-6 last:rounded-b-xl *:last:pr-6">
+      <Link href={href} className={cn("grow space-y-3 py-3 pl-6", className)}>
+        {children}
+      </Link>
+      {Action && (
+        <div>
+          <Action />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -55,7 +66,7 @@ export function EmptyCardList({
   return (
     <div
       className={cn(
-        "relative flex min-h-96 flex-col items-center justify-center gap-2 text-center",
+        "relative flex min-h-32 flex-col items-center justify-center gap-2 text-center",
         className,
       )}
     >
