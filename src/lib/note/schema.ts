@@ -9,6 +9,7 @@ export type CreateNoteSchema = z.infer<typeof createNoteSchema>;
 export const updateNoteSchema = z.object({
   id: z.string().uuid(),
   systemPrompt: z.string().optional(),
+  publishToOrigin: z.boolean().optional(),
 });
 export type UpdateNoteSchema = z.infer<typeof updateNoteSchema>;
 

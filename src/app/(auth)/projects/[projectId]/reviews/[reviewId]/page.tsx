@@ -144,8 +144,9 @@ export default async function ReviewPage({
           </Alert>
         )}
 
-        <ReviewNotes reviewNotes={review.reviewNotes} />
-
+        <div className="grid grid-cols-2 gap-4">
+          <ReviewNotes reviewNotes={review.reviewNotes} />
+        </div>
         {comments.length ? (
           <div className="flex max-h-full gap-4 pb-6">
             <SideComments diffs={review.diffs} comments={fileComments} />

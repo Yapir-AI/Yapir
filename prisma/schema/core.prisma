@@ -84,14 +84,15 @@ model Comment {
 }
 
 model NoteDefinition {
-  id           String       @id @default(uuid(7)) @db.Uuid
-  title        String
-  tag          String       @unique
-  systemPrompt String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  reviewers    Reviewer[]
-  reviewNotes  ReviewNote[]
+  id              String       @id @default(uuid(7)) @db.Uuid
+  title           String
+  tag             String       @unique
+  systemPrompt    String
+  publishToOrigin Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  reviewers       Reviewer[]
+  reviewNotes     ReviewNote[]
 }
 
 model ReviewNote {

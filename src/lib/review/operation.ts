@@ -68,6 +68,7 @@ export class ReviewOperation {
       .addStep("updateReview", this.reviewLifecycleSteps.update)
       .addStep("createNotes", this.customNoteSteps.saveOutputNotes)
       .addStep("postSummary", this.postReviewSummaryStep.postReviewSummary)
+      .addStep("publishNotes", this.customNoteSteps.publishNotes)
       .execute(params);
   }
 

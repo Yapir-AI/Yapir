@@ -26,14 +26,14 @@ export function ReviewNotes({ reviewNotes }: ReviewNotesProps) {
     <div className="flex gap-3">
       {reviewNotes.map((note) => (
         <Card key={note.id}>
-          <CardHeader className="flex-row items-center gap-2 space-y-0">
+          <CardHeader className="flex-row items-center justify-between gap-2 space-y-0">
             <ReviewerAvatar
               reviewerName={note.reviewer.name}
               options={{ size: 30, radius: 50 }}
             />
-            <CardTitle>
-              {note.reviewer.name} - {note.noteDefinition.title}
-            </CardTitle>
+            <CardTitle>{note.reviewer.name}</CardTitle>
+            <div className="grow" />
+            <CardTitle>{note.noteDefinition.title}</CardTitle>
           </CardHeader>
           <CardContent className="text-sm">
             <MarkdownRenderer>

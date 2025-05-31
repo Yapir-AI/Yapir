@@ -44,7 +44,7 @@ export function CardListItem({
 }>) {
   return (
     <div className="hover:bg-accent flex flex-row items-center gap-6 last:rounded-b-xl *:last:pr-6">
-      <Link href={href} className={cn("grow space-y-3 py-3 pl-6", className)}>
+      <Link href={href} className={cn("grow py-3 pl-6", className)}>
         {children}
       </Link>
       {Action && (

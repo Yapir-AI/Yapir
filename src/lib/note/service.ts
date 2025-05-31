@@ -23,7 +23,10 @@ export class NoteService {
   update(schema: UpdateNoteSchema) {
     return this.prisma.noteDefinition.update({
       where: { id: schema.id },
-      data: { systemPrompt: schema.systemPrompt },
+      data: {
+        systemPrompt: schema.systemPrompt,
+        publishToOrigin: schema.publishToOrigin,
+      },
     });
   }
 
