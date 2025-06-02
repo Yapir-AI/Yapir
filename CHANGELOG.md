@@ -1,3 +1,12 @@
+## [0.12.1](https://github.com/yapir-ai/yapir/compare/v0.12.0...v0.12.1) (2025-06-02)
+
+
+### Bug Fixes
+
+* chat heigth ([a7cca56](https://github.com/yapir-ai/yapir/commit/a7cca5667c207dd659c766afe2850d8f766ab1d9))
+
+
+
 # [0.12.0](https://github.com/yapir-ai/yapir/compare/v0.11.3...v0.12.0) (2025-05-31)
 
 
@@ -36,16 +45,6 @@
 ### Bug Fixes
 
 * uuid generator ([0e853d1](https://github.com/yapir-ai/yapir/commit/0e853d1b68ddf9b9a946af6da9b9b1ca54181cc5))
-
-
-
-# [0.11.0](https://github.com/yapir-ai/yapir/compare/v0.10.4...v0.11.0) (2025-05-26)
-
-
-### Features
-
-* multi reviewer ([379f6bf](https://github.com/yapir-ai/yapir/commit/379f6bf9a329f567cb9c1bf2f3f12402793b08ac))
-* review note ([ba68a84](https://github.com/yapir-ai/yapir/commit/ba68a84e12174858ab6e8b40ae55fd7727781bea))
 
 
 
