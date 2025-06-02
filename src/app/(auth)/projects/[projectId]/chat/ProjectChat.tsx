@@ -37,7 +37,7 @@ export function ProjectChat({
   });
 
   return (
-    <div className="h-[86dvh] max-h-full space-y-4">
+    <div className="h-[calc(100%-68px)] max-h-full space-y-4">
       <div className="flex justify-between">
         <div>
           <H1>{projectName}</H1>
