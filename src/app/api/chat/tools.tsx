@@ -34,7 +34,6 @@ export function createTool<
     execute: fn,
   });
 }
-
 const getFileParams = z.object({
   path: z.string().describe("The file path"),
 });
@@ -42,7 +41,8 @@ const getFileResult = z.string();
 const getFileTool: ChatTool<typeof getFileParams, typeof getFileResult> = {
   parameters: getFileParams,
   result: getFileResult,
-  description: "Get the content of a file from the project.",
+  description:
+    "Retrieve the complete content of a specific file from the repository described in the <available_files> section. Provide the full file path (e.g., 'src/components/Header.tsx'). Use this to examine implementations, configurations, and documentation. Don't fetch .yapir/guidelines as you already get those in the <developer_guideline> block",
   components: {
     calling: ({ params }) => (
       <div className="bg-muted/50 text-muted-foreground flex items-center gap-3 rounded-lg border px-3 py-2 text-sm">
@@ -83,7 +83,8 @@ export const searchContentTool: ChatTool<
 > = {
   parameters: searchContentParams,
   result: searchContentResult,
-  description: "Search some content in the project files.",
+  description:
+    "Search for text, code patterns, or keywords across all repository files. Returns matching files with line numbers and context. Supports gitlab simple_query_string patterns.",
   components: {
     calling: ({ params }) => (
       <div className="bg-muted/50 text-muted-foreground flex items-center gap-3 rounded-lg border px-3 py-2 text-sm">
@@ -98,7 +99,6 @@ export const searchContentTool: ChatTool<
       </div>
     ),
     result: ({ result, params }) => {
-      console.log(result[0]?.data);
       return (
         <div className="bg-muted/50 w-full max-w-2xl rounded-lg border">
           <div className="flex items-center gap-3 border-b px-3 py-2">
