@@ -10,7 +10,6 @@ import { computeDiff } from "@/lib/git/parsing/diffUtils";
 import type { GitlabClient } from "@/lib/git/connectors/gitlab/clientFactory";
 import type { ExpandedMergeRequestSchema } from "@gitbeaker/core";
 import ignore, { type Ignore } from "ignore";
-import { atob } from "node:buffer";
 
 export abstract class GitMergeRequestAdapter {
   protected abstract getChangedFiles(): Promise<
@@ -112,7 +111,7 @@ export class GitlabMergeRequestAdapter extends GitMergeRequestAdapter {
       path,
       ref,
     );
-    return atob(file.content);
+    return Buffer.from(file.content, "base64").toString("utf8");
   }
 
   async postNote({ content }: { content: string }) {
