@@ -1,3 +1,18 @@
+# [0.13.0](https://github.com/yapir-ai/yapir/compare/v0.12.1...v0.13.0) (2025-06-12)
+
+
+### Bug Fixes
+
+* review notes display ([03b302a](https://github.com/yapir-ai/yapir/commit/03b302a013bc44f06759ab2ae6ad71ccdbe63a8b))
+* ut8 issues ([365b2f5](https://github.com/yapir-ai/yapir/commit/365b2f599f257481368f4cb47e7a6f518d851abf))
+
+
+### Features
+
+* upgraded chat prompt ([fa0eecb](https://github.com/yapir-ai/yapir/commit/fa0eecb5ccd891500f83b6653e26d7dd1c9e5728))
+
+
+
 ## [0.12.1](https://github.com/yapir-ai/yapir/compare/v0.12.0...v0.12.1) (2025-06-02)
 
 
@@ -36,15 +51,6 @@
 ### Bug Fixes
 
 * failing generation for uuid ([26cc3be](https://github.com/yapir-ai/yapir/commit/26cc3be06f9df57f3010c2feddfa783ba61a700c))
-
-
-
-## [0.11.1](https://github.com/yapir-ai/yapir/compare/v0.11.0...v0.11.1) (2025-05-27)
-
-
-### Bug Fixes
-
-* uuid generator ([0e853d1](https://github.com/yapir-ai/yapir/commit/0e853d1b68ddf9b9a946af6da9b9b1ca54181cc5))
 
 
 
