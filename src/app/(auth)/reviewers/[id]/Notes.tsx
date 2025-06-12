@@ -1,6 +1,5 @@
 "use client";
 
-import { type NoteListElement, NoteListItem } from "@/app/(auth)/notes/page";
 import {
   SearchCommand,
   useSearchCommand,
@@ -11,6 +10,8 @@ import { PlusIcon, TrashIcon } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { H3, H3Sub } from "@/components/ui/typography";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { NoteListItem } from "@/lib/note/note-list";
+import type { NoteListElement } from "@/lib/note/service";
 
 function NoteSearchItem({ item: note }: { item: NoteListElement }) {
   return <div>{note.title}</div>;

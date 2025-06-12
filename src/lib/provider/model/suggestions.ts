@@ -242,6 +242,7 @@ export const ollamaModels = [
 ];
 
 export const mistralModels = [
+  "magistral-medium-2506",
   "ministral-3b-latest",
   "ministral-8b-latest",
   "mistral-large-latest",

@@ -24,8 +24,8 @@ import {
 import type { GitFileDiff } from "@/lib/git/parsing/model/GitFileDiff";
 import type { GitLineChange } from "@/lib/git/parsing/model/GitLineChange";
 import { cn } from "@/lib/utils";
-import { codeToHtml } from "shiki";
 import type { Comment, Reviewer } from "@prisma/client";
+import { stackoverflowLight as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import {
   CardContent,
   CardDescription,
@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EmptyCard } from "@/components/rich/emptyCard";
-
+import SyntaxHighlighter from "react-syntax-highlighter";
 type FileComments = Partial<Record<string, Comment[]>>;
 
 function SideComments({
@@ -286,24 +286,12 @@ async function File({
   );
 }
 
-async function FileLine({ ...line }: GitLineChange & { lang: string }) {
+function FileLine({ ...line }: GitLineChange & { lang: string }) {
   const typeToPrefix: Record<GitLineChange["type"], string> = {
     added: "+",
     removed: "-",
     unchanged: "",
   };
-
-  const out = await codeToHtml(line.content, {
-    lang: line.lang,
-    // defaultColor: false,
-    themes: {
-      light: "github-light",
-      dark: "github-dark",
-    },
-    colorReplacements: {
-      "#fff": "transparent",
-    },
-  });
 
   return (
     <>
@@ -321,8 +309,23 @@ async function FileLine({ ...line }: GitLineChange & { lang: string }) {
         <td className="w-1 p-0">
           <span className="select-none">{typeToPrefix[line.type]} </span>
         </td>
-        <td className="text-shiki-light bg-shiki-light-bg dark:text-shiki-dark dark:bg-shiki-dark-bg pl-0! [&_pre]:break-words [&_pre]:whitespace-pre-wrap">
-          <p dangerouslySetInnerHTML={{ __html: out }}></p>
+
+        <td className="pl-0!">
+          <SyntaxHighlighter
+            wrapLongLines={true}
+            language={line.lang}
+            style={theme}
+            customStyle={{
+              background: "transparent",
+              padding: 0,
+              maxWidth: "100%",
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
+              overflow: "hidden",
+            }}
+          >
+            {line.content}
+          </SyntaxHighlighter>
         </td>
       </tr>
     </>

@@ -67,3 +67,7 @@ export class NoteService {
     });
   }
 }
+
+export type NoteListElement = Awaited<
+  ReturnType<typeof NoteService.prototype.list>
+>[number];

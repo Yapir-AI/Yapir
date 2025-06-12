@@ -1,9 +1,11 @@
-import React, { Fragment, type JSX, Suspense } from "react";
+import React, { type JSX } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/utils";
 import { CopyButton } from "@/components/ui/copy-button";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { stackoverflowLight as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 interface MarkdownRendererProps {
   children: string;
@@ -18,61 +20,6 @@ export function MarkdownRenderer({ children }: MarkdownRendererProps) {
     </div>
   );
 }
-
-interface HighlightedPre extends React.HTMLAttributes<HTMLPreElement> {
-  children: string;
-  language: string;
-}
-
-const HighlightedPre = React.memo(
-  async ({ children, language, ...props }: HighlightedPre) => {
-    const { codeToTokens, bundledLanguages } = await import("shiki");
-
-    if (!(language in bundledLanguages)) {
-      return <pre {...props}>{children}</pre>;
-    }
-
-    const { tokens } = await codeToTokens(children, {
-      lang: language as keyof typeof bundledLanguages,
-      defaultColor: false,
-      themes: {
-        light: "github-light",
-        dark: "github-dark",
-      },
-    });
-
-    return (
-      <pre {...props}>
-        <code>
-          {tokens.map((line, lineIndex) => (
-            <Fragment key={lineIndex}>
-              <span>
-                {line.map((token, tokenIndex) => {
-                  const style =
-                    typeof token.htmlStyle === "string"
-                      ? undefined
-                      : token.htmlStyle;
-
-                  return (
-                    <span
-                      key={tokenIndex}
-                      className="text-shiki-light bg-shiki-light-bg dark:text-shiki-dark dark:bg-shiki-dark-bg"
-                      style={style}
-                    >
-                      {token.content}
-                    </span>
-                  );
-                })}
-              </span>
-              {lineIndex !== tokens.length - 1 && "\n"}
-            </Fragment>
-          ))}
-        </code>
-      </pre>
-    );
-  },
-);
-HighlightedPre.displayName = "HighlightedCode";
 
 interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
   children: React.ReactNode;
@@ -92,23 +39,28 @@ const CodeBlock = ({
       : childrenTakeAllStringContents(children);
 
   const preClass = cn(
-    "overflow-x-scroll rounded-md border bg-background/50 p-4 font-mono text-sm [scrollbar-width:none]",
+    "overflow-x-scroll rounded-md border bg-background/50 p-4! font-mono text-sm [scrollbar-width:none]",
     className,
   );
 
   return (
     <div className="group/code relative mb-4">
-      <Suspense
-        fallback={
-          <pre className={preClass} {...restProps}>
-            {children}
-          </pre>
-        }
+      <SyntaxHighlighter
+        wrapLongLines={true}
+        language={language}
+        className={preClass}
+        style={theme}
+        customStyle={{
+          background: "transparent",
+          padding: 0,
+          maxWidth: "100%",
+          overflowWrap: "break-word",
+          wordBreak: "break-word",
+          overflow: "hidden",
+        }}
       >
-        <HighlightedPre language={language} className={preClass}>
-          {code}
-        </HighlightedPre>
-      </Suspense>
+        {code}
+      </SyntaxHighlighter>
 
       <div className="invisible absolute top-2 right-2 flex space-x-1 rounded-lg p-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
         <CopyButton content={code} copyMessage="Copied code to clipboard" />
