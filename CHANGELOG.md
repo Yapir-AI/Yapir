@@ -1,3 +1,14 @@
+# [0.14.0](https://github.com/yapir-ai/yapir/compare/v0.13.0...v0.14.0) (2025-06-12)
+
+
+### Features
+
+* better highlighter ([b9a9a9d](https://github.com/yapir-ai/yapir/commit/b9a9a9dfa4702f3649cc765085e2e71ed1e10ecd))
+* implement SearchCommand component for unified search/selection UI ([9751230](https://github.com/yapir-ai/yapir/commit/97512304d8176313aa5e19190a89303857d8915b))
+* new avatars ([3958948](https://github.com/yapir-ai/yapir/commit/3958948a3fff7a4d5e6886ed69267e46b08cd42b))
+
+
+
 # [0.13.0](https://github.com/yapir-ai/yapir/compare/v0.12.1...v0.13.0) (2025-06-12)
 
 
@@ -42,15 +53,6 @@
 ### Bug Fixes
 
 * long line causing issues to comments ([362ebce](https://github.com/yapir-ai/yapir/commit/362ebcedded834ab374afcb884ec83d0b571d054))
-
-
-
-## [0.11.2](https://github.com/yapir-ai/yapir/compare/v0.11.1...v0.11.2) (2025-05-27)
-
-
-### Bug Fixes
-
-* failing generation for uuid ([26cc3be](https://github.com/yapir-ai/yapir/commit/26cc3be06f9df57f3010c2feddfa783ba61a700c))
 
 
 
