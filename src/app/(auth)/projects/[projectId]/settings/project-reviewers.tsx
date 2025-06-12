@@ -13,8 +13,8 @@ import {
 import { ReviewerListItem } from "@/lib/reviewer/ReviewerList";
 import { Button } from "@/components/ui/button";
 import { searchReviewers } from "@/lib/reviewer/action";
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import { useMutation } from "@tanstack/react-query";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 
 export function ProjectReviewers({
   reviewers: initialReviewers,
@@ -105,7 +105,11 @@ export function ProjectReviewers({
 function ReviewerSearchItem({ item: reviewer }: { item: ReviewerListElement }) {
   return (
     <div className="flex items-center gap-3">
-      <ReviewerAvatar reviewerName={reviewer.name} options={{ size: 30 }} />
+      <ReviewerAvatar
+        name={reviewer.name}
+        square
+        className="min-h-8 min-w-8 rounded"
+      />
       <p>{reviewer.name}</p>
     </div>
   );

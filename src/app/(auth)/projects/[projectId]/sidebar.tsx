@@ -4,7 +4,7 @@ import type { GitProject } from "@prisma/client";
 import { SidebarPortal } from "@/components/rich/AppSideBar";
 import { routes } from "@/lib/route";
 import { CogIcon, GitPullRequestIcon, MessagesSquareIcon } from "lucide-react";
-import { ProjectAvatar } from "@/lib/avatar/project";
+import { ProjectAvatar } from "@/lib/project/components/project-avatar";
 
 export function ProjectSidebar({ project }: { project: GitProject }) {
   return (
@@ -19,8 +19,9 @@ export function ProjectSidebar({ project }: { project: GitProject }) {
               strict: true,
               icon: () => (
                 <ProjectAvatar
-                  projectName={project.name}
-                  options={{ size: 20 }}
+                  name={project.name}
+                  square
+                  className="size-5 rounded-md"
                 />
               ),
             },

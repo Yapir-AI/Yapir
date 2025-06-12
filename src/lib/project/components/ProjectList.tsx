@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card-list";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { routes } from "@/lib/route";
-import { ProjectAvatar } from "@/lib/avatar/project";
+import { ProjectAvatar } from "@/lib/project/components/project-avatar";
 
 export function ProjectList({
   projects,
@@ -26,7 +26,11 @@ export function ProjectList({
           className="flex gap-4"
           key={project.id}
         >
-          <ProjectAvatar projectName={project.name} />
+          <ProjectAvatar
+            name={project.name}
+            square
+            className="size-16 rounded"
+          />
           <div className="flex flex-col justify-evenly">
             <CardTitle className="group-hover:underline">
               {project.name}

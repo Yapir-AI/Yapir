@@ -9,8 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ExternalLinkIcon, MessagesSquareIcon } from "lucide-react";
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
-import { Card, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import { breadCrumbFactory } from "@/components/rich/BreadCrumbFactory";
 import { RunReviewButton } from "@/app/(auth)/projects/[projectId]/mergeRequests/RunReviewButton";
 import { cn } from "@/lib/utils";
@@ -19,6 +18,7 @@ import {
   CardListItem,
   CardListTitle,
 } from "@/components/ui/card-list";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 
 export default async function MergeRequestPage({
   params,
@@ -87,9 +87,8 @@ export default async function MergeRequestPage({
                     {review.reviewers.slice(0, 3).map((reviewer) => (
                       <ReviewerAvatar
                         key={reviewer.id}
-                        reviewerName={reviewer.name}
-                        options={{ size: 30, radius: 60 }}
-                        className="border-background rounded-full border"
+                        name={reviewer.name}
+                        className="border-background size-8 rounded-full border"
                       />
                     ))}
                   </div>

@@ -32,7 +32,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { CommentFeedback } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/commentFeedback";
 import { ReviewNotes } from "@/app/(auth)/projects/[projectId]/reviews/[reviewId]/reviewNotes";
@@ -46,6 +45,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EmptyCard } from "@/components/rich/emptyCard";
 import SyntaxHighlighter from "react-syntax-highlighter";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
+
 type FileComments = Partial<Record<string, Comment[]>>;
 
 function SideComments({
@@ -198,10 +199,7 @@ function LineComments({
         className="bg-card text-card-foreground border-y font-sans text-sm"
       >
         <CardHeader className="flex flex-row items-center gap-3 space-y-0">
-          <ReviewerAvatar
-            reviewerName={c.reviewer.name}
-            options={{ size: 35, radius: 100 }}
-          />
+          <ReviewerAvatar name={c.reviewer.name} className="size-8" />
           <CardTitle>{c.reviewer.name}</CardTitle>
           <div className="grow" />
           <CommentFeedback {...c} />

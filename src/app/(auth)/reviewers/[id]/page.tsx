@@ -3,8 +3,6 @@ import { H1, H3, HSub } from "@/components/ui/typography";
 import { Main } from "@/components/ui/main";
 import { container } from "@/lib/di/container";
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
-import { Avatar } from "@/lib/avatar";
-import { botttsNeutral } from "@dicebear/collection";
 import {
   Select,
   SelectContent,
@@ -20,6 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { providerConfigs } from "@/lib/provider/model/configs";
 import { ProjectList } from "@/lib/project/components/ProjectList";
 import { Notes } from "@/app/(auth)/reviewers/[id]/Notes";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 
 export default async function ReviewerPage({
   params,
@@ -45,9 +44,10 @@ export default async function ReviewerPage({
       <Main>
         <TitleSection>
           <div className="flex gap-8">
-            <Avatar
-              style={botttsNeutral}
-              options={{ seed: reviewer.name, size: 80, radius: 10 }}
+            <ReviewerAvatar
+              name={reviewer.name}
+              square
+              className="size-20 rounded-lg"
             />
             <div className="flex flex-col justify-evenly">
               <H1>{reviewer.name}</H1>

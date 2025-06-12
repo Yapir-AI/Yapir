@@ -2,7 +2,6 @@ import { routes } from "@/lib/route";
 import { CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GitBranchIcon, MessageSquareIcon } from "lucide-react";
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import { formatDistanceToNow } from "date-fns";
 import { container } from "@/lib/di/container";
 import {
@@ -10,6 +9,7 @@ import {
   CardListItem,
   CardListTitle,
 } from "@/components/ui/card-list";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 
 const listRecentReviews = async (projectId: string) =>
   container.cradle.reviewService.listReviews({
@@ -71,9 +71,8 @@ function ReviewCard(props: ReviewCardProps) {
           {props.reviewers.slice(0, 3).map((reviewer, index) => (
             <ReviewerAvatar
               key={reviewer.id}
-              reviewerName={reviewer.name}
-              options={{ radius: 50, size: 25 }}
-              className="rounded-full border"
+              name={reviewer.name}
+              className="size-6 rounded-full border"
             />
           ))}
         </div>

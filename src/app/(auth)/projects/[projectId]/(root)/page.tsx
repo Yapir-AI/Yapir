@@ -2,7 +2,6 @@ import { Main } from "@/components/ui/main";
 import { BreadCrumbHelper } from "@/components/rich/BreadCrumbHelper";
 import { container } from "@/lib/di/container";
 import {
-  CogIcon,
   ExternalLinkIcon,
   GitPullRequestIcon,
   MessageSquareIcon,
@@ -14,7 +13,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ProjectAvatar } from "@/lib/avatar/project";
 import { Suspense } from "react";
 import { RecentReviews } from "@/app/(auth)/projects/[projectId]/(root)/recentReviews";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -22,9 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import type { ProjectStats } from "@/lib/stats/service";
 import { cn } from "@/lib/utils";
 import type { Reviewer } from "@prisma/client";
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import { routes } from "@/lib/route";
 import { GradientCard } from "@/components/ui/gradientCard";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
+import { ProjectAvatar } from "@/lib/project/components/project-avatar";
 
 export default async function ProjectPage({
   params,
@@ -56,10 +55,7 @@ export default async function ProjectPage({
               </Button>
             </div>
             <div className="flex flex-col items-center">
-              <ProjectAvatar
-                projectName={project.name}
-                options={{ size: 120, radius: 100 }}
-              />
+              <ProjectAvatar name={project.name} className="size-32" />
               <CardTitle className="mt-4 text-xl">{project.name}</CardTitle>
               <CardDescription>{project.fullName}</CardDescription>
             </div>
@@ -160,8 +156,7 @@ function Reviewers({
             <ReviewerAvatar
               className="-ml-5 min-w-10 rounded-full border"
               key={r.id}
-              reviewerName={r.name}
-              options={{ size: 35, radius: 100 }}
+              name={r.name}
             />
           ))}
         </div>

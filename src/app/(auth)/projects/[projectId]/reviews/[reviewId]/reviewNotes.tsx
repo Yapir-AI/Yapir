@@ -1,4 +1,3 @@
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import {
   type NoteDefinition,
@@ -6,6 +5,7 @@ import {
   type ReviewNote,
 } from "@prisma/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 
 type ReviewNoteWithReviewerAndDefinition = ReviewNote & {
   reviewer: Reviewer;
@@ -22,10 +22,7 @@ export function ReviewNotes({ reviewNotes }: ReviewNotesProps) {
   return reviewNotes.map((note) => (
     <Card key={note.id}>
       <CardHeader className="flex-row items-center justify-between gap-2 space-y-0">
-        <ReviewerAvatar
-          reviewerName={note.reviewer.name}
-          options={{ size: 30, radius: 50 }}
-        />
+        <ReviewerAvatar name={note.reviewer.name} className="size-8" />
         <CardTitle>{note.reviewer.name}</CardTitle>
         <div className="grow" />
         <CardTitle>{note.noteDefinition.title}</CardTitle>

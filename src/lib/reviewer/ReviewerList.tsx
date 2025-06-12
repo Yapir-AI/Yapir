@@ -9,11 +9,11 @@ import type {
   ReviewerListElement,
   ReviewersList,
 } from "@/lib/reviewer/service";
-import { ReviewerAvatar } from "@/lib/avatar/reviewer";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { providerConfigs } from "@/lib/provider/model/configs";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 
 export function ReviewerList({
   reviewers,
@@ -56,7 +56,7 @@ export function ReviewerListItem({
       outerClassName={outerClassName}
       Action={Action}
     >
-      <ReviewerAvatar reviewerName={reviewer.name} options={{ size: 64 }} />
+      <ReviewerAvatar name={reviewer.name} className="size-16 rounded" square />
       <div className="flex flex-col justify-evenly">
         <CardTitle className="group-hover:underline">{reviewer.name}</CardTitle>
         <CardDescription>
