@@ -50,4 +50,20 @@ export class NoteService {
       },
     });
   }
+
+  async search({
+    search,
+    excludedIds = [],
+  }: {
+    search: string;
+    excludedIds?: string[];
+  }) {
+    return this.prisma.noteDefinition.findMany({
+      where: {
+        title: { contains: search, mode: "insensitive" },
+        id: { notIn: excludedIds },
+      },
+      take: 20,
+    });
+  }
 }

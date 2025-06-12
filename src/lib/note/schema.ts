@@ -19,3 +19,8 @@ export const toggleReviewerNoteSchema = z.object({
   enabled: z.boolean(),
 });
 export type ToggleReviewerNoteSchema = z.infer<typeof toggleReviewerNoteSchema>;
+
+export const searchNotesSchema = z.object({
+  search: z.string(),
+  excludedIds: z.array(z.string()).optional(),
+});

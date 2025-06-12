@@ -20,7 +20,7 @@ async function listNotes() {
   return noteService.list({ orderBy: { createdAt: "desc" } });
 }
 
-type NoteListElement = Awaited<ReturnType<typeof listNotes>>[number];
+export type NoteListElement = Awaited<ReturnType<typeof listNotes>>[number];
 
 export default async function NotesPage() {
   const notes = await listNotes();
@@ -55,22 +55,35 @@ export function NoteList<Note extends NoteListElement>({
     <CardList>
       <CardListTitle>Notes</CardListTitle>
       {notes.map((note) => (
-        <CardListItem
-          href={routes.note(note.id)}
+        <NoteListItem
           key={note.id}
+          note={note}
           Action={Action ? () => <Action note={note} /> : undefined}
-        >
-          <div className="flex justify-between">
-            <CardTitle>{note.title}</CardTitle>
-            <Badge variant="secondary">{note.tag}</Badge>
-          </div>
-          {!!note.systemPrompt && (
-            <CardDescription className="line-clamp-1">
-              {note.systemPrompt}
-            </CardDescription>
-          )}
-        </CardListItem>
+        />
       ))}
     </CardList>
+  );
+}
+
+export function NoteListItem({
+  note,
+  hideBadge = false,
+  ...props
+}: Omit<React.ComponentProps<typeof CardListItem>, "href"> & {
+  note: NoteListElement;
+  hideBadge?: boolean;
+}) {
+  return (
+    <CardListItem href={routes.note(note.id)} key={note.id} {...props}>
+      <div className="flex justify-between">
+        <CardTitle>{note.title}</CardTitle>
+        {!hideBadge && <Badge variant="secondary">{note.tag}</Badge>}
+      </div>
+      {!!note.systemPrompt && (
+        <CardDescription className="line-clamp-1">
+          {note.systemPrompt}
+        </CardDescription>
+      )}
+    </CardListItem>
   );
 }

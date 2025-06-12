@@ -3,6 +3,7 @@
 import { actionClient } from "@/lib/safeAction/client";
 import {
   createNoteSchema,
+  searchNotesSchema,
   toggleReviewerNoteSchema,
   updateNoteSchema,
 } from "@/lib/note/schema";
@@ -29,4 +30,13 @@ export const toggleReviewerNoteAction = actionClient
   .schema(toggleReviewerNoteSchema)
   .action(async ({ parsedInput, ctx: { noteService } }) =>
     noteService.toggleReviewerNote(parsedInput),
+  );
+
+export const searchNotes = actionClient
+  .schema(searchNotesSchema)
+  .action(async ({ parsedInput, ctx: { noteService } }) =>
+    noteService.search({
+      search: parsedInput.search,
+      excludedIds: parsedInput.excludedIds,
+    }),
   );

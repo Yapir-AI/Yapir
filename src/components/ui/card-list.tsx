@@ -36,14 +36,21 @@ export function CardListItem({
   children,
   href,
   className,
+  outerClassName,
   Action,
 }: PropsWithChildren<{
   href: YapirRoute;
   className?: string;
+  outerClassName?: string;
   Action?: () => React.ReactElement;
 }>) {
   return (
-    <div className="hover:bg-accent flex flex-row items-center gap-6 last:rounded-b-xl *:last:pr-6">
+    <div
+      className={cn(
+        "hover:bg-accent flex flex-row items-center gap-6 last:rounded-b-xl *:last:pr-6",
+        outerClassName,
+      )}
+    >
       <Link href={href} className={cn("grow py-3 pl-6", className)}>
         {children}
       </Link>

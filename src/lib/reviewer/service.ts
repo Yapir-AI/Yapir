@@ -15,8 +15,20 @@ export class ReviewerService {
     });
   }
 
-  listReviewers() {
+  listReviewers({
+    excludedIds,
+    search,
+  }: { excludedIds?: string[]; search?: string } = {}) {
     return this.prisma.reviewer.findMany({
+      where: {
+        id: {
+          notIn: excludedIds,
+        },
+        name: {
+          mode: "insensitive",
+          contains: search,
+        },
+      },
       include: {
         aiProvider: {
           omit: { apiKey: true },

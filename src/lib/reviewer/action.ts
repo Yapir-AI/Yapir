@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { routes } from "@/lib/route";
 import { ReviewerUpdate } from "@/lib/reviewer/operation/update";
 import { redirect } from "next/navigation";
+import { searchReviewerSchema } from "@/lib/reviewer/schema";
 
 const revalidateReviewers = () => revalidatePath(routes.reviewers);
 const revalidateReviewer = (id: string) => revalidatePath(routes.reviewer(id));
@@ -28,4 +29,13 @@ export const updateReviewer = actionClient
     revalidateReviewers();
 
     return result;
+  });
+
+export const searchReviewers = actionClient
+  .schema(searchReviewerSchema)
+  .action(async ({ parsedInput, ctx: { reviewerService } }) => {
+    return reviewerService.listReviewers({
+      search: parsedInput.search,
+      excludedIds: parsedInput.excludedIds,
+    });
   });

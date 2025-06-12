@@ -13,21 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { updateReviewer } from "@/lib/reviewer/action";
-import {
-  type ReviewerWithProviderAndProjects,
-  reviewerWithProviderAndProjects,
-} from "@/lib/reviewer/types";
-import { ProjectCard } from "@/lib/project/components/projectCard";
+import { reviewerWithProviderAndProjects } from "@/lib/reviewer/types";
 import { SystemPrompt } from "@/app/(auth)/reviewers/[id]/SystemPrompt";
-import Link from "next/link";
-import { routes } from "@/lib/route";
 import type { AiProviderType, Reviewer } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
 import { providerConfigs } from "@/lib/provider/model/configs";
 import { ProjectList } from "@/lib/project/components/ProjectList";
 import { Notes } from "@/app/(auth)/reviewers/[id]/Notes";
-import { NoteList } from "@/app/(auth)/notes/page";
-import { Suspense } from "react";
 
 export default async function ReviewerPage({
   params,
@@ -68,9 +60,11 @@ export default async function ReviewerPage({
           <div className="space-y-10 lg:col-span-2">
             <ProjectInstructions {...reviewer} />
             <SystemPrompt {...reviewer} />
-            <Suspense>
-              <Notes reviewerId={reviewer.id} />
-            </Suspense>
+            <Notes
+              reviewerName={reviewer.name}
+              reviewerId={reviewer.id}
+              initialNotes={reviewer.noteDefinitions}
+            />
           </div>
           <div className="space-y-10">
             <ProviderSelect
