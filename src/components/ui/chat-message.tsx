@@ -17,7 +17,7 @@ import type { UIMessage } from "ai";
 import { ToolCall } from "@/components/ui/tool-call";
 
 const chatBubbleVariants = cva(
-  "group/message relative break-words rounded-lg p-3 text-sm sm:max-w-[70%]",
+  "group/message relative break-words rounded-lg p-3 text-sm sm:max-w-[90%]",
   {
     variants: {
       isUser: {
@@ -267,7 +267,7 @@ const ReasoningBlock = ({ part }: { part: ReasoningPart }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mb-2 flex flex-col items-start sm:max-w-[70%]">
+    <div className="mb-2 flex flex-col items-start sm:max-w-[90%]">
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}

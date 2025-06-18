@@ -4,8 +4,7 @@ import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/utils";
 import { CopyButton } from "@/components/ui/copy-button";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { stackoverflowLight as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { CodeHighlight } from "@/components/ui/code-highlight";
 
 interface MarkdownRendererProps {
   children: string;
@@ -45,22 +44,9 @@ const CodeBlock = ({
 
   return (
     <div className="group/code relative mb-4">
-      <SyntaxHighlighter
-        wrapLongLines={true}
-        language={language}
-        className={preClass}
-        style={theme}
-        customStyle={{
-          background: "transparent",
-          padding: 0,
-          maxWidth: "100%",
-          overflowWrap: "break-word",
-          wordBreak: "break-word",
-          overflow: "hidden",
-        }}
-      >
+      <CodeHighlight language={language} className={preClass}>
         {code}
-      </SyntaxHighlighter>
+      </CodeHighlight>
 
       <div className="invisible absolute top-2 right-2 flex space-x-1 rounded-lg p-1 opacity-0 transition-all duration-200 group-hover/code:visible group-hover/code:opacity-100">
         <CopyButton content={code} copyMessage="Copied code to clipboard" />

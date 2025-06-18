@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
-const dark = "dark";
+export const dark = "dark";
 const light = "light";
 
 export function ThemeToggle() {

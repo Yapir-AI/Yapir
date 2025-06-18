@@ -25,7 +25,7 @@ export default async function ProjectChatPage({
           { label: "Chat" },
         ]}
       />
-      <Main className="max-w-4xl">
+      <Main className="max-w-5xl">
         <ProjectChat projectName={project.name} reviewers={reviewers} />
       </Main>
     </>

@@ -15,17 +15,11 @@ import {
   FilePlusIcon,
   FileQuestionIcon,
 } from "lucide-react";
-import {
-  Fragment,
-  type PropsWithChildren,
-  type ReactNode,
-  Suspense,
-} from "react";
+import { Fragment, type PropsWithChildren, type ReactNode } from "react";
 import type { GitFileDiff } from "@/lib/git/parsing/model/GitFileDiff";
 import type { GitLineChange } from "@/lib/git/parsing/model/GitLineChange";
 import { cn } from "@/lib/utils";
 import type { Comment, Reviewer } from "@prisma/client";
-import { stackoverflowLight as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import {
   CardContent,
   CardDescription,
@@ -44,8 +38,8 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EmptyCard } from "@/components/rich/emptyCard";
-import SyntaxHighlighter from "react-syntax-highlighter";
 import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
+import { CodeHighlight } from "@/components/ui/code-highlight";
 
 type FileComments = Partial<Record<string, Comment[]>>;
 
@@ -93,12 +87,14 @@ export default async function ReviewPage({
   const { reviewService } = container.cradle;
   const { reviewId } = await params;
 
+  console.log("start");
   const review = await reviewService.findById(reviewId, {
     reviewers: true,
     mergeRequest: { include: { project: true } },
     comments: { include: { reviewer: true } },
     reviewNotes: { include: { reviewer: true, noteDefinition: true } },
   });
+  console.log("end");
 
   const { reviewers, mergeRequest, comments } = review;
   const { project } = mergeRequest;
@@ -212,7 +208,7 @@ function LineComments({
   ));
 }
 
-async function File({
+function File({
   comments,
   diff: file,
 }: {
@@ -249,7 +245,7 @@ async function File({
       <AccordionItem value="file">
         <FileTitle {...file} />
         <AccordionContent>
-          <table className="bg-back w-full text-xs dark:bg-white dark:text-black">
+          <table className="bg-back w-full text-xs">
             <tbody className="w-full">
               {file.lineChanges.map((l) => {
                 const newLineComments =
@@ -267,9 +263,7 @@ async function File({
 
                 return (
                   <Fragment key={`${l.oldLineNumber}-${l.newLineNumber}`}>
-                    <Suspense>
-                      <FileLine lang={fileType} {...l} />
-                    </Suspense>
+                    <FileLine lang={fileType} {...l} />
                     <LineComments
                       comments={[...newLineComments, ...oldLineComments]}
                     />
@@ -296,8 +290,8 @@ function FileLine({ ...line }: GitLineChange & { lang: string }) {
       <tr
         className={cn(
           "*:px-2 *:pb-1 *:align-top",
-          line.isRemoved() && "bg-red-100!",
-          line.isAdded() && "bg-green-100!",
+          line.isRemoved() && "bg-red-100 dark:bg-red-800",
+          line.isAdded() && "bg-green-100 dark:bg-green-800",
         )}
       >
         <td className="w-12 text-right select-none">{line.oldLineNumber}</td>
@@ -309,21 +303,7 @@ function FileLine({ ...line }: GitLineChange & { lang: string }) {
         </td>
 
         <td className="pl-0!">
-          <SyntaxHighlighter
-            wrapLongLines={true}
-            language={line.lang}
-            style={theme}
-            customStyle={{
-              background: "transparent",
-              padding: 0,
-              maxWidth: "100%",
-              overflowWrap: "break-word",
-              wordBreak: "break-word",
-              overflow: "hidden",
-            }}
-          >
-            {line.content}
-          </SyntaxHighlighter>
+          <CodeHighlight language={line.lang}>{line.content}</CodeHighlight>
         </td>
       </tr>
     </>
