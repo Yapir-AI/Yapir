@@ -1,3 +1,12 @@
+## [0.14.2](https://github.com/yapir-ai/yapir/compare/v0.14.1...v0.14.2) (2025-06-18)
+
+
+### Bug Fixes
+
+* markdown rendering ([5ea4ec7](https://github.com/yapir-ai/yapir/commit/5ea4ec7dcaf2329628d83de56ce0748d98a82ad9))
+
+
+
 ## [0.14.1](https://github.com/yapir-ai/yapir/compare/v0.14.0...v0.14.1) (2025-06-18)
 
 
@@ -39,20 +48,6 @@
 ### Bug Fixes
 
 * chat heigth ([a7cca56](https://github.com/yapir-ai/yapir/commit/a7cca5667c207dd659c766afe2850d8f766ab1d9))
-
-
-
-# [0.12.0](https://github.com/yapir-ai/yapir/compare/v0.11.3...v0.12.0) (2025-05-31)
-
-
-### Features
-
-* added google studio & deepseek providers ([18f675d](https://github.com/yapir-ai/yapir/commit/18f675d2470ec53331ad28003ea6e09044d588b9))
-* chat with codebase ([97e69fe](https://github.com/yapir-ai/yapir/commit/97e69fec262cdefdb97a116f2731fe2684621683))
-* dynamic review note ([b4ef631](https://github.com/yapir-ai/yapir/commit/b4ef631f5693a99a358519bd31eff3ab1f7e660d))
-* funny message on origin note ([4050cb1](https://github.com/yapir-ai/yapir/commit/4050cb12f8488f884014237b33f319300d436ec3))
-* note to origin ([ac3b90b](https://github.com/yapir-ai/yapir/commit/ac3b90b2ddde5f2395370b3721a7943a763f3bda))
-* review note pages ([d5917e8](https://github.com/yapir-ai/yapir/commit/d5917e88338fc99fee398ab999336c1818612763))
 
 
 
