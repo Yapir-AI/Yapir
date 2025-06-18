@@ -1,3 +1,12 @@
+## [0.14.1](https://github.com/yapir-ai/yapir/compare/v0.14.0...v0.14.1) (2025-06-18)
+
+
+### Bug Fixes
+
+* reviewer usage in chat ([814a0e3](https://github.com/yapir-ai/yapir/commit/814a0e34ad389fe1254a22155ec23d1ae34350ac))
+
+
+
 # [0.14.0](https://github.com/yapir-ai/yapir/compare/v0.13.0...v0.14.0) (2025-06-12)
 
 
@@ -44,15 +53,6 @@
 * funny message on origin note ([4050cb1](https://github.com/yapir-ai/yapir/commit/4050cb12f8488f884014237b33f319300d436ec3))
 * note to origin ([ac3b90b](https://github.com/yapir-ai/yapir/commit/ac3b90b2ddde5f2395370b3721a7943a763f3bda))
 * review note pages ([d5917e8](https://github.com/yapir-ai/yapir/commit/d5917e88338fc99fee398ab999336c1818612763))
-
-
-
-## [0.11.3](https://github.com/yapir-ai/yapir/compare/v0.11.2...v0.11.3) (2025-05-28)
-
-
-### Bug Fixes
-
-* long line causing issues to comments ([362ebce](https://github.com/yapir-ai/yapir/commit/362ebcedded834ab374afcb884ec83d0b571d054))
 
 
 
