@@ -9,11 +9,12 @@ export default async function ProjectChatPage({
 }: {
   params: Promise<{ projectId: string }>;
 }) {
-  const { projectService } = container.cradle;
+  const { projectService, reviewerService } = container.cradle;
   const { projectId } = await params;
-  const project = await projectService.findByIdIncluding(projectId, {
-    reviewers: true,
-  });
+  const [project, reviewers] = await Promise.all([
+    projectService.findById(projectId),
+    reviewerService.listReviewers(),
+  ]);
 
   return (
     <>
@@ -25,7 +26,7 @@ export default async function ProjectChatPage({
         ]}
       />
       <Main className="max-w-4xl">
-        <ProjectChat projectName={project.name} reviewers={project.reviewers} />
+        <ProjectChat projectName={project.name} reviewers={reviewers} />
       </Main>
     </>
   );

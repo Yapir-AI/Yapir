@@ -34,7 +34,7 @@ export class PromptService {
 
     messages.push({
       role: "user",
-      content: `<code_changes>\nCode changes: \n${diffs.toLLMString()}</code_changes>`,
+      content: `<code_changes>\n${diffs.toLLMString()}\n</code_changes>`,
     });
 
     return messages;
