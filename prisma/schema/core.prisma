@@ -1,18 +1,20 @@
 model GitProject {
-  id            String          @id @default(uuid(7)) @db.Uuid
-  originId      String
-  url           String
-  name          String
-  fullName      String
-  providerType  GitProviderType
-  createdAt     DateTime        @default(now())
-  ignoreDraft   Boolean         @default(true)
-  ignoreList    String?
-  ignorePattern String?
-  reviewers     Reviewer[]
-  mergeRequests MergeRequest[]
-  connectorId   String          @db.Uuid
-  connector     GitConnector    @relation(fields: [connectorId], references: [id])
+  id                    String          @id @default(uuid(7)) @db.Uuid
+  originId              String
+  url                   String
+  name                  String
+  fullName              String
+  providerType          GitProviderType
+  createdAt             DateTime        @default(now())
+  ignoreDraft           Boolean         @default(true)
+  ignoreList            String?
+  ignorePattern         String?
+  instructionFile       String?
+  customInstructionFile Boolean         @default(false)
+  reviewers             Reviewer[]
+  mergeRequests         MergeRequest[]
+  connectorId           String          @db.Uuid
+  connector             GitConnector    @relation(fields: [connectorId], references: [id])
 
   @@unique([originId, connectorId])
 }

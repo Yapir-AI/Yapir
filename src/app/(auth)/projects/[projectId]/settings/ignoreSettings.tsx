@@ -4,15 +4,13 @@ import type { GitProject } from "@prisma/client";
 import { H3, H3Sub } from "@/components/ui/typography";
 import { Label, LabelDescription } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { updateIgnoreSettings } from "@/lib/project/action";
-import { Input } from "@/components/ui/input";
+import { updateProject } from "@/lib/project/action";
 import { Textarea } from "@/components/ui/textarea";
 import { useDebouncedMutation } from "@/lib/reactQuery/useDebouncedMutation";
-import { z } from "zod";
 
-export function ProjectSettings(project: GitProject) {
+export function IgnoreSettings(project: GitProject) {
   async function toggleIgnoreDraft() {
-    return updateIgnoreSettings({
+    return updateProject({
       projectId: project.id,
       ignore: !project.ignoreDraft,
     });
@@ -20,7 +18,7 @@ export function ProjectSettings(project: GitProject) {
 
   const { debouncedMutate: updateIgnoreList } = useDebouncedMutation({
     mutationFn: async (ignoreList: string) =>
-      updateIgnoreSettings({
+      updateProject({
         projectId: project.id,
         ignoreList,
       }),
@@ -28,7 +26,7 @@ export function ProjectSettings(project: GitProject) {
 
   const { debouncedMutate: updateIgnorePattern } = useDebouncedMutation({
     mutationFn: async (ignorePattern: string) =>
-      updateIgnoreSettings({
+      updateProject({
         projectId: project.id,
         ignorePattern,
       }),
@@ -39,7 +37,8 @@ export function ProjectSettings(project: GitProject) {
       <div>
         <H3>Ignore</H3>
         <H3Sub>
-          Manage <span className="italic">{project.name}</span> configuration
+          Configure <span className="italic">{project.name}</span> ignore
+          settings
         </H3Sub>
       </div>
 

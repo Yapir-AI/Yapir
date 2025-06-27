@@ -9,8 +9,9 @@ import { ProjectReviewers } from "@/app/(auth)/projects/[projectId]/settings/pro
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CogIcon, ExternalLinkIcon } from "lucide-react";
-import { ProjectSettings } from "@/app/(auth)/projects/[projectId]/settings/projectSettings";
+import { IgnoreSettings } from "@/app/(auth)/projects/[projectId]/settings/ignoreSettings";
 import { breadCrumbFactory } from "@/components/rich/BreadCrumbFactory";
+import { InstructionsSettings } from "@/app/(auth)/projects/[projectId]/settings/instructionsSettings";
 
 export default async function ProjectSettingsPage({
   params,
@@ -53,7 +54,8 @@ export default async function ProjectSettingsPage({
           </Button>
         </TitleSection>
         <div className="space-y-16">
-          <ProjectSettings {...project} />
+          <InstructionsSettings {...project} />
+          <IgnoreSettings {...project} />
           <ProjectReviewers
             reviewers={project.reviewers}
             projectId={projectId}

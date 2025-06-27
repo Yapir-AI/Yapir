@@ -42,7 +42,7 @@ const getFileTool: ChatTool<typeof getFileParams, typeof getFileResult> = {
   parameters: getFileParams,
   result: getFileResult,
   description:
-    "Retrieve the complete content of a specific file from the repository described in the <available_files> section. Provide the full file path (e.g., 'src/components/Header.tsx'). Use this to examine implementations, configurations, and documentation. Don't fetch .yapir/guidelines as you already get those in the <developer_guideline> block",
+    "Retrieve the complete content of a specific file from the repository described in the <available_files> section. Provide the full file path (e.g., 'src/components/Header.tsx'). Use this to examine implementations, configurations, and documentation. Don't fetch .yapir/instructions as you already get those in the <developer_guideline> block",
   components: {
     calling: ({ params }) => (
       <div className="bg-muted/50 text-muted-foreground flex items-center gap-3 rounded-lg border px-3 py-2 text-sm">

@@ -62,7 +62,7 @@ export function GitlabConnectorButton() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <GitLabIcon className="inline-block size-5 fill-foreground" />
+            <GitLabIcon className="fill-foreground inline-block size-5" />
             Create a GitLab connexion
           </DialogTitle>
           <DialogDescription asChild>
@@ -85,7 +85,7 @@ export function GitlabConnectorButton() {
                 <li>
                   Create a new application with the following details:
                   <ul className="list-inside list-disc pl-4">
-                    <li>Name: Dokploy</li>
+                    <li>Name: Yapir</li>
                     <li>
                       Redirect URI:{" "}
                       <span className="text-foreground">

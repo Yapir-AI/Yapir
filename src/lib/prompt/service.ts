@@ -2,18 +2,33 @@ import type { CoreMessage } from "ai";
 import type { Reviewer } from "@prisma/client";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
+import type { ProjectForReview } from "@/lib/review/types";
 
 export class PromptService {
   private readonly gitMergeRequestAdapter: GitMergeRequestAdapter;
+  private readonly project: ProjectForReview;
 
-  constructor(opts: { gitMergeRequestAdapter: GitMergeRequestAdapter }) {
+  constructor(opts: {
+    gitMergeRequestAdapter: GitMergeRequestAdapter;
+    project: ProjectForReview;
+  }) {
     this.gitMergeRequestAdapter = opts.gitMergeRequestAdapter;
+    this.project = opts.project;
   }
 
   async createPrompt(reviewer: Reviewer, diffs: GitMergeRequestDiffs) {
-    const [repositoryInstructions] = await Promise.all([
-      this.gitMergeRequestAdapter.getRepositoryInstructions(),
-    ]);
+    const instructionsPath = this.project.customInstructionFile
+      ? (this.project.instructionFile ?? ".yapir/instructions.md")
+      : ".yapir/instructions.md";
+    const repositoryInstructions = await this.gitMergeRequestAdapter
+      .getFileContent(instructionsPath, "head")
+      .catch((e) => {
+        console.warn(
+          `Unable to find instructions at ${instructionsPath}, using empty as fallback.`,
+          e,
+        );
+        return "";
+      });
 
     const messages: CoreMessage[] = [
       {

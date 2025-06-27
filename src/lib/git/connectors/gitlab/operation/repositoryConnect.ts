@@ -1,12 +1,18 @@
 import { z } from "zod";
 import type { GitlabClientFactory } from "@/lib/git/connectors/gitlab/clientFactory";
+import { ProjectService } from "@/lib/project/service";
 
 export namespace GitlabRepositoryConnect {
   export class Operation {
     private readonly gitlabClientFactory: GitlabClientFactory;
+    private readonly projectService: ProjectService;
 
-    constructor(opts: { gitlabClientFactory: GitlabClientFactory }) {
+    constructor(opts: {
+      gitlabClientFactory: GitlabClientFactory;
+      projectService: ProjectService;
+    }) {
       this.gitlabClientFactory = opts.gitlabClientFactory;
+      this.projectService = opts.projectService;
     }
 
     async execute({ connectorId, origin, repoId }: Schema) {
@@ -22,6 +28,20 @@ export namespace GitlabRepositoryConnect {
           mergeRequestsEvents: true,
         },
       );
+
+      const project = await gitlab.Projects.show(repoId);
+
+      await this.projectService.findOrCreate({
+        include: {},
+        create: {
+          connector: { connect: { id: connectorId } },
+          originId: project.id.toString(),
+          url: project.web_url,
+          name: project.name,
+          fullName: project.path_with_namespace,
+          providerType: "GITLAB",
+        },
+      });
     }
   }
 

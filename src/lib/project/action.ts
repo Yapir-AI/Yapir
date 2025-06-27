@@ -2,7 +2,7 @@
 
 import { actionClient } from "@/lib/safeAction/client";
 import {
-  updateIgnoreSchema,
+  updateProjectSchema,
   toggleProjectReviewerSchema,
 } from "@/lib/project/service";
 import { revalidatePath } from "next/cache";
@@ -15,9 +15,9 @@ export const toggleProjectReviewer = actionClient
     revalidatePath(routes.project(parsedInput.projectId));
   });
 
-export const updateIgnoreSettings = actionClient
-  .schema(updateIgnoreSchema)
+export const updateProject = actionClient
+  .schema(updateProjectSchema)
   .action(async ({ parsedInput, ctx: { projectService } }) => {
-    await projectService.updateIgnoreSettings(parsedInput);
+    await projectService.updateProject(parsedInput);
     revalidatePath(routes.project(parsedInput.projectId));
   });
