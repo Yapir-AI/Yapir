@@ -4,7 +4,7 @@ import type {
 } from "@/lib/review/operation";
 import type { CreateSchemaStepOutput } from "@/lib/review/steps/createSchemaStep";
 import { z } from "zod";
-import type { Prisma, PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import type { InitReviewStepOutput } from "@/lib/review/steps/reviewLifecycleSteps";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 

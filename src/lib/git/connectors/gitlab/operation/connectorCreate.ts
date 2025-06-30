@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/generated/prisma/client";
 import { gitlabConnectorConfigSchema } from "@/lib/git/connectors/gitlab/connectorService";
 
 export namespace GitlabConnectorCreate {

@@ -4,7 +4,7 @@ import { container } from "@/lib/di/container";
 import { z } from "zod";
 import { createTool, tools } from "./tools";
 import { buildSystemPrompt } from "./system-prompt";
-import type { GitProject } from "@prisma/client";
+import type { GitProject } from "@/generated/prisma/client";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;

@@ -130,6 +130,7 @@ export default function AutoFormObject<
 
         return (
           <FormField
+            // @ts-ignore
             control={form.control}
             name={key}
             key={key}

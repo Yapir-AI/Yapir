@@ -13,7 +13,7 @@ import {
 import { updateReviewer } from "@/lib/reviewer/action";
 import { reviewerWithProviderAndProjects } from "@/lib/reviewer/types";
 import { SystemPrompt } from "@/app/(auth)/reviewers/[id]/SystemPrompt";
-import type { AiProviderType, Reviewer } from "@prisma/client";
+import type { AiProviderType, Reviewer } from "@/generated/prisma/client";
 import { Switch } from "@/components/ui/switch";
 import { providerConfigs } from "@/lib/provider/model/configs";
 import { ProjectList } from "@/lib/project/components/ProjectList";

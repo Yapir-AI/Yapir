@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import type { GitProject } from "@prisma/client";
+import type { GitProject } from "@/generated/prisma/client";
 import { MergeRequestIgnoreService } from "@/lib/mergeRequest/ignoreService";
 
 const defaultProject: GitProject = {
@@ -14,6 +14,8 @@ const defaultProject: GitProject = {
   ignoreList: null,
   ignorePattern: null,
   connectorId: "1",
+  instructionFile: null,
+  customInstructionFile: false,
 };
 
 const defaultParams = {

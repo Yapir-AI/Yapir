@@ -19,7 +19,7 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { ProjectStats } from "@/lib/stats/service";
 import { cn } from "@/lib/utils";
-import type { Reviewer } from "@prisma/client";
+import type { Reviewer } from "@/generated/prisma/client";
 import { routes } from "@/lib/route";
 import { GradientCard } from "@/components/ui/gradientCard";
 import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";

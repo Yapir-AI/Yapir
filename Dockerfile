@@ -2,7 +2,6 @@
 # see all versions at https://hub.docker.com/r/oven/bun/tags
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
-RUN apt update && apt install python3 python3-pip make g++ -y
 
 # install dependencies into temp directory
 # this will cache them and speed up future builds
@@ -11,7 +10,7 @@ RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
 COPY prisma /temp/dev/prisma
 RUN ls
-RUN cd /temp/dev && bun install --frozen-lockfile && ls -al && bunx --bun prisma generate
+RUN cd /temp/dev && bun install --frozen-lockfile
 
 # copy node_modules from temp directory
 # then copy all (non-ignored) project files into the image

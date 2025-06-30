@@ -11,7 +11,7 @@ import {
   openAiModels,
 } from "@/lib/provider/model/suggestions";
 import { MistralIcon } from "@/components/icons/mistral";
-import { AiProviderType } from "@prisma/client";
+import { AiProviderType } from "@/generated/prisma/client";
 import { cn } from "@/lib/utils";
 import { DeepseekIcon } from "@/components/icons/deepseek";
 import { GoogleGenerativeIcon } from "@/components/icons/googleGenerative";

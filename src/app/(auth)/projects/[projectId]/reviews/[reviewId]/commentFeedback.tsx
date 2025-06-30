@@ -1,7 +1,7 @@
 "use client";
 
 import { ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
-import type { Comment } from "@prisma/client";
+import type { Comment } from "@/generated/prisma/client";
 import { reviewCommentAction } from "@/lib/comment/action";
 import type { CommentReview } from "@/lib/comment/schema";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import type { GitProject } from "@prisma/client";
+import type { GitProject } from "@/generated/prisma/client";
 import { H3, H3Sub } from "@/components/ui/typography";
 import { Label, LabelDescription } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";

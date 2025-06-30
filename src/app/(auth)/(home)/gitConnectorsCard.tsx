@@ -4,7 +4,7 @@ import { routes } from "@/lib/route";
 import { cn } from "@/lib/utils";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { GitBranchIcon } from "lucide-react";
-import type { GitProviderType } from "@prisma/client";
+import type { GitProviderType } from "@/generated/prisma/client";
 import type { ReactElement } from "react";
 import { GitLabIcon } from "@/components/icons/gitlab";
 import { Badge } from "@/components/ui/badge";

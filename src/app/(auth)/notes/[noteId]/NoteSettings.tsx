@@ -1,6 +1,6 @@
 "use client";
 
-import type { NoteDefinition } from "@prisma/client";
+import type { NoteDefinition } from "@/generated/prisma/client";
 import { Textarea } from "@/components/ui/textarea";
 import { useDebouncedMutation } from "@/lib/reactQuery/useDebouncedMutation";
 import { updateNoteAction } from "@/lib/note/action";

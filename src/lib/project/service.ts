@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@/generated/prisma/client";
 
 export class ProjectService {
   private readonly prisma: PrismaClient;

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Reviewer } from "@prisma/client";
+import type { Reviewer } from "@/generated/prisma/client";
 import { H3 } from "@/components/ui/typography";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -48,7 +48,7 @@ export function SystemPrompt(reviewer: Reviewer) {
         }}
       />
       {reviewer.systemPromptEnabled && (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-xs">
           Use carefully, changing the System Prompt can produce inaccurate
           results.
         </p>

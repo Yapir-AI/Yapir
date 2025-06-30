@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AiProviderType, PrismaClient } from "@prisma/client";
+import { AiProviderType, PrismaClient } from "@/generated/prisma/client";
 
 export namespace ProviderCreate {
   export class Operation {

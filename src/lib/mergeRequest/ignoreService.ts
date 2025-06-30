@@ -1,4 +1,4 @@
-import type { GitProject } from "@prisma/client";
+import type { GitProject } from "@/generated/prisma/client";
 
 export class MergeRequestIgnoreService {
   isIgnored(

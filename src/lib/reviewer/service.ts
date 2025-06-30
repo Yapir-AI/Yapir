@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@/generated/prisma/client";
 import type { YapirPrismaClient } from "@/lib/db";
 
 export class ReviewerService {

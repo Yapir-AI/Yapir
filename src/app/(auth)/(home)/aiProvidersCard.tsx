@@ -6,7 +6,7 @@ import { CardDescription, CardTitle } from "@/components/ui/card";
 import { H3 } from "@/components/ui/typography";
 import { BrainIcon } from "lucide-react";
 import { GradientCard } from "@/components/ui/gradientCard";
-import type { AiProviderType } from "@prisma/client";
+import type { AiProviderType } from "@/generated/prisma/client";
 import { providerConfigs } from "@/lib/provider/model/configs";
 import { Badge } from "@/components/ui/badge";
 import { NoCard } from "@/app/(auth)/(home)/noCard";

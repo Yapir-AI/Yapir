@@ -1,6 +1,6 @@
 "use client";
 
-import type { GitProject } from "@prisma/client";
+import type { GitProject } from "@/generated/prisma/client";
 import { SidebarPortal } from "@/components/rich/AppSideBar";
 import { routes } from "@/lib/route";
 import { CogIcon, GitPullRequestIcon, MessagesSquareIcon } from "lucide-react";

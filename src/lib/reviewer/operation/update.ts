@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/generated/prisma/client";
 
 export namespace ReviewerUpdate {
   export class Operation {

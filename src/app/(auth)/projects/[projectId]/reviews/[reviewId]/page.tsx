@@ -19,7 +19,7 @@ import { Fragment, type PropsWithChildren, type ReactNode } from "react";
 import type { GitFileDiff } from "@/lib/git/parsing/model/GitFileDiff";
 import type { GitLineChange } from "@/lib/git/parsing/model/GitLineChange";
 import { cn } from "@/lib/utils";
-import type { Comment, Reviewer } from "@prisma/client";
+import type { Comment, Reviewer } from "@/generated/prisma/client";
 import {
   CardContent,
   CardDescription,

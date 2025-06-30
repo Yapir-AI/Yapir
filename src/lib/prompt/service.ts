@@ -1,5 +1,5 @@
 import type { CoreMessage } from "ai";
-import type { Reviewer } from "@prisma/client";
+import type { Reviewer } from "@/generated/prisma/client";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 import type { GitMergeRequestDiffs } from "@/lib/git/parsing/model/GitMergeRequestDiffs";
 import type { ProjectForReview } from "@/lib/review/types";

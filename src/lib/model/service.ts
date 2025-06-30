@@ -2,7 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createOllama } from "ollama-ai-provider";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createMistral } from "@ai-sdk/mistral";
-import { type AiProvider } from "@prisma/client";
+import { type AiProvider } from "@/generated/prisma/client";
 import type { LanguageModelV1 } from "ai";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";

@@ -4,7 +4,7 @@ import type {
   ProcessReviewersOutput,
   ReviewOperationInput,
 } from "@/lib/review/operation";
-import { Prisma, type ReviewStatus } from "@prisma/client";
+import { Prisma, type ReviewStatus } from "@/generated/prisma/client";
 import type { ProjectForReview } from "@/lib/review/types";
 
 type InitReviewStepInput = FetchDiffStepOutput & ReviewOperationInput;

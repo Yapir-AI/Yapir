@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { ProviderService } from "@/lib/provider/service";
 import { ProviderCreate } from "@/lib/provider/operation/create";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/generated/prisma/client";
 
 export namespace ProviderUpdate {
   export class Operation {

@@ -3,7 +3,7 @@ import {
   type NoteDefinition,
   type Reviewer,
   type ReviewNote,
-} from "@prisma/client";
+} from "@/generated/prisma/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReviewerAvatar } from "@/lib/reviewer/reviewer-avatar";
 

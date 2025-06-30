@@ -1,5 +1,5 @@
 import { container } from "@/lib/di/container";
-import type { GitProject } from "@prisma/client";
+import type { GitProject } from "@/generated/prisma/client";
 
 export async function buildSystemPrompt(project: GitProject): Promise<string> {
   const { gitlabClientFactory } = container.cradle;

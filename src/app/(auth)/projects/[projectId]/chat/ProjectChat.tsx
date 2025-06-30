@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Reviewer } from "@prisma/client";
+import type { Reviewer } from "@/generated/prisma/client";
 import { H1, HSub } from "@/components/ui/typography";
 
 export function ProjectChat({

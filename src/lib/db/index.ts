@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { fieldEncryptionExtension } from "prisma-field-encryption";
 
 export type YapirPrismaClient = ReturnType<typeof prismaClient>;
