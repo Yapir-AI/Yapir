@@ -26,6 +26,7 @@ export default async function LoginPage() {
           <LoginForm />
         </CardContent>
       </Card>
+      <HSub>Yet Yapir only supports a single account.</HSub>
     </main>
   );
 }

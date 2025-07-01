@@ -10,7 +10,9 @@ export class GitlabConnectorService {
   }
 
   async listConnectors() {
-    const installations = await this.prisma.gitConnector.findMany();
+    const installations = await this.prisma.gitConnector.findMany({
+      where: { type: "GITLAB" },
+    });
 
     return installations.map(({ id, createdAt, config }) => ({
       id,

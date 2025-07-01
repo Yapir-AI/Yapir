@@ -4,6 +4,7 @@ import Arrow2 from "@/components/rich/arrow";
 import { GitlabCard } from "@/app/(auth)/git/gitlabCard";
 import type { Metadata } from "next";
 import { container } from "@/lib/di/container";
+import { GithubCard } from "@/app/(auth)/git/githubCard";
 
 export const dynamic = "force-dynamic";
 
@@ -12,15 +13,22 @@ export const metadata: Metadata = {
 };
 
 export default async function GitPage() {
-  const gitlabService = container.resolve("gitlabConnectorService");
+  const { gitlabConnectorService, githubConnectorService } = container.cradle;
 
-  const [gitlabInstalls] = await Promise.all([gitlabService.listConnectors()]);
+  const [gitlabInstalls, githubInstalls] = await Promise.all([
+    gitlabConnectorService.listConnectors(),
+    githubConnectorService.listConnectors(),
+  ]);
 
-  if (gitlabInstalls.length === 0) return <NoGit />;
+  if (gitlabInstalls.length === 0 && githubInstalls.length === 0)
+    return <NoGit />;
   return (
     <div className="space-y-2">
       {gitlabInstalls.map((install) => (
         <GitlabCard key={install.id} {...install} />
+      ))}
+      {githubInstalls.map((install) => (
+        <GithubCard key={install.id} {...install} />
       ))}
     </div>
   );

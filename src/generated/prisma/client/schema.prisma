@@ -188,6 +188,7 @@ model Reviewer {
 
 enum GitProviderType {
   GITLAB
+  GITHUB
 }
 
 enum AiProviderType {

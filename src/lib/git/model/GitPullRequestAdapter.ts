@@ -49,15 +49,6 @@ export abstract class GitMergeRequestAdapter {
     });
   }
 
-  async getRepositoryInstructions() {
-    try {
-      return await this.getFileContent(".yapir/instructions.md", "head");
-    } catch (e) {
-      console.warn(e);
-      return "";
-    }
-  }
-
   private isIgnored({ newPath, ignore }: { newPath?: string; ignore: Ignore }) {
     return !newPath || ignore.ignores(newPath);
   }

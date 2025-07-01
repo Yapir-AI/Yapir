@@ -14,6 +14,11 @@ export default function RegisterPage() {
           <RegisterForm />
         </CardContent>
       </Card>
+      <HSub className="text-center">
+        Yet Yapir only supports a single account.
+        <br />
+        Make sure not to use a personal password if you intend to share it.
+      </HSub>
     </main>
   );
 }

@@ -87,14 +87,12 @@ export default async function ReviewPage({
   const { reviewService } = container.cradle;
   const { reviewId } = await params;
 
-  console.log("start");
   const review = await reviewService.findById(reviewId, {
     reviewers: true,
     mergeRequest: { include: { project: true } },
     comments: { include: { reviewer: true } },
     reviewNotes: { include: { reviewer: true, noteDefinition: true } },
   });
-  console.log("end");
 
   const { reviewers, mergeRequest, comments } = review;
   const { project } = mergeRequest;

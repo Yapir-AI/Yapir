@@ -34,12 +34,14 @@ import { CustomNoteSteps } from "@/lib/review/steps/customNoteSteps";
 import { GenerateObjectStep } from "@/lib/review/steps/generateObjectStep";
 import { PostReviewSummaryStep } from "@/lib/review/steps/postReviewSummaryStep";
 import { NoteService } from "@/lib/note/service";
+import { GithubConnectorService } from "@/lib/git/connectors/github/connectorService";
 
 export const container = createTypedContainer({
   prisma: asValue(prismaClient),
   modelService: asClass(ModelService),
   commentService: asClass(CommentService),
   connectorService: asClass(ConnectorService),
+  githubConnectorService: asClass(GithubConnectorService),
   gitlabConnectorService: asClass(GitlabConnectorService),
   gitlabClientFactory: asClass(GitlabClientFactory),
   gitlabRepositoryConnectOperation: asClass(GitlabRepositoryConnect.Operation),
