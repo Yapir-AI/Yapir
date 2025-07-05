@@ -21,7 +21,7 @@ export function GithubCard({ slug, createdAt }: GithubConnectorListElement) {
           href={`https://github.com/apps/${slug}/installations/new`}
           target="_blank"
         >
-          Add to project
+          Configure
           <ExternalLink />
         </Link>
       </Button>

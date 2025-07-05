@@ -36,6 +36,22 @@ export class GithubConnectorService {
       ...githubConfigSchema.parse(JSON.parse(connector.config)),
     };
   }
+
+  async updateInstallationId(id: string, installationId: number) {
+    const connector = await this.prisma.gitConnector.findUniqueOrThrow({
+      where: { id },
+    });
+
+    const config = githubConfigSchema.parse(JSON.parse(connector.config));
+    config.installation_id = installationId;
+
+    this.prisma.gitConnector.update({
+      data: {
+        config: JSON.stringify(config),
+      },
+      where: { id },
+    });
+  }
 }
 
 export type GithubConnectorListElement = Awaited<

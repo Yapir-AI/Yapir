@@ -69,6 +69,27 @@ export async function POST(
     },
   );
 
+  github.webhooks.on(["installation"], async (event) => {
+    const projectCreations = event.payload.repositories?.map((repo) =>
+      projectService.findOrCreate({
+        create: {
+          connector: { connect: { id: connectorId } },
+          originId: repo.id.toString(),
+          url: "https://github.com/" + repo.full_name,
+          name: repo.name,
+          fullName: repo.full_name,
+          providerType: "GITHUB",
+        },
+        include: {},
+      }),
+    );
+    await Promise.all(projectCreations ?? []);
+    await githubConnectorService.updateInstallationId(
+      connectorId,
+      event.payload.installation.id,
+    );
+  });
+
   await github.webhooks.verifyAndReceive({
     name: headers.get("x-github-event") as WebhookEventName,
     id: headers.get("x-github-hook-id")!,
