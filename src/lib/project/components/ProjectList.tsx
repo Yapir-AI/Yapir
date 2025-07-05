@@ -20,25 +20,27 @@ export function ProjectList({
   return (
     <CardList className={className}>
       <CardListTitle>{title ?? "Projects"}</CardListTitle>
-      {projects.map((project) => (
-        <CardListItem
-          href={routes.project(project.id)}
-          className="flex gap-4"
-          key={project.id}
-        >
-          <ProjectAvatar
-            name={project.name}
-            square
-            className="size-16 rounded"
-          />
-          <div className="flex flex-col justify-evenly">
-            <CardTitle className="group-hover:underline">
-              {project.name}
-            </CardTitle>
-            <CardDescription>{project.fullName}</CardDescription>
-          </div>
-        </CardListItem>
-      ))}
+      <div className="overflow-y-auto">
+        {projects.map((project) => (
+          <CardListItem
+            href={routes.project(project.id)}
+            className="flex gap-4"
+            key={project.id}
+          >
+            <ProjectAvatar
+              name={project.name}
+              square
+              className="size-16 rounded"
+            />
+            <div className="flex flex-col justify-evenly">
+              <CardTitle className="group-hover:underline">
+                {project.name}
+              </CardTitle>
+              <CardDescription>{project.fullName}</CardDescription>
+            </div>
+          </CardListItem>
+        ))}
+      </div>
     </CardList>
   );
 }

@@ -25,7 +25,7 @@ export default async function HomePage() {
   const [connectorPage, providers, projects, reviewers] = await Promise.all([
     connectorService.listConnectors(),
     providerService.listProviders(),
-    projectService.listProjects(),
+    projectService.listProjects({ take: 10 }),
     reviewerService.listReviewers(),
   ]);
 
@@ -66,7 +66,7 @@ export default async function HomePage() {
           ) : (
             <ProjectList
               projects={projects}
-              className={cn(step !== undefined && "opacity-50")}
+              className={cn(step !== undefined && "opacity-50", "max-h-80")}
             />
           )}
         </div>
