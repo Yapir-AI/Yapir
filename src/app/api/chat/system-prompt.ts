@@ -1,21 +1,18 @@
-import { container } from "@/lib/di/container";
-import type { GitProject } from "@/generated/prisma/client";
+import type {
+  GitChatProvider,
+  ProjectForChat,
+} from "@/app/api/chat/gitChatProvider";
 
-export async function buildSystemPrompt(project: GitProject): Promise<string> {
-  const { gitlabClientFactory } = container.cradle;
-  const gitlab = await gitlabClientFactory.forConnectorId(project.connectorId);
-
-  const tree = await gitlab.Repositories.allRepositoryTrees(
-    Number(project.originId),
-    { recursive: true },
-  );
-  const files = tree.filter((item) => item.type === "blob");
-  const guidelines = await gitlab.RepositoryFiles.show(
-    Number(project.originId),
-    ".yapir/instructions.md",
-    "HEAD",
-  )
-    .then((file) => atob(file.content))
+export async function buildSystemPrompt(
+  project: ProjectForChat,
+  gitProvider: GitChatProvider,
+): Promise<string> {
+  const tree = await gitProvider.getTree();
+  const instructionsPaths = project.customInstructionFile
+    ? (project.instructionFile ?? ".yapir/instructions.md")
+    : ".yapir/instructions.md";
+  const guidelines = await gitProvider
+    .getFile(instructionsPaths)
     .catch(() => "Error when retrieving guidelines.");
 
   return `You are Yapir, an AI assistant specialized in helping developers understand and navigate the "${project.name}" codebase.
@@ -60,7 +57,7 @@ You have access to two powerful tools for exploring the codebase:
 </important_guidelines>
 
 <available_files>
-${files.map((f) => f.path).join("\n")}
+${tree.join("\n")}
 </available_files>
 
 <developer_guidelines>

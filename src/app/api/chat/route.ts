@@ -4,10 +4,13 @@ import { container } from "@/lib/di/container";
 import { z } from "zod";
 import { createTool, tools } from "./tools";
 import { buildSystemPrompt } from "./system-prompt";
-import type { GitProject } from "@/generated/prisma/client";
+import {
+  GitChatProvider,
+  projectForChatSelect,
+} from "@/app/api/chat/gitChatProvider";
 
 // Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 const chatRequestSchema = z.object({
   messages: z.array(z.any()),
@@ -23,55 +26,37 @@ export async function POST(req: Request) {
 
   const { modelService, reviewerService, projectService } = container.cradle;
 
-  // Get project and reviewer data
   const [reviewer, project] = await Promise.all([
     reviewerService.findById(reviewerId, {
       aiProvider: { omit: { apiKey: false } },
     }),
-    projectService.findById(projectId),
+    projectService.findByIdIncluding(projectId, projectForChatSelect),
   ]);
 
+  const gitProvider = await GitChatProvider.forProject(project);
+
   const model = modelService.toModel(reviewer.aiProvider);
-  const tools = await createChatTools(project);
+  const tools = await createChatTools(gitProvider);
 
   const result = streamText({
     model: model,
     messages,
     maxSteps: 10,
-    system: await buildSystemPrompt(project),
+    system: await buildSystemPrompt(project, gitProvider),
     tools,
   });
 
   return result.toDataStreamResponse();
 }
 
-export async function createChatTools(project: GitProject) {
-  const { gitlabClientFactory } = container.cradle;
-  const gitlab = await gitlabClientFactory.forConnectorId(project.connectorId);
-  const originId = Number(project.originId);
-
+export async function createChatTools(gitProvider: GitChatProvider) {
   return {
-    getFile: createTool(tools.getFile, async ({ path }) => {
-      try {
-        const file = await gitlab.RepositoryFiles.show(originId, path, "HEAD");
-        return atob(file.content);
-      } catch (error) {
-        throw new Error(
-          `Failed to read file ${path}: ${error instanceof Error ? error.message : "Unknown error"}`,
-        );
-      }
-    }),
+    getFile: createTool(tools.getFile, async ({ path }) =>
+      gitProvider.getFile(path),
+    ),
 
-    searchContent: createTool(tools.searchContent, async ({ search }) => {
-      try {
-        return await gitlab.Search.all("blobs", search, {
-          projectId: originId,
-        });
-      } catch (error) {
-        throw new Error(
-          `Failed to search content: ${error instanceof Error ? error.message : "Unknown error"}`,
-        );
-      }
-    }),
+    searchContent: createTool(tools.searchContent, async ({ search }) =>
+      gitProvider.searchContent(search),
+    ),
   };
 }

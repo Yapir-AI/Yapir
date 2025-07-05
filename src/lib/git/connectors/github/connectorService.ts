@@ -45,7 +45,7 @@ export class GithubConnectorService {
     const config = githubConfigSchema.parse(JSON.parse(connector.config));
     config.installation_id = installationId;
 
-    this.prisma.gitConnector.update({
+    await this.prisma.gitConnector.update({
       data: {
         config: JSON.stringify(config),
       },

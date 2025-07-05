@@ -99,7 +99,7 @@ export async function POST(
   return NextResponse.json({});
 }
 
-function createGithubApp(app: GithubConfig) {
+export function createGithubApp(app: GithubConfig) {
   return new App({
     appId: app.id,
     Octokit: Octokit.plugin(restEndpointMethods),
