@@ -68,7 +68,7 @@ ${guidelines}
 - Quote relevant code snippets with file paths and line numbers
 - Explain the context and purpose of the code
 - Suggest related files that might be helpful
-- Use clear markdown formatting for readability
+- Make sur to use clear and valid markdown format
 </response_format>
 `;
 }

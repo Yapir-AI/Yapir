@@ -1,5 +1,5 @@
 import { gitFileDiffSchema } from "@/lib/git/parsing/model/GitFileDiff";
-import { z } from "zod";
+import { z } from 'zod/v3';
 
 export const gitMergeRequestDiffsSchema = z
   .object({

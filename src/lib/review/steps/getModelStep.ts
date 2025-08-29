@@ -1,9 +1,9 @@
-import type { LanguageModelV1 } from "ai";
+import type { LanguageModelV2 } from "@ai-sdk/provider";
 import type { ModelService } from "@/lib/model/service";
 import type { ProcessReviewerInput } from "@/lib/review/operation";
 
 type GetModelStepInput = ProcessReviewerInput;
-export type GetModelStepOutput = { model: LanguageModelV1 };
+export type GetModelStepOutput = { model: LanguageModelV2 };
 
 export class GetModelStep {
   private readonly modelService: ModelService;

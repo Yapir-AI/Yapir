@@ -2,7 +2,7 @@
 
 import { actionClient } from "@/lib/safeAction/client";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { ProviderCreate } from "@/lib/provider/operation/create";
 import { ProviderUpdate } from "@/lib/provider/operation/update";
 import { routes } from "@/lib/route";

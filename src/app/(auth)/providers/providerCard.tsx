@@ -1,5 +1,5 @@
 import type { ProviderListElement } from "@/lib/provider/service";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { updateProvider } from "@/lib/provider/actions";
 import {
   AccordionContent,

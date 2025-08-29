@@ -1,9 +1,9 @@
-import { streamText } from "ai";
+import { convertToModelMessages, stepCountIs, streamText } from "ai";
 import { assertAuthenticated } from "@/lib/auth/check";
 import { container } from "@/lib/di/container";
-import { z } from "zod";
-import { createTool, tools } from "./tools";
+import { z } from "zod/v3";
 import { buildSystemPrompt } from "./system-prompt";
+import { tools as sharedTools } from "@/app/api/chat/tools";
 import {
   GitChatProvider,
   projectForChatSelect,
@@ -36,27 +36,28 @@ export async function POST(req: Request) {
   const gitProvider = await GitChatProvider.forProject(project);
 
   const model = modelService.toModel(reviewer.aiProvider);
-  const tools = await createChatTools(gitProvider);
 
   const result = streamText({
     model: model,
-    messages,
-    maxSteps: 10,
+    messages: convertToModelMessages(messages),
+    stopWhen: stepCountIs(10),
     system: await buildSystemPrompt(project, gitProvider),
-    tools,
+    providerOptions: {
+      openai: {
+        reasoningSummary: "auto",
+      },
+    },
+    tools: {
+      getFile: {
+        ...sharedTools.getFile,
+        execute: ({ path }) => gitProvider.getFile(path),
+      },
+      searchContent: {
+        ...sharedTools.searchContent,
+        execute: ({ search }) => gitProvider.searchContent(search),
+      },
+    },
   });
 
-  return result.toDataStreamResponse();
-}
-
-export async function createChatTools(gitProvider: GitChatProvider) {
-  return {
-    getFile: createTool(tools.getFile, async ({ path }) =>
-      gitProvider.getFile(path),
-    ),
-
-    searchContent: createTool(tools.searchContent, async ({ search }) =>
-      gitProvider.searchContent(search),
-    ),
-  };
+  return result.toUIMessageStreamResponse();
 }

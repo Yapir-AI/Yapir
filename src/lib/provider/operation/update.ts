@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod/v3';
 import type { ProviderService } from "@/lib/provider/service";
 import { ProviderCreate } from "@/lib/provider/operation/create";
 import { PrismaClient } from "@/generated/prisma/client";

@@ -1,5 +1,5 @@
 import type { gitlabAuthResponseSchema } from "@/lib/git/connectors/gitlab/model/authResponseSchema";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import type { YapirPrismaClient } from "@/lib/db";
 
 export class GitlabConnectorService {

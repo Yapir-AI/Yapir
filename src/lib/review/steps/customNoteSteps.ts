@@ -3,7 +3,7 @@ import type {
   ProcessReviewersOutput,
 } from "@/lib/review/operation";
 import type { CreateSchemaStepOutput } from "@/lib/review/steps/createSchemaStep";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import type { InitReviewStepOutput } from "@/lib/review/steps/reviewLifecycleSteps";
 import type { GitMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";

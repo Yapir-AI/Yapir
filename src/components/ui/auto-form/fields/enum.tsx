@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import * as z from "zod";
+import * as z from 'zod/v3';
 import AutoFormLabel from "../common/label";
 import AutoFormTooltip from "../common/tooltip";
 import { type AutoFormInputComponentProps } from "../types";

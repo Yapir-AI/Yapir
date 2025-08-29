@@ -7,7 +7,7 @@ import { GitlabRepositoryConnect } from "@/lib/git/connectors/gitlab/operation/r
 import { assertAuthenticated } from "@/lib/auth/check";
 import { container, reviewContainer } from "@/lib/di/container";
 import { routes } from "@/lib/route";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { GitlabMergeRequestAdapter } from "@/lib/git/model/GitPullRequestAdapter";
 import { projectForReview } from "@/lib/review/types";
 

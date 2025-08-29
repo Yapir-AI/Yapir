@@ -1,5 +1,5 @@
 import { type ControllerRenderProps, type FieldValues } from "react-hook-form";
-import * as z from "zod";
+import * as z from 'zod/v3';
 import { INPUT_COMPONENTS } from "./config";
 
 export type FieldConfigItem = {

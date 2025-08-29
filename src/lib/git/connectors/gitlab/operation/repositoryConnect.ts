@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod/v3';
 import type { GitlabClientFactory } from "@/lib/git/connectors/gitlab/clientFactory";
 import { ProjectService } from "@/lib/project/service";
 

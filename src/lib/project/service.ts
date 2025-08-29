@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { Prisma, PrismaClient } from "@/generated/prisma/client";
 
 export class ProjectService {

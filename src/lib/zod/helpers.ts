@@ -11,7 +11,7 @@ import {
   ZodEffects,
   type Effect,
   z,
-} from "zod";
+} from 'zod/v3';
 
 export const mergeWithEffect = <
   Incoming extends AnyZodObject,

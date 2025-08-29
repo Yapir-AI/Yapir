@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import type { Route } from "next";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { GitlabConnectorCreate } from "@/lib/git/connectors/gitlab/operation/connectorCreate";
 import { createGitlabConnector } from "@/lib/git/connectors/gitlab/actions";
 

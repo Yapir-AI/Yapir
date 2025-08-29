@@ -237,7 +237,7 @@ function File({
     <Accordion
       type="multiple"
       defaultValue={["file"]}
-      key={file.newPath ?? "" + file.oldPath ?? ""}
+      key={file.newPath ?? "" + (file.oldPath ?? "")}
       className="max-h-fit rounded border"
     >
       <AccordionItem value="file">

@@ -1,6 +1,6 @@
 import { assertAuthenticated } from "@/lib/auth/check";
 import { NextRequest } from "next/server";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { validateUrlParams } from "@/lib/validation/parseSearchParams";
 import { redirect } from "next/navigation";
 import ky from "ky";

@@ -1,11 +1,11 @@
 import type { FetchDiffStepOutput } from "@/lib/review/steps/fetchDiffStep";
-import type { CoreMessage } from "ai";
+import type { ModelMessage } from "ai";
 import type { PromptService } from "@/lib/prompt/service";
 import type { ProcessReviewerInput } from "@/lib/review/operation";
 
 type CreatePromptStepInput = ProcessReviewerInput & FetchDiffStepOutput;
 export type CreatePromptStepOutput = {
-  promptMessages: CoreMessage[];
+  promptMessages: ModelMessage[];
 };
 
 export class CreatePromptStep {

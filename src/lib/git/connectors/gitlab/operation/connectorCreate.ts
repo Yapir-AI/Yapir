@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { PrismaClient } from "@/generated/prisma/client";
 import { gitlabConnectorConfigSchema } from "@/lib/git/connectors/gitlab/connectorService";
 

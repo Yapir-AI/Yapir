@@ -2,7 +2,7 @@
 
 import { authClient } from "@/lib/auth/client";
 import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
-import { z } from "zod";
+import { z } from 'zod/v3';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";

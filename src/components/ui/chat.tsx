@@ -1,338 +1,218 @@
 "use client";
 
 import {
-  forwardRef,
-  useCallback,
-  useRef,
-  useState,
-  type ReactElement,
-} from "react";
-import { ArrowDown, ThumbsDown, ThumbsUp } from "lucide-react";
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai/conversation";
+import { Message, MessageContent } from "@/components/ai/message";
+import {
+  PromptInput,
+  PromptInputModelSelect,
+  PromptInputModelSelectContent,
+  PromptInputModelSelectItem,
+  PromptInputModelSelectTrigger,
+  PromptInputModelSelectValue,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputToolbar,
+  PromptInputTools,
+} from "@/components/ai/prompt-input";
+import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import type { UIMessage, InferUITools } from "ai";
+import type { ChatTools } from "@/app/api/chat/tools";
+import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { Response } from "@/components/ai/response";
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ai/reasoning";
+import { Loader } from "@/components/ai/loader";
+import type { Reviewer } from "@/generated/prisma/client";
+import { useParams } from "next/navigation";
+import {
+  Tool,
+  ToolContent,
+  ToolHeader,
+  ToolInput,
+  ToolOutput,
+} from "@/components/ai/tool";
+import { CodeBlock } from "@/components/ai/code-block";
 
-import { cn } from "@/lib/utils";
-import { useAutoScroll } from "@/hooks/use-auto-scroll";
-import { Button } from "@/components/ui/button";
-import { type Message } from "@/components/ui/chat-message";
-import { CopyButton } from "@/components/ui/copy-button";
-import { MessageInput } from "@/components/ui/message-input";
-import { MessageList } from "@/components/ui/message-list";
-import { PromptSuggestions } from "@/components/ui/prompt-suggestions";
-import type { UIMessage } from "ai";
+type ChatUITools = InferUITools<ChatTools>;
+type ChatUIMessage = UIMessage<unknown, Record<string, unknown>, ChatUITools>;
 
-interface ChatPropsBase {
-  handleSubmit: (
-    event?: { preventDefault?: () => void },
-    options?: { experimental_attachments?: FileList },
-  ) => void;
-  messages: Array<UIMessage>;
-  input: string;
-  className?: string;
-  handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement>;
-  isGenerating: boolean;
-  stop?: () => void;
-  onRateResponse?: (
-    messageId: string,
-    rating: "thumbs-up" | "thumbs-down",
-  ) => void;
-  setMessages?: (messages: any[]) => void;
-  transcribeAudio?: (blob: Blob) => Promise<string>;
-}
+export const Chat = ({
+  reviewers,
+  projectName,
+}: {
+  reviewers: Reviewer[];
+  projectName: string;
+}) => {
+  const [input, setInput] = useState("");
+  const { messages, sendMessage, status } = useChat<ChatUIMessage>({
+    // Auto-submit when all tool results are available (server-side tools)
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+  });
 
-interface ChatPropsWithoutSuggestions extends ChatPropsBase {
-  append?: never;
-  suggestions?: never;
-}
+  const params = useParams();
+  const projectId = params.projectId as string;
 
-interface ChatPropsWithSuggestions extends ChatPropsBase {
-  append: (message: { role: "user"; content: string }) => void;
-  suggestions: string[];
-}
+  const [selectedReviewerId, setSelectedReviewerId] = useState(
+    reviewers[0]?.id,
+  );
 
-type ChatProps = ChatPropsWithoutSuggestions | ChatPropsWithSuggestions;
-
-export function Chat({
-  messages,
-  handleSubmit,
-  input,
-  handleInputChange,
-  stop,
-  isGenerating,
-  append,
-  suggestions,
-  className,
-  onRateResponse,
-  setMessages,
-  transcribeAudio,
-}: ChatProps) {
-  const lastMessage = messages.at(-1);
-  const isEmpty = messages.length === 0;
-  const isTyping = lastMessage?.role === "user";
-
-  const messagesRef = useRef(messages);
-  messagesRef.current = messages;
-
-  // Enhanced stop function that marks pending tool calls as cancelled
-  const handleStop = useCallback(() => {
-    stop?.();
-
-    if (!setMessages) return;
-
-    const latestMessages = [...messagesRef.current];
-    const lastAssistantMessage = latestMessages.findLast(
-      (m) => m.role === "assistant",
-    );
-
-    if (!lastAssistantMessage) return;
-
-    let needsUpdate = false;
-    let updatedMessage = { ...lastAssistantMessage };
-
-    if (lastAssistantMessage.toolInvocations) {
-      const updatedToolInvocations = lastAssistantMessage.toolInvocations.map(
-        (toolInvocation) => {
-          if (toolInvocation.state === "call") {
-            needsUpdate = true;
-            return {
-              ...toolInvocation,
-              state: "result",
-              result: {
-                content: "Tool execution was cancelled",
-                __cancelled: true, // Special marker to indicate cancellation
-              },
-            } as const;
-          }
-          return toolInvocation;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      sendMessage(
+        { text: input },
+        {
+          body: {
+            reviewerId: selectedReviewerId,
+            projectId,
+          },
         },
       );
-
-      if (needsUpdate) {
-        updatedMessage = {
-          ...updatedMessage,
-          toolInvocations: updatedToolInvocations,
-        };
-      }
+      setInput("");
     }
-
-    if (lastAssistantMessage.parts && lastAssistantMessage.parts.length > 0) {
-      const updatedParts = lastAssistantMessage.parts.map((part: any) => {
-        if (
-          part.type === "tool-invocation" &&
-          part.toolInvocation &&
-          part.toolInvocation.state === "call"
-        ) {
-          needsUpdate = true;
-          return {
-            ...part,
-            toolInvocation: {
-              ...part.toolInvocation,
-              state: "result",
-              result: {
-                content: "Tool execution was cancelled",
-                __cancelled: true,
-              },
-            },
-          };
-        }
-        return part;
-      });
-
-      if (needsUpdate) {
-        updatedMessage = {
-          ...updatedMessage,
-          parts: updatedParts,
-        };
-      }
-    }
-
-    if (needsUpdate) {
-      const messageIndex = latestMessages.findIndex(
-        (m) => m.id === lastAssistantMessage.id,
-      );
-      if (messageIndex !== -1) {
-        latestMessages[messageIndex] = updatedMessage;
-        setMessages(latestMessages);
-      }
-    }
-  }, [stop, setMessages, messagesRef]);
-
-  const messageOptions = useCallback(
-    (message: UIMessage) => ({
-      actions: onRateResponse ? (
-        <>
-          <div className="border-r pr-1">
-            <CopyButton
-              content={message.content}
-              copyMessage="Copied response to clipboard!"
-            />
-          </div>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-6 w-6"
-            onClick={() => onRateResponse(message.id, "thumbs-up")}
-          >
-            <ThumbsUp className="h-4 w-4" />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-6 w-6"
-            onClick={() => onRateResponse(message.id, "thumbs-down")}
-          >
-            <ThumbsDown className="h-4 w-4" />
-          </Button>
-        </>
-      ) : (
-        <CopyButton
-          content={message.content}
-          copyMessage="Copied response to clipboard!"
-        />
-      ),
-    }),
-    [onRateResponse],
-  );
+  };
 
   return (
-    <ChatContainer className={className}>
-      {isEmpty && append && suggestions ? (
-        <PromptSuggestions
-          label="Talk to your codebase ✨"
-          append={append}
-          suggestions={suggestions}
-        />
-      ) : null}
+    <div className="relative mx-auto size-full h-full max-h-full max-w-4xl p-6">
+      <div className="flex h-full flex-col">
+        <Conversation className="h-full">
+          <ConversationContent>
+            {messages.map((message) => (
+              <div key={message.id}>
+                <Message from={message.role} key={message.id}>
+                  <MessageContent>
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <Response key={`${message.id}-${i}`}>
+                              {part.text}
+                            </Response>
+                          );
+                        case "reasoning":
+                          return (
+                            <Reasoning
+                              key={`${message.id}-${i}`}
+                              className="w-full"
+                              isStreaming={status === "streaming"}
+                            >
+                              <ReasoningTrigger />
+                              <ReasoningContent>{part.text}</ReasoningContent>
+                            </Reasoning>
+                          );
+                        case "step-start":
+                          return (
+                            <div
+                              key={`${message.id}-${i}`}
+                              className="text-gray-500"
+                            >
+                              <hr className="my-2 border-gray-300" />
+                            </div>
+                          );
+                        case "tool-getFile": {
+                          return (
+                            <Tool key={`${message.id}-${i}`}>
+                              <ToolHeader
+                                type={`Reading: ${part.input?.path}`}
+                                state={part.state}
+                              />
+                              <ToolContent>
+                                <ToolInput input={part.input} />
+                                <ToolOutput
+                                  errorText={part.errorText}
+                                  output={
+                                    <CodeBlock
+                                      className="max-h-96 overflow-y-auto"
+                                      code={part.output ?? ""}
+                                      language={
+                                        part.input?.path?.split(".").pop()!
+                                      }
+                                    />
+                                  }
+                                />
+                              </ToolContent>
+                            </Tool>
+                          );
+                        }
+                        case "tool-searchContent": {
+                          return (
+                            <Tool key={`${message.id}-${i}`}>
+                              <ToolHeader
+                                type={`Searching: ${part.input?.search}`}
+                                state={part.state}
+                              />
+                              <ToolContent>
+                                <ToolInput input={part.input} />
+                                <ToolOutput
+                                  errorText={part.errorText}
+                                  output={
+                                    <CodeBlock
+                                      code={JSON.stringify(
+                                        part.output,
+                                        null,
+                                        2,
+                                      )}
+                                      language="json"
+                                    />
+                                  }
+                                />
+                              </ToolContent>
+                            </Tool>
+                          );
+                        }
+                        default:
+                          return null;
+                      }
+                    })}
+                  </MessageContent>
+                </Message>
+              </div>
+            ))}
+            {status === "submitted" && <Loader />}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
 
-      {messages.length > 0 ? (
-        <ChatMessages messages={messages}>
-          <MessageList
-            messages={messages}
-            isTyping={isTyping}
-            messageOptions={messageOptions}
-          />
-        </ChatMessages>
-      ) : null}
-
-      <ChatForm
-        className="mt-auto"
-        isPending={isGenerating || isTyping}
-        handleSubmit={handleSubmit}
-      >
-        {({ files, setFiles }) => (
-          <MessageInput
+        <PromptInput onSubmit={handleSubmit} className="mt-4">
+          <PromptInputTextarea
+            onChange={(e) => setInput(e.target.value)}
             value={input}
-            onChange={handleInputChange}
-            allowAttachments
-            files={files}
-            setFiles={setFiles}
-            stop={handleStop}
-            isGenerating={isGenerating}
-            transcribeAudio={transcribeAudio}
           />
-        )}
-      </ChatForm>
-    </ChatContainer>
-  );
-}
-Chat.displayName = "Chat";
-
-export function ChatMessages({
-  messages,
-  children,
-}: React.PropsWithChildren<{
-  messages: UIMessage[];
-}>) {
-  const {
-    containerRef,
-    scrollToBottom,
-    handleScroll,
-    shouldAutoScroll,
-    handleTouchStart,
-  } = useAutoScroll([messages]);
-
-  return (
-    <div
-      className="grid grid-cols-1 overflow-y-auto pb-4"
-      ref={containerRef}
-      onScroll={handleScroll}
-      onTouchStart={handleTouchStart}
-    >
-      <div className="[grid-column:1/1] [grid-row:1/1] max-w-full">
-        {children}
+          <PromptInputToolbar>
+            <PromptInputTools>
+              <PromptInputModelSelect
+                onValueChange={(value) => {
+                  setSelectedReviewerId(value);
+                }}
+                value={selectedReviewerId}
+              >
+                <PromptInputModelSelectTrigger>
+                  <PromptInputModelSelectValue />
+                </PromptInputModelSelectTrigger>
+                <PromptInputModelSelectContent>
+                  {reviewers.map((reviewer) => (
+                    <PromptInputModelSelectItem
+                      key={reviewer.id}
+                      value={reviewer.id}
+                    >
+                      {reviewer.name}
+                    </PromptInputModelSelectItem>
+                  ))}
+                </PromptInputModelSelectContent>
+              </PromptInputModelSelect>
+            </PromptInputTools>
+            <PromptInputSubmit disabled={!input} status={status} />
+          </PromptInputToolbar>
+        </PromptInput>
       </div>
-
-      {!shouldAutoScroll && (
-        <div className="pointer-events-none [grid-column:1/1] [grid-row:1/1] flex flex-1 items-end justify-end">
-          <div className="sticky bottom-0 left-0 flex w-full justify-end">
-            <Button
-              onClick={scrollToBottom}
-              className="animate-in fade-in-0 slide-in-from-bottom-1 pointer-events-auto h-8 w-8 rounded-full ease-in-out"
-              size="icon"
-              variant="ghost"
-            >
-              <ArrowDown className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
-}
-
-export const ChatContainer = forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn("grid max-h-full w-full grid-rows-[1fr_auto]", className)}
-      {...props}
-    />
-  );
-});
-ChatContainer.displayName = "ChatContainer";
-
-interface ChatFormProps {
-  className?: string;
-  isPending: boolean;
-  handleSubmit: (
-    event?: { preventDefault?: () => void },
-    options?: { experimental_attachments?: FileList },
-  ) => void;
-  children: (props: {
-    files: File[] | null;
-    setFiles: React.Dispatch<React.SetStateAction<File[] | null>>;
-  }) => ReactElement;
-}
-
-export const ChatForm = forwardRef<HTMLFormElement, ChatFormProps>(
-  ({ children, handleSubmit, isPending, className }, ref) => {
-    const [files, setFiles] = useState<File[] | null>(null);
-
-    const onSubmit = (event: React.FormEvent) => {
-      if (!files) {
-        handleSubmit(event);
-        return;
-      }
-
-      const fileList = createFileList(files);
-      handleSubmit(event, { experimental_attachments: fileList });
-      setFiles(null);
-    };
-
-    return (
-      <form ref={ref} onSubmit={onSubmit} className={className}>
-        {children({ files, setFiles })}
-      </form>
-    );
-  },
-);
-ChatForm.displayName = "ChatForm";
-
-function createFileList(files: File[] | FileList): FileList {
-  const dataTransfer = new DataTransfer();
-  for (const file of Array.from(files)) {
-    dataTransfer.items.add(file);
-  }
-  return dataTransfer.files;
-}
+};

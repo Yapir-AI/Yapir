@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod/v3';
 
 export const gitlabAuthResponseSchema = z.object({
   access_token: z.string(),
