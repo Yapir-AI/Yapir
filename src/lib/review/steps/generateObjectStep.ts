@@ -20,6 +20,7 @@ export class GenerateObjectStep {
         model: context.model,
         schema: context.schema,
         messages: context.promptMessages,
+        experimental_telemetry: { isEnabled: true },
       });
 
       return { output: { success: true, ...object } } as const;

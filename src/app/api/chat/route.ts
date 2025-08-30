@@ -57,6 +57,7 @@ export async function POST(req: Request) {
         execute: ({ search }) => gitProvider.searchContent(search),
       },
     },
+    experimental_telemetry: { isEnabled: true },
   });
 
   return result.toUIMessageStreamResponse();

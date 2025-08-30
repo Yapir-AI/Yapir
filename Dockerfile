@@ -19,6 +19,8 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
 ENV NODE_ENV=production
+ENV BETTER_AUTH_TELEMETRY=0
+ENV NEXT_OTEL_VERBOSE=1
 RUN bun run build
 
 # copy production dependencies and source code into final image
