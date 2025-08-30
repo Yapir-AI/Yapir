@@ -1,3 +1,12 @@
+## [0.15.1](https://github.com/yapir-ai/yapir/compare/v0.15.0...v0.15.1) (2025-08-30)
+
+
+### Bug Fixes
+
+* removed prisma generated files ([5a80d86](https://github.com/yapir-ai/yapir/commit/5a80d8696de83e2c571e3df7438006da48b5e1ef))
+
+
+
 # [0.15.0](https://github.com/yapir-ai/yapir/compare/v0.14.2...v0.15.0) (2025-08-30)
 
 
@@ -38,21 +47,6 @@
 * better highlighter ([b9a9a9d](https://github.com/yapir-ai/yapir/commit/b9a9a9dfa4702f3649cc765085e2e71ed1e10ecd))
 * implement SearchCommand component for unified search/selection UI ([9751230](https://github.com/yapir-ai/yapir/commit/97512304d8176313aa5e19190a89303857d8915b))
 * new avatars ([3958948](https://github.com/yapir-ai/yapir/commit/3958948a3fff7a4d5e6886ed69267e46b08cd42b))
-
-
-
-# [0.13.0](https://github.com/yapir-ai/yapir/compare/v0.12.1...v0.13.0) (2025-06-12)
-
-
-### Bug Fixes
-
-* review notes display ([03b302a](https://github.com/yapir-ai/yapir/commit/03b302a013bc44f06759ab2ae6ad71ccdbe63a8b))
-* ut8 issues ([365b2f5](https://github.com/yapir-ai/yapir/commit/365b2f599f257481368f4cb47e7a6f518d851abf))
-
-
-### Features
-
-* upgraded chat prompt ([fa0eecb](https://github.com/yapir-ai/yapir/commit/fa0eecb5ccd891500f83b6653e26d7dd1c9e5728))
 
 
 
