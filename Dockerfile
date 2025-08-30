@@ -2,6 +2,7 @@
 # see all versions at https://hub.docker.com/r/oven/bun/tags
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
+RUN apt-get update -y && apt-get install -y openssl
 
 # install dependencies into temp directory
 # this will cache them and speed up future builds
@@ -20,6 +21,7 @@ COPY . .
 ENV NODE_ENV=production
 ENV BETTER_AUTH_TELEMETRY=0
 ENV NEXT_OTEL_VERBOSE=1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
 # copy production dependencies and source code into final image
