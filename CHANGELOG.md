@@ -1,3 +1,17 @@
+# [0.15.0](https://github.com/yapir-ai/yapir/compare/v0.14.2...v0.15.0) (2025-08-30)
+
+
+### Features
+
+* ai sdk 5 ([9502f3e](https://github.com/yapir-ai/yapir/commit/9502f3efc050f4a0b34fc0909de4cdf8e3a2f5ea))
+* chat working with github ([59704f2](https://github.com/yapir-ai/yapir/commit/59704f28aaf53b7406be82e46937c93220ebb4b7))
+* custom instructions path ([fa582c0](https://github.com/yapir-ai/yapir/commit/fa582c04b78c429a0af7697d9055a9db067f5627))
+* github integration cleans ([fd2825b](https://github.com/yapir-ai/yapir/commit/fd2825bf2246c0f12e1dba1e6f1d66d7c9fe67b7))
+* github merge request adapter ([5a91b0a](https://github.com/yapir-ai/yapir/commit/5a91b0a1b9b596ab136df59112752b5483d8b2b2))
+* removed sentry for signoz ([154c143](https://github.com/yapir-ai/yapir/commit/154c1434ae64c1250ee4e2e16c2b781a61507c70))
+
+
+
 ## [0.14.2](https://github.com/yapir-ai/yapir/compare/v0.14.1...v0.14.2) (2025-06-18)
 
 
@@ -39,15 +53,6 @@
 ### Features
 
 * upgraded chat prompt ([fa0eecb](https://github.com/yapir-ai/yapir/commit/fa0eecb5ccd891500f83b6653e26d7dd1c9e5728))
-
-
-
-## [0.12.1](https://github.com/yapir-ai/yapir/compare/v0.12.0...v0.12.1) (2025-06-02)
-
-
-### Bug Fixes
-
-* chat heigth ([a7cca56](https://github.com/yapir-ai/yapir/commit/a7cca5667c207dd659c766afe2850d8f766ab1d9))
 
 
 
