@@ -1,3 +1,12 @@
+## [0.15.2](https://github.com/yapir-ai/yapir/compare/v0.15.1...v0.15.2) (2025-08-30)
+
+
+### Bug Fixes
+
+* docker file openssl ([0a27cb6](https://github.com/yapir-ai/yapir/commit/0a27cb67c41c471aa243c2ce7d0300e20a4d8548))
+
+
+
 ## [0.15.1](https://github.com/yapir-ai/yapir/compare/v0.15.0...v0.15.1) (2025-08-30)
 
 
@@ -36,17 +45,6 @@
 ### Bug Fixes
 
 * reviewer usage in chat ([814a0e3](https://github.com/yapir-ai/yapir/commit/814a0e34ad389fe1254a22155ec23d1ae34350ac))
-
-
-
-# [0.14.0](https://github.com/yapir-ai/yapir/compare/v0.13.0...v0.14.0) (2025-06-12)
-
-
-### Features
-
-* better highlighter ([b9a9a9d](https://github.com/yapir-ai/yapir/commit/b9a9a9dfa4702f3649cc765085e2e71ed1e10ecd))
-* implement SearchCommand component for unified search/selection UI ([9751230](https://github.com/yapir-ai/yapir/commit/97512304d8176313aa5e19190a89303857d8915b))
-* new avatars ([3958948](https://github.com/yapir-ai/yapir/commit/3958948a3fff7a4d5e6886ed69267e46b08cd42b))
 
 
 
