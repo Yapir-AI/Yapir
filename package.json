@@ -2,9 +2,6 @@
   "name": "yapir",
   "version": "0.15.2",
   "private": true,
-  "prisma": {
-    "schema": "./prisma"
-  },
   "prettier": {
     "plugins": [
       "prettier-plugin-tailwindcss"

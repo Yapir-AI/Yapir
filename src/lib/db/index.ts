@@ -18,7 +18,9 @@ const prismaClient = () => {
   const encryptionKey = process.env.PRISMA_FIELD_ENCRYPTION_KEY;
 
   if (encryptionKey)
-    return new PrismaClient(options).$extends(fieldEncryptionExtension());
+    return new PrismaClient(options).$extends(
+      fieldEncryptionExtension({ dmmf: Prisma.dmmf }),
+    );
 
   console.warn(
     "Running without PRISMA_FIELD_ENCRYPTION_KEY. Secrets will not be encrypted in database. Ignore this while building",
