@@ -1,3 +1,12 @@
+## [0.15.3](https://github.com/yapir-ai/yapir/compare/v0.15.2...v0.15.3) (2025-08-30)
+
+
+### Bug Fixes
+
+* prisma encryption plugin ([6816130](https://github.com/yapir-ai/yapir/commit/681613008c9cbb62a79c8821bcda500555f79a57))
+
+
+
 ## [0.15.2](https://github.com/yapir-ai/yapir/compare/v0.15.1...v0.15.2) (2025-08-30)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * markdown rendering ([5ea4ec7](https://github.com/yapir-ai/yapir/commit/5ea4ec7dcaf2329628d83de56ce0748d98a82ad9))
-
-
-
-## [0.14.1](https://github.com/yapir-ai/yapir/compare/v0.14.0...v0.14.1) (2025-06-18)
-
-
-### Bug Fixes
-
-* reviewer usage in chat ([814a0e3](https://github.com/yapir-ai/yapir/commit/814a0e34ad389fe1254a22155ec23d1ae34350ac))
 
 
 
