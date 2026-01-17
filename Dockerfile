@@ -34,7 +34,7 @@ COPY --from=prerelease  /usr/src/app/prisma ./prisma
 # Create startup script to run migrations then start the app
 RUN echo '#!/bin/sh\n\
 echo "Running database migrations..."\n\
-bunx --bun prisma migrate deploy\n\
+bunx --bun prisma@$(bun -e "const p = require(\"./package.json\"); console.log(p.devDependencies.prisma)") migrate deploy\n\
 MIGRATION_EXIT_CODE=$?\n\
 \n\
 if [ $MIGRATION_EXIT_CODE -ne 0 ]; then\n\
@@ -47,7 +47,6 @@ echo "✅ Database migrations completed successfully"\n\
 echo "Starting server..."\n\
 exec bun run server.js\n' > /usr/src/app/start.sh
 RUN chmod +x ./start.sh
-
 
 # run the app
 USER bun
