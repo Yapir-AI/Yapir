@@ -31,6 +31,8 @@ COPY --from=prerelease  /usr/src/app/.next/standalone ./
 COPY --from=prerelease  /usr/src/app/.next/static ./.next/static
 COPY --from=prerelease  /usr/src/app/prisma ./prisma
 
+RUN bun add prisma@$(bun -e "const p = require('./package.json'); console.log(p.devDependencies.prisma)")
+
 # Create startup script to run migrations then start the app
 RUN echo '#!/bin/sh\n\
 echo "Running database migrations..."\n\
