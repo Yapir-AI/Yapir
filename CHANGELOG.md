@@ -1,3 +1,13 @@
+## [0.15.5](https://github.com/yapir-ai/yapir/compare/v0.15.4...v0.15.5) (2026-01-19)
+
+
+### Bug Fixes
+
+* resolve P1012 error due to bunx resolving latest version of prisma cli because of missing bin in node_modules ([1742148](https://github.com/yapir-ai/yapir/commit/17421488119ff6542ff067e26a965cbdb4960394))
+* upgrade next to 15.5.8 to patch CVE ([518a09d](https://github.com/yapir-ai/yapir/commit/518a09d6d74c2b7a2768c7ec220dd8b8e750b3f4))
+
+
+
 ## [0.15.4](https://github.com/yapir-ai/yapir/compare/v0.15.2...v0.15.4) (2026-01-07)
 
 
@@ -37,15 +47,6 @@
 * github integration cleans ([fd2825b](https://github.com/yapir-ai/yapir/commit/fd2825bf2246c0f12e1dba1e6f1d66d7c9fe67b7))
 * github merge request adapter ([5a91b0a](https://github.com/yapir-ai/yapir/commit/5a91b0a1b9b596ab136df59112752b5483d8b2b2))
 * removed sentry for signoz ([154c143](https://github.com/yapir-ai/yapir/commit/154c1434ae64c1250ee4e2e16c2b781a61507c70))
-
-
-
-## [0.14.2](https://github.com/yapir-ai/yapir/compare/v0.14.1...v0.14.2) (2025-06-18)
-
-
-### Bug Fixes
-
-* markdown rendering ([5ea4ec7](https://github.com/yapir-ai/yapir/commit/5ea4ec7dcaf2329628d83de56ce0748d98a82ad9))
 
 
 
