@@ -6,11 +6,11 @@
   "observability": {
     "enabled": true
   },
-  "d1_databases": [
+  "hyperdrive": [
     {
       "binding": "DB",
-      "database_name": "yapir",
-      "migrations_dir": "drizzle/migrations"
+      "id": "yapir",
+      "localConnectionString": "drizzle/migrations"
     }
   ]
 }
