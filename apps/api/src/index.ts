@@ -1,9 +1,28 @@
+import { getSandbox, type Sandbox as SandboxObject } from "@cloudflare/sandbox";
 import { Hono } from "hono";
-import { auth } from "@/lib/auth";
+import { env } from "cloudflare:workers";
 
-const app = new Hono<{ Variables: { foo: string } }>();
+export { Sandbox } from "@cloudflare/sandbox";
 
-app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+const app = new Hono<{
+  Bindings: { Sandbox: DurableObjectNamespace<SandboxObject> };
+  Variables: { foo: string };
+}>();
+
+app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+  const { auth } = await import("@/lib/auth");
+  return auth.handler(c.req.raw);
+});
+
+app.get("/sandbox/hello", async (c) => {
+  const sandbox = getSandbox(env.Sandbox, "hello-world");
+  const result = await sandbox.exec(
+    'printf "Hello from Cloudflare Sandbox\\n"',
+  );
+
+  return c.json(result);
+});
+
 app.get(
   "/",
   (c, next) => {

@@ -31,6 +31,7 @@ Deployment: embracing Cloudflare for now (Workers + Hyperdrive), but the backend
 - **Path aliases**: `@/*`.
 - TypeScript strict, no `any` as a catch-all. Keep types implicit where possible; create named types only for reusable contracts.
 - Never hardcode anything.
+- We do not write tests for now.
 
 ## Ethos
 
@@ -45,6 +46,8 @@ Effectiveness (DX + KISS) and quality are masters.
 (We channel the *mood* of the ponytail skills — minimalism and laziness-as-virtue — without adopting their literal workflow.)
 
 ## Agent skills
+
+Answer the user prompts in the same language, but all documents, issues, PRDs and all should remain in plain english.
 
 ### Issue tracker
 

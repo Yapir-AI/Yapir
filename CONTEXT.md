@@ -10,6 +10,10 @@ An AI-powered code review platform where Agents and Users collaborate to review 
 An AI profile that performs code reviews on behalf of the project.
 _Avoid_: Reviewer, bot, assistant
 
+**AiProvider**:
+A connection to an AI model provider account, carrying provider configuration and credentials that Agents use to perform Reviews. Admin-managed and shared across Projects.
+_Avoid_: ModelProvider, LlmProvider, AI account
+
 **User**:
 A person's identity (auth account); the human who collaborates on reviews.
 _Avoid_: Member (as a standalone noun), account, profile
