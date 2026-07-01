@@ -7,6 +7,8 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
+    "auth-gen": "bunx auth@1.7.0-rc.0 generate --output ./src/lib/db/auth-schema.ts",
+    "db-gen": "drizzle-kit generate --name",
     "cf-typegen": "wrangler types"
   },
   "devDependencies": {
