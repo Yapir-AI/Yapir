@@ -65,7 +65,7 @@ A narrative synthesis produced by a Review beyond inline Comments (e.g. a techni
 _Avoid_: Summary, report
 
 **NoteTemplate**:
-A reusable, configurable template (title, tag, prompt) that instructs an Agent to produce a ReviewNote; may be published externally depending on the delivery mode.
+A reusable, configurable template (title, prompt) that instructs an Agent to produce a ReviewNote.
 _Avoid_: NoteDefinition
 
 ### Opinions

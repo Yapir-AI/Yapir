@@ -26,7 +26,7 @@ Deployment: embracing Cloudflare for now (Workers + Hyperdrive), but the backend
 
 ## Conventions
 
-- **DI container** (`apps/api/src/lib/container`): register services through the typed awilix container; keep business logic in services, routes thin.
+- **DI container** (`apps/api/src/lib/container`): register operations and reusable services through the typed awilix container; keep routes thin. Operations are the application logic atoms; services are optional reusable helpers.
 - **DB schema** in `apps/api/src/lib/db/` (`schema.ts` domain, `auth-schema.ts` better-auth). Migrations via drizzle-kit.
 - **Path aliases**: `@/*`.
 - TypeScript strict, no `any` as a catch-all. Keep types implicit where possible; create named types only for reusable contracts.
