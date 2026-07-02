@@ -27,9 +27,14 @@ Deployment: embracing Cloudflare for now (Workers + Hyperdrive), but the backend
 ## Conventions
 
 - **DI container** (`apps/api/src/lib/container`): register operations and reusable services through the typed awilix container; keep routes thin. Operations are the application logic atoms; services are optional reusable helpers.
+- **API entity slices** (`apps/api/src/lib/<resource>/`): expose resource-oriented plural REST routes under `/api`; use one Operation per action file named `<resource>-<action>.operation.ts`; use `<logical-name>.<role>.ts` for shared files (`note-template.dto.ts`, `note-template.routes.ts`).
+- **Operations and services**: define `async function execute(...)` or service methods inside the factory and return them at the end; inline dependency object types in the function parameter; export operation/service types only when another file needs them; inject only dependencies the implementation uses.
+- **Operation readability**: write Operations as readable business scenarios in execution order (load, check, decide, write, return); prefer `requestDto` for request DTO parameters; update noops should not touch audit fields, and deletes are idempotent unless product behavior says otherwise.
+- **DTOs**: request DTOs come from ArkType schemas, one DTO file per request/response shape; response DTOs can be inferred from mapper return types when outputs are constructed internally; use shared DTO helpers for cross-cutting behavior like update change detection instead of repeating dirty-checking in every Operation.
+- **DX helpers**: when a pattern is about to be copied across multiple files, proactively propose a tiny shared helper instead of spreading boilerplate; the helper must remove real repeated plumbing or implement an already-decided project convention.
 - **DB schema** in `apps/api/src/lib/db/` (`schema.ts` domain, `auth-schema.ts` better-auth). Migrations via drizzle-kit.
 - **Path aliases**: `@/*`.
-- TypeScript strict, no `any` as a catch-all. Keep types implicit where possible; create named types only for reusable contracts.
+- TypeScript strict, no `any` as a catch-all. Keep types implicit/inline where possible; create named types only for reusable contracts.
 - Never hardcode anything.
 - We do not write tests for now.
 
@@ -43,7 +48,7 @@ Effectiveness (DX + KISS) and quality are masters.
 - Deep modules, tight interfaces — a small interface over a deep body.
 - Minimal, lazy-by-default: if it doesn't need to exist, it shouldn't.
 
-(We channel the *mood* of the ponytail skills — minimalism and laziness-as-virtue — without adopting their literal workflow.)
+(We channel the _mood_ of the ponytail skills — minimalism and laziness-as-virtue — without adopting their literal workflow.)
 
 ## Agent skills
 
