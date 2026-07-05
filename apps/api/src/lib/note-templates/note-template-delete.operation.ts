@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import type { CurrentUser } from "@/lib/current-user";
 import { noteTemplateTable } from "@/lib/db/schema";
 import type { Db } from "@/lib/db";
+import { forbidden } from "@/lib/errors/error.factory";
 
 export function noteTemplateDeleteOperation({
   db,
@@ -12,7 +13,7 @@ export function noteTemplateDeleteOperation({
 }) {
   async function execute(id: string) {
     if (currentUser.role !== "admin") {
-      throw new Error("Forbidden");
+      throw forbidden("FORBIDDEN");
     }
 
     await db.delete(noteTemplateTable).where(eq(noteTemplateTable.id, id));

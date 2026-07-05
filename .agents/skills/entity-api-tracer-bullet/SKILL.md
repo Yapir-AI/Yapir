@@ -64,10 +64,11 @@ Style rules:
 - Use DB entity names for rows (`noteTemplate`), not generic `row`, when it improves readability.
 - Treat `Update` noop as no write: return the current row mapped to DTO without touching audit fields.
 - Treat `Delete` not-found as idempotent success.
+- Use the shared API error factory located in apps/api/src/lib/errors/error.factory.ts
 
 Services are optional. Introduce a service only when multiple operations need the same reusable behavior. Do not create a service per entity by default.
 
-Completion: each operation is one use case, has precise deps, and contains no route/Hono concerns.
+Completion: each operation is one use case, has precise deps, and uses only shared API error helpers for intentional HTTP errors.
 
 ### 5. Implement routes
 
@@ -103,7 +104,6 @@ Known platform gaps:
 
 - `currentUser` request-scoped wiring is not done yet; do not invent defensive `501` paths or throwaway auth abstractions.
 - LIST endpoints are intended to be paginated, but the pagination contract is not defined yet. If adding LIST before that session, leave a local TODO.
-- The standard API error contract is not defined yet. Do not build a temporary error framework.
 
 Completion: any gap used by the endpoint is marked at the nearest useful location.
 

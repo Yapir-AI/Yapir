@@ -14,7 +14,7 @@ Monorepo: **Turborepo + bun**, workspaces in `apps/*`. TypeScript, strict.
 - **`apps/api` (`@yapir/api`)** — Hono on Cloudflare Workers (wrangler); better-auth (minimal, drizzle adapter); Drizzle ORM (pg); awilix (typed DI container); arktype + `@hono/standard-validator` for validation. Postgres via Hyperdrive; local Postgres via `docker-compose.yml`.
 - **`apps/web` (`@yapir/web`)** — React 19; TanStack Router + Query; shadcn/ui; Tailwind v4; Vite. RPC to the API via hono-client.
 
-Deployment: embracing Cloudflare for now (Workers + Hyperdrive), but the backend stays **deployment-agnostic** as a target (docker bun/node, Vercel, etc.) — don't couple domain logic to a runtime.
+Deployment: embracing Cloudflare for now (Workers + Hyperdrive), but keep deployment-runtime concerns encapsulated so the backend can opt out later (docker bun/node, Vercel, etc.). It is fine for API code to use backend framework libraries such as Hono; avoid coupling core application logic to Cloudflare-specific bindings or deployment-only APIs.
 
 ## Commands
 

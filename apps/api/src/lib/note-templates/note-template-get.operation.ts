@@ -1,4 +1,5 @@
 import type { Db } from "@/lib/db";
+import { notFound } from "@/lib/errors/error.factory";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 
 export function noteTemplateGetOperation({ db }: { db: Db }) {
@@ -8,7 +9,7 @@ export function noteTemplateGetOperation({ db }: { db: Db }) {
     });
 
     if (!noteTemplate) {
-      throw new Error("Note template not found");
+      throw notFound("NOTE_TEMPLATE_NOT_FOUND");
     }
 
     return toNoteTemplateResponseDto(noteTemplate);

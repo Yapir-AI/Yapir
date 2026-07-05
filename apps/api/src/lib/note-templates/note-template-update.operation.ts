@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import type { CurrentUser } from "@/lib/current-user";
 import { noteTemplateTable } from "@/lib/db/schema";
 import type { Db } from "@/lib/db";
+import { forbidden, notFound } from "@/lib/errors/error.factory";
 import type { NoteTemplateUpdateRequestDto } from "./note-template-update.dto";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 
@@ -14,14 +15,14 @@ export function noteTemplateUpdateOperation({
 }) {
   async function execute(id: string, requestDto: NoteTemplateUpdateRequestDto) {
     if (currentUser.role !== "admin") {
-      throw new Error("Forbidden");
+      throw forbidden("FORBIDDEN");
     }
 
     const noteTemplate = await db.query.noteTemplateTable.findFirst({
       where: { id },
     });
 
-    if (!noteTemplate) throw new Error("Not Found");
+    if (!noteTemplate) throw notFound("NOTE_TEMPLATE_NOT_FOUND");
 
     if (!requestDto.hasAnyChange)
       return toNoteTemplateResponseDto(noteTemplate);
@@ -37,7 +38,7 @@ export function noteTemplateUpdateOperation({
       .where(eq(noteTemplateTable.id, id))
       .returning();
 
-    if (!updatedNoteTemplate) throw new Error("Not Found");
+    if (!updatedNoteTemplate) throw notFound("NOTE_TEMPLATE_NOT_FOUND");
 
     return toNoteTemplateResponseDto(updatedNoteTemplate);
   }
