@@ -2,6 +2,7 @@ import { getSandbox } from "@cloudflare/sandbox";
 import { env } from "cloudflare:workers";
 import { noteTemplateRoutes } from "@/lib/note-templates/note-template.routes";
 import { authMiddleware } from "@/lib/auth/auth.middleware";
+import { gitConnectorRoutes } from "@/lib/git-connectors/git-connector.routes";
 import { hono } from "@/lib/hono/hono.factory";
 
 export { Sandbox } from "@cloudflare/sandbox";
@@ -16,6 +17,7 @@ app.on(["POST", "GET"], "/api/auth/*", async (c) => {
 app.use(authMiddleware);
 
 app.route("/api/note-templates", noteTemplateRoutes);
+app.route("/api/git-connectors", gitConnectorRoutes);
 
 app.get("/sandbox/hello", async (c) => {
   const sandbox = getSandbox(env.Sandbox, "hello-world");

@@ -1,6 +1,6 @@
 # Install and list a GitHub Connector
 
-Status: ready-for-agent
+Status: ready-for-human
 Migrated from: `yapir-ai/yapir#13`
 Parent: `../PRD.md`
 
@@ -10,17 +10,24 @@ Allow an Admin to complete the secure GitHub App installation flow and expose th
 
 ## Acceptance criteria
 
-- [ ] Operator configuration accepts the App ID, slug, private key, OAuth client ID, and OAuth client secret.
-- [ ] Only an Admin can initiate or complete an installation.
-- [ ] `POST /api/git-connectors/github/installations` returns a `303` redirect with anti-CSRF state.
-- [ ] The callback validates state and exchanges the OAuth code through Octokit.
-- [ ] The callback verifies that the GitHub User can access the installation.
-- [ ] The user token is discarded after verification and is never persisted.
-- [ ] The GitConnector persists only non-sensitive installation and account metadata in a discriminated JSONB configuration.
-- [ ] Repeating or concurrently completing the same installation reuses one GitConnector.
-- [ ] `GET /api/git-connectors` returns normalized provider-neutral DTOs.
+- [x] Operator configuration accepts the App ID, slug, private key, OAuth client ID, and OAuth client secret.
+- [x] Only an Admin can initiate or complete an installation.
+- [x] `POST /api/git-connectors/github/installations` returns a `303` redirect with anti-CSRF state.
+- [x] The callback validates state and exchanges the OAuth code through Octokit.
+- [x] The callback verifies that the GitHub User can access the installation.
+- [x] The user token is discarded after verification and is never persisted.
+- [x] The GitConnector persists only non-sensitive installation and account metadata in a discriminated JSONB configuration.
+- [x] Repeating or concurrently completing the same installation reuses one GitConnector.
+- [x] `GET /api/git-connectors` returns normalized provider-neutral DTOs.
 - [ ] The generated migration is inspected and the API typecheck, build, and real GitHub installation flow are verified.
 
 ## Blocked by
 
 None - can start immediately.
+
+## Comments
+
+Implementation and local verification are complete. The migration was inspected,
+the API typecheck and Worker dry-run pass, and the monorepo build passes. A human
+must configure a development GitHub App and verify the real installation flow
+before checking the final acceptance criterion.

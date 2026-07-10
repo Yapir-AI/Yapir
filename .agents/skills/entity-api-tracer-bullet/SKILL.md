@@ -28,8 +28,10 @@ File conventions:
 - Response DTO/mapper file: `<resource>.dto.ts`.
 - Request DTO files are one per request shape: `<resource>-create.dto.ts`, `<resource>-update.dto.ts`, etc.
 - Use `-` to separate logical words and `.` to separate the file role.
+- For polymorphic resources, keep provider-neutral files at the resource root and put every variant-specific Operation, route, DTO, and type under `<resource>/<variant>/`.
+- Name variant files `<variant>-<resource>-<action>.<role>.ts`, and have the generic resource route compose the variant route.
 
-Completion: files are named by resource/action and no barrel or folder split exists unless the resource already needs it.
+Completion: generic and variant-specific knowledge are separated, files are named by resource/action, and no barrel exists.
 
 ### 3. Define DTOs
 
@@ -56,7 +58,7 @@ Write the Operation as a readable business scenario: the code should read in the
 Style rules:
 
 - Inline the dependency object type in the factory parameter.
-- Inject only dependencies the operation uses.
+- Inject only dependencies the operation uses. The validated application `env` is an allowed atomic dependency.
 - Define `async function execute(...)` inside the factory, then `return { execute }` at the bottom.
 - Name request DTO parameters `requestDto`.
 - Export the operation factory; export the operation type only when another file needs it.
@@ -65,8 +67,9 @@ Style rules:
 - Treat `Update` noop as no write: return the current row mapped to DTO without touching audit fields.
 - Treat `Delete` not-found as idempotent success.
 - Use the shared API error factory located in apps/api/src/lib/errors/error.factory.ts
+- Trust runtime configuration from `apps/api/src/lib/env.ts`; do not revalidate deployment invariants inside Operations or services.
 
-Services are optional. Introduce a service only when multiple operations need the same reusable behavior. Do not create a service per entity by default.
+Services are optional. Introduce one only when the same behavior has multiple callers in the current change. Do not create a service merely to group SDK calls, hold configuration, create a test seam, or anticipate another ticket.
 
 Completion: each operation is one use case, has precise deps, and uses only shared API error helpers for intentional HTTP errors.
 
@@ -128,10 +131,6 @@ Do not create speculative helpers. The helper earns its place when it removes re
 Completion: repeated cross-cutting plumbing is centralized once, or intentionally left inline because it appears only once.
 
 ### 8. Respect current deliberate deferrals
-
-Known platform gaps:
-
-- `currentUser` request-scoped wiring is not done yet; do not invent defensive `501` paths or throwaway auth abstractions.
 
 Completion: any gap used by the endpoint is marked at the nearest useful location.
 

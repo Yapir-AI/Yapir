@@ -31,6 +31,7 @@ Conventions:
 - User-managed API objects carry `createdAt`, `updatedAt`, `createdBy`, `updatedBy` when actions come from a `User`.
 - `createdBy` and `updatedBy` are FK columns to `user.id`; SQL column names are `created_by` and `updated_by`.
 - Export DB row types only when another file needs them, e.g. `NoteTemplateSelect` for a response mapper.
+- Keep polymorphic JSONB variant types with their variant module and import them into the Drizzle schema. Add a generic union only when a second variant exists.
 - Add relations only when code needs relation-aware Drizzle queries such as `db.query.<table>`.
 
 Keep DB constraints minimal and real:

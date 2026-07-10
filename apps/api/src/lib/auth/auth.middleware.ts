@@ -1,6 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import { unauthorized } from "@/lib/errors/error.factory";
 import { createRequestContainer } from "@/lib/container/typed-container";
+import { currentUser } from "@/lib/current-user";
 
 export const authMiddleware = createMiddleware(async (c, next) => {
   const { auth } = await import("@/lib/auth");
@@ -9,7 +10,7 @@ export const authMiddleware = createMiddleware(async (c, next) => {
   if (!session) throw unauthorized("UNAUTHORIZED");
 
   const requestContainer = createRequestContainer({
-    currentUser: session.user,
+    currentUser: currentUser(session.user),
   });
   c.set("container", requestContainer.cradle);
 
