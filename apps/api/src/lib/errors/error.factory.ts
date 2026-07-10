@@ -22,3 +22,4 @@ function httpError(errorCode: ErrorCode, status: ContentfulStatusCode) {
 
 export const forbidden = (errorCode: ErrorCode) => httpError(errorCode, 403);
 export const notFound = (errorCode: ErrorCode) => httpError(errorCode, 404);
+export const unauthorized = (errorCode: ErrorCode) => httpError(errorCode, 401);

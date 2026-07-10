@@ -1,7 +1,6 @@
 import type { CurrentUser } from "@/lib/current-user";
 import { noteTemplateTable } from "@/lib/db/schema";
 import type { Db } from "@/lib/db";
-import { forbidden } from "@/lib/errors/error.factory";
 import type { NoteTemplateCreateRequestDto } from "./note-template-create.dto";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 
@@ -13,9 +12,7 @@ export function noteTemplateCreateOperation({
   currentUser: CurrentUser;
 }) {
   async function execute(requestDto: NoteTemplateCreateRequestDto) {
-    if (currentUser.role !== "admin") {
-      throw forbidden("FORBIDDEN");
-    }
+    currentUser.assertRole("admin");
 
     const [noteTemplate] = await db
       .insert(noteTemplateTable)

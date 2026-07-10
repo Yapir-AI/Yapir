@@ -1,3 +1,17 @@
-import type { auth } from "@/lib/auth";
+import type { auth as authType } from "@/lib/auth";
+import { forbidden } from "@/lib/errors/error.factory";
 
-export type CurrentUser = typeof auth.$Infer.Session.user;
+export function currentUser(auth: typeof authType.$Infer.Session.user) {
+  function assertRole(role: "user" | "admin") {
+    if (auth.role !== "admin") {
+      throw forbidden("FORBIDDEN");
+    }
+  }
+
+  return {
+    ...auth,
+    assertRole,
+  };
+}
+
+export type CurrentUser = ReturnType<typeof currentUser>;
