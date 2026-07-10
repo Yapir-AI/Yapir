@@ -35,11 +35,11 @@ _Avoid_: Project membership (as a noun), permission, share
 ### Projects and git
 
 **Project**:
-Yapir's record of a git repository put under review; mirrors a repo on a git provider via an origin id and URL.
+Yapir's record of a git repository made available for review through one GitConnector; mirrors the external repository through its origin id, path, and URL.
 _Avoid_: Repository, Repo (reserved for the external git repo), Workspace
 
 **GitConnector**:
-A connection to a git provider account, carrying the provider type and credentials; shared across many Projects. Admin-managed.
+A connection to a git provider account that grants Yapir access to repositories and carries provider-specific connection metadata. It is shared across many Projects and Admin-managed.
 _Avoid_: GitAccount, GitIntegration, GitCredential
 
 **ChangeRequest**:

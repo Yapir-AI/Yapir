@@ -56,7 +56,7 @@ Answer the user prompts in the same language, but all documents, issues, PRDs an
 
 ### Issue tracker
 
-GitHub Issues (repo: `yapir-ai/yapir`), via the `gh` CLI. External PRs are not a triage surface. See `docs/agents/issue-tracker.md`.
+Local markdown under `.scratch/<feature>/`. There is no PR triage surface. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
