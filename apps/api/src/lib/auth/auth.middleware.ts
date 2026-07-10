@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 import { unauthorized } from "@/lib/errors/error.factory";
-import { createRequestContainer } from "@/lib/container/typed-container";
+import { createRequestContainer } from "@/lib/container";
 import { currentUser } from "@/lib/current-user";
 
 export const authMiddleware = createMiddleware(async (c, next) => {

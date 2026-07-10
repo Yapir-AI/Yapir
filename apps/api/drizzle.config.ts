@@ -5,7 +5,6 @@ export default defineConfig({
   schema: ["./src/lib/db/schema.ts", "./src/lib/db/auth-schema.ts"],
   dialect: "postgresql",
   dbCredentials: {
-    //@ts-expect-error no node types
     url: process.env.DATABASE_URL!,
   },
 });
