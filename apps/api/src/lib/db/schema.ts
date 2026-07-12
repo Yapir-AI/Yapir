@@ -7,8 +7,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { user } from "@/lib/db/auth-schema";
-import type { GithubConnectorConfiguration } from "@/lib/git-connectors/github/github-connector.configuration";
+import { user } from "#api/lib/db/auth-schema";
+import type { GithubConnectorConfiguration } from "#api/lib/git-connectors/github/github-connector.configuration";
 
 export const gitConnectorTable = pgTable(
   "git_connector",

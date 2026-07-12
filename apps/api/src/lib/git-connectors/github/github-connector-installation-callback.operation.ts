@@ -1,10 +1,10 @@
 import { App } from "@octokit/app";
 import { and, eq, sql } from "drizzle-orm";
-import type { CurrentUser } from "@/lib/current-user";
-import { gitConnectorTable } from "@/lib/db/schema";
-import type { Db } from "@/lib/db";
-import type { AppEnv } from "@/lib/env";
-import { forbidden } from "@/lib/errors/error.factory";
+import type { CurrentUser } from "#api/lib/current-user";
+import { gitConnectorTable } from "#api/lib/db/schema";
+import type { Db } from "#api/lib/db";
+import type { AppEnv } from "#api/lib/env";
+import { forbidden } from "#api/lib/errors/error.factory";
 import { toGitConnectorResponseDto } from "../git-connector.dto";
 import type { GithubConnectorConfiguration } from "./github-connector.configuration";
 import type { GithubConnectorInstallationCallbackRequestDto } from "./github-connector-installation-callback.dto";

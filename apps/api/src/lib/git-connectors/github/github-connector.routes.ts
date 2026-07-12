@@ -1,6 +1,6 @@
 import { sValidator } from "@hono/standard-validator";
-import { hono } from "@/lib/hono/hono.factory";
-import { createStateCookie } from "@/lib/hono/state-cookie.middleware";
+import { hono } from "#api/lib/hono/hono.factory";
+import { createStateCookie } from "#api/lib/hono/state-cookie.middleware";
 import { githubConnectorInstallationCallbackRequestSchema } from "./github-connector-installation-callback.dto";
 
 const { createStateMiddleware, verifyStateMiddleware, getState } =

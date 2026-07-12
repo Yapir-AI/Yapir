@@ -1,4 +1,4 @@
-import type { GitConnectorSelect } from "@/lib/db/schema";
+import type { GitConnectorSelect } from "#api/lib/db/schema";
 
 export function toGitConnectorResponseDto(gitConnector: GitConnectorSelect) {
   return {

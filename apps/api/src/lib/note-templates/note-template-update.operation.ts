@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
-import type { CurrentUser } from "@/lib/current-user";
-import { noteTemplateTable } from "@/lib/db/schema";
-import type { Db } from "@/lib/db";
-import { notFound } from "@/lib/errors/error.factory";
+import type { CurrentUser } from "#api/lib/current-user";
+import { noteTemplateTable } from "#api/lib/db/schema";
+import type { Db } from "#api/lib/db";
+import { notFound } from "#api/lib/errors/error.factory";
 import type { NoteTemplateUpdateRequestDto } from "./note-template-update.dto";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 

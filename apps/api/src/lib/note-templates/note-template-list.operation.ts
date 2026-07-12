@@ -1,6 +1,6 @@
 import { desc } from "drizzle-orm";
-import { noteTemplateTable } from "@/lib/db/schema";
-import type { Db } from "@/lib/db";
+import { noteTemplateTable } from "#api/lib/db/schema";
+import type { Db } from "#api/lib/db";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 
 export function noteTemplateListOperation({ db }: { db: Db }) {

@@ -1,6 +1,6 @@
-import type { CurrentUser } from "@/lib/current-user";
-import { noteTemplateTable } from "@/lib/db/schema";
-import type { Db } from "@/lib/db";
+import type { CurrentUser } from "#api/lib/current-user";
+import { noteTemplateTable } from "#api/lib/db/schema";
+import type { Db } from "#api/lib/db";
 import type { NoteTemplateCreateRequestDto } from "./note-template-create.dto";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 

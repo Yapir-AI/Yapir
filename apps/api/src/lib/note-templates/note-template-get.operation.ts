@@ -1,5 +1,5 @@
-import type { Db } from "@/lib/db";
-import { notFound } from "@/lib/errors/error.factory";
+import type { Db } from "#api/lib/db";
+import { notFound } from "#api/lib/errors/error.factory";
 import { toNoteTemplateResponseDto } from "./note-template.dto";
 
 export function noteTemplateGetOperation({ db }: { db: Db }) {

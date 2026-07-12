@@ -1,5 +1,5 @@
-import type { CurrentUser } from "@/lib/current-user";
-import type { AppEnv } from "@/lib/env";
+import type { CurrentUser } from "#api/lib/current-user";
+import type { AppEnv } from "#api/lib/env";
 
 export function githubConnectorInstallationStartOperation({
   currentUser,

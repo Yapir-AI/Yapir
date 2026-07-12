@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { ApiContainer } from "@/lib/container/typed-container";
+import type { ApiContainer } from "#api/lib/container";
 
 export const hono = () =>
   new Hono<{

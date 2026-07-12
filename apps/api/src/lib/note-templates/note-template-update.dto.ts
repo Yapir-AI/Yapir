@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { changeChecker } from "@/lib/dto-helpers/change-checker";
+import { changeChecker } from "#api/lib/dto-helpers/change-checker";
 
 export const noteTemplateUpdateRequestSchema = type({
   "title?": "string >= 3",

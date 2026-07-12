@@ -13,8 +13,6 @@
     "module": "es2022",
     /* Specify how TypeScript looks up a file from a given module specifier. */
     "moduleResolution": "Bundler",
-    /* Specify type package names to be included without being referenced in a source file. */
-    "types": ["bun"],
     /* Enable importing .json files */
     "resolveJsonModule": true,
 
@@ -40,7 +38,7 @@
     "skipLibCheck": true,
 
     "paths": {
-      "@/*": ["./src/*"]
+      "#api/*": ["./src/*"]
     }
   },
   "exclude": ["test"],

@@ -1,7 +1,7 @@
 import { sValidator } from "@hono/standard-validator";
 import { noteTemplateCreateRequestSchema } from "./note-template-create.dto";
 import { noteTemplateUpdateRequestSchema } from "./note-template-update.dto";
-import { hono } from "@/lib/hono/hono.factory";
+import { hono } from "#api/lib/hono/hono.factory";
 
 export const noteTemplateRoutes = hono()
   .get("/", async (c) => {

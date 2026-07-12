@@ -1,7 +1,7 @@
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import type { Context } from "hono";
-import { badRequest } from "@/lib/errors/error.factory";
+import { badRequest } from "#api/lib/errors/error.factory";
 
 async function timingSafeEqualStrings(provided: string, expected?: string) {
   if (!expected) return false;
@@ -12,7 +12,11 @@ async function timingSafeEqualStrings(provided: string, expected?: string) {
     crypto.subtle.digest("SHA-256", encoder.encode(expected)),
   ]);
 
-  return crypto.subtle.timingSafeEqual(providedHash, expectedHash);
+  return (
+    crypto.subtle as SubtleCrypto & {
+      timingSafeEqual(a: ArrayBuffer, b: ArrayBuffer): boolean;
+    }
+  ).timingSafeEqual(providedHash, expectedHash);
 }
 
 export function createStateCookie(name: string, path: string) {

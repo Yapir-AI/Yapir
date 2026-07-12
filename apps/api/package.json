@@ -2,10 +2,20 @@
   "name": "@yapir/api",
   "version": "0.0.0",
   "private": true,
+  "imports": {
+    "#api/lib/container": "./src/lib/container/index.ts",
+    "#api/lib/db": "./src/lib/db/index.ts",
+    "#api/*": "./src/*.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "deploy": "wrangler deploy",
+    "deploy": "bun run --cwd ../web build && wrangler deploy",
     "dev": "wrangler dev --env development",
     "start": "wrangler dev",
+    "build": "wrangler deploy --dry-run",
+    "check-types": "tsc --noEmit",
     "test": "vitest",
     "auth-gen": "bunx auth@1.7.0-rc.0 generate --output ./src/lib/db/auth-schema.ts",
     "db-gen": "drizzle-kit generate --name",

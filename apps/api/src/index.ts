@@ -1,23 +1,22 @@
+/// <reference path="../worker-configuration.d.ts" />
+
 import { getSandbox } from "@cloudflare/sandbox";
 import { env } from "cloudflare:workers";
-import { noteTemplateRoutes } from "@/lib/note-templates/note-template.routes";
-import { authMiddleware } from "@/lib/auth/auth.middleware";
-import { gitConnectorRoutes } from "@/lib/git-connectors/git-connector.routes";
-import { hono } from "@/lib/hono/hono.factory";
+import { noteTemplateRoutes } from "#api/lib/note-templates/note-template.routes";
+import { authMiddleware } from "#api/lib/auth/auth.middleware";
+import { gitConnectorRoutes } from "#api/lib/git-connectors/git-connector.routes";
+import { hono } from "#api/lib/hono/hono.factory";
 
 export { Sandbox } from "@cloudflare/sandbox";
 
-const app = hono();
-
-app.on(["POST", "GET"], "/api/auth/*", async (c) => {
-  const { auth } = await import("@/lib/auth");
-  return auth.handler(c.req.raw);
-});
-
-app.use(authMiddleware);
-
-app.route("/api/note-templates", noteTemplateRoutes);
-app.route("/api/git-connectors", gitConnectorRoutes);
+const app = hono()
+  .on(["POST", "GET"], "/api/auth/*", async (c) => {
+    const { auth } = await import("#api/lib/auth");
+    return auth.handler(c.req.raw);
+  })
+  .use(authMiddleware)
+  .route("/api/note-templates", noteTemplateRoutes)
+  .route("/api/git-connectors", gitConnectorRoutes);
 
 app.get("/sandbox/hello", async (c) => {
   const sandbox = getSandbox(env.Sandbox, "hello-world");
@@ -27,5 +26,7 @@ app.get("/sandbox/hello", async (c) => {
 
   return c.json(result);
 });
+
+export type AppType = typeof app;
 
 export default app;

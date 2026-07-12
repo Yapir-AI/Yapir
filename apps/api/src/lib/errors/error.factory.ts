@@ -1,6 +1,7 @@
 import { HTTPException } from "hono/http-exception";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
-import { ErrorCode, ErrorCodes } from "@/lib/errors/error.code";
+import type { ErrorCode } from "#api/lib/errors/error.code";
+import { ErrorCodes } from "#api/lib/errors/error.code";
 
 export type ProblemDetail = {
   title: ErrorCode;

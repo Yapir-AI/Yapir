@@ -1,4 +1,4 @@
-import type { NoteTemplateSelect } from "@/lib/db/schema";
+import type { NoteTemplateSelect } from "#api/lib/db/schema";
 
 export function toNoteTemplateResponseDto(noteTemplate: NoteTemplateSelect) {
   return {

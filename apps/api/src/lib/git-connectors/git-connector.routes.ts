@@ -1,4 +1,4 @@
-import { hono } from "@/lib/hono/hono.factory";
+import { hono } from "#api/lib/hono/hono.factory";
 import { githubConnectorRoutes } from "./github/github-connector.routes";
 
 export const gitConnectorRoutes = hono()
