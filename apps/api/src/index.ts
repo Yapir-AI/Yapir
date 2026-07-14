@@ -18,15 +18,6 @@ const app = hono()
   .route("/api/note-templates", noteTemplateRoutes)
   .route("/api/git-connectors", gitConnectorRoutes);
 
-app.get("/sandbox/hello", async (c) => {
-  const sandbox = getSandbox(env.Sandbox, "hello-world");
-  const result = await sandbox.exec(
-    'printf "Hello from Cloudflare Sandbox\\n"',
-  );
-
-  return c.json(result);
-});
-
 export type AppType = typeof app;
 
 export default app;
