@@ -16,10 +16,9 @@
     "start": "wrangler dev",
     "build": "wrangler deploy --dry-run",
     "check-types": "tsc --noEmit",
-    "test": "vitest",
     "auth-gen": "bunx auth@1.7.0-rc.0 generate --output ./src/lib/db/auth-schema.ts",
     "db-gen": "drizzle-kit generate --name",
-    "cf-typegen": "wrangler types"
+    "cf-gen": "wrangler types"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",

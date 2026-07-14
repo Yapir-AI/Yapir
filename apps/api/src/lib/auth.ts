@@ -1,11 +1,5 @@
-import { betterAuth } from "better-auth/minimal";
-import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
-import { admin } from "better-auth/plugins/admin";
-import { db } from "#api/lib/db";
+import { createDb } from "#api/lib/db";
+import { createAuth } from "#api/lib/auth/auth.factory";
 
-export const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "pg" }),
-  emailAndPassword: { enabled: true, minPasswordLength: 8 },
-  experimental: { joins: true },
-  plugins: [admin()],
-});
+// Do not import me, i'm just here for better auth CLI.
+export const auth = createAuth(createDb());

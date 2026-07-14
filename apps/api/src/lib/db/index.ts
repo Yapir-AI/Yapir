@@ -3,8 +3,9 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { authRelations } from "#api/lib/db/auth-schema";
 import { relations } from "#api/lib/db/schema";
 
-export const db = drizzle(process.env.DATABASE_URL ?? env.DB.connectionString, {
-  relations: { ...relations, ...authRelations },
-});
+export const createDb = () =>
+  drizzle(process.env.DATABASE_URL ?? env.DB.connectionString, {
+    relations: { ...relations, ...authRelations },
+  });
 
-export type Db = typeof db;
+export type Db = ReturnType<typeof createDb>;

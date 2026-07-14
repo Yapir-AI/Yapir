@@ -1,6 +1,6 @@
 import { asFunction, asValue, createContainer } from "./typed-container";
 import type { CurrentUser } from "#api/lib/current-user";
-import { db } from "#api/lib/db";
+import { type Db } from "#api/lib/db";
 import { env } from "#api/lib/env";
 import { noteTemplateCreateOperation } from "#api/lib/note-templates/note-template-create.operation";
 import { noteTemplateDeleteOperation } from "#api/lib/note-templates/note-template-delete.operation";
@@ -13,9 +13,10 @@ import { githubConnectorInstallationStartOperation } from "#api/lib/git-connecto
 
 export function createRequestContainer({
   currentUser,
+  db,
 }: {
+  db: Db;
   currentUser: CurrentUser;
-  databaseConnectionString?: string;
 }) {
   return createContainer({
     db: asValue(db),
