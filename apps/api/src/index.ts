@@ -1,7 +1,5 @@
 /// <reference path="../worker-configuration.d.ts" />
 
-import { getSandbox } from "@cloudflare/sandbox";
-import { env } from "cloudflare:workers";
 import { noteTemplateRoutes } from "#api/lib/note-templates/note-template.routes";
 import { authMiddleware } from "#api/lib/auth/auth.middleware";
 import { gitConnectorRoutes } from "#api/lib/git-connectors/git-connector.routes";

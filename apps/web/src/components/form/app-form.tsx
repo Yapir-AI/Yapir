@@ -1,8 +1,8 @@
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 
 import { Button } from "#web/components/ui/button";
+import { Field, FieldError, FieldLabel } from "#web/components/ui/field";
 import { Input } from "#web/components/ui/input";
-import { Label } from "#web/components/ui/label";
 import * as React from "react";
 
 const { fieldContext, formContext, useFieldContext, useFormContext } =
@@ -27,8 +27,8 @@ function TextField({
       : [];
 
   return (
-    <div className="grid gap-1">
-      <Label htmlFor={field.name}>{label}</Label>
+    <Field data-invalid={errors.length > 0}>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Input
         id={field.name}
         name={field.name}
@@ -41,34 +41,37 @@ function TextField({
         onBlur={field.handleBlur}
         onChange={(event) => field.handleChange(event.target.value)}
       />
-      <p id={errorId} className="min-h-4 text-xs text-destructive">
-        {errors[0]}
-      </p>
-    </div>
+      <div id={errorId} className="min-h-4">
+        <FieldError>{errors[0]}</FieldError>
+      </div>
+    </Field>
   );
 }
 
-function SubmitButton({ children }: { children: React.ReactNode }) {
-  const form = useFormContext();
-
-  return (
-    <form.Subscribe selector={(state) => state.isSubmitting}>
-      {(isSubmitting) => (
-        <Button type="submit" disabled={isSubmitting}>
-          {children}
-        </Button>
-      )}
-    </form.Subscribe>
-  );
-}
-
-function Form({
+function SubmitButton({
   children,
   error,
 }: {
   children: React.ReactNode;
   error?: string;
 }) {
+  const form = useFormContext();
+
+  return (
+    <div className="grid gap-1">
+      <div className="min-h-4">{error && <FieldError>{error}</FieldError>}</div>
+      <form.Subscribe selector={(state) => state.isSubmitting}>
+        {(isSubmitting) => (
+          <Button type="submit" disabled={isSubmitting}>
+            {children}
+          </Button>
+        )}
+      </form.Subscribe>
+    </div>
+  );
+}
+
+function Form({ children }: { children: React.ReactNode }) {
   const form = useFormContext();
 
   return (
@@ -81,13 +84,6 @@ function Form({
       }}
     >
       {children}
-      <p
-        role="alert"
-        aria-live="polite"
-        className="min-h-4 text-xs text-destructive"
-      >
-        {error}
-      </p>
     </form>
   );
 }

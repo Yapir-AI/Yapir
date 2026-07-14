@@ -77,7 +77,7 @@ function SignupPage() {
       </CardHeader>
       <CardContent>
         <form.AppForm>
-          <form.Form error={signup.error?.message}>
+          <form.Form>
             <form.AppField
               name="name"
               children={(field) => (
@@ -114,7 +114,9 @@ function SignupPage() {
                 />
               )}
             />
-            <form.SubmitButton>Create account</form.SubmitButton>
+            <form.SubmitButton error={signup.error?.message}>
+              Create account
+            </form.SubmitButton>
           </form.Form>
         </form.AppForm>
       </CardContent>
