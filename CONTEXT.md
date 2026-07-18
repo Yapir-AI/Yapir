@@ -1,21 +1,21 @@
 # Yapir
 
-An AI-powered code review platform where Agents and Users collaborate to review code changes against the Organization's and Project's Opinions.
+An AI orchestration platform where Agents and Users collaborate on software delivery work.
 
 ## Language
 
 ### People and AI
 
 **Agent**:
-An AI profile that performs code reviews on behalf of the project.
+An Organization-owned AI profile configured for a specialized kind of software delivery work and reusable across Projects.
 _Avoid_: Reviewer, bot, assistant
 
 **AiProvider**:
-A connection to an AI model provider account, carrying provider configuration and credentials that Agents use to perform Reviews. Admin-managed and shared across Projects.
+A connection to an AI model provider account, carrying provider configuration and credentials that Agents use to perform work. Admin-managed and shared across Projects.
 _Avoid_: ModelProvider, LlmProvider, AI account
 
 **User**:
-A person's identity (auth account); the human who collaborates on reviews.
+A person's identity (auth account); the human who collaborates with Agents on software delivery work.
 _Avoid_: Member (as a standalone noun), account, profile
 
 ### Tenancy and access
@@ -29,13 +29,13 @@ A User whose platform role grants access to all resources and settings.
 _Avoid_: Owner, superuser
 
 **ProjectAccess**:
-A grant linking a User to a Project, carrying a project role: project admin (manages the Project — connects Agents, invites Users) or project member (participates in reviews). Platform Admins bypass ProjectAccess and access all Projects.
+A grant linking a User to a Project, carrying a project role: project admin (manages the Project — connects Agents, invites Users) or project member (participates in collaborative work). Platform Admins bypass ProjectAccess and access all Projects.
 _Avoid_: Project membership (as a noun), permission, share
 
 ### Projects and git
 
 **Project**:
-Yapir's record of a git repository made available for review through one GitConnector; mirrors the external repository through its origin id, path, and URL.
+Yapir's record of a git repository made available for collaborative work through one GitConnector; mirrors the external repository through its origin id, path, and URL.
 _Avoid_: Repository, Repo (reserved for the external git repo), Workspace
 
 **GitConnector**:
@@ -43,21 +43,35 @@ A connection to a git provider account that grants Yapir access to repositories 
 _Avoid_: GitAccount, GitIntegration, GitCredential
 
 **ChangeRequest**:
-A request to merge one branch into another, sourced from a git provider (a GitLab merge request or a GitHub pull request); carries branches, author, and URL.
+A request to merge one branch into another, sourced from a git provider (a GitLab merge request or a GitHub pull request); carries branches, author, and URL. When an Agent creates it through Yapir, it records the AgentWork that produced it, and other Agents' AgentWorks may later become related to it.
 _Avoid_: PullRequest, MergeRequest (reserved for provider vocabulary), Change
+
+**Issue**:
+An externally canonical unit of requested work that may initiate an AgentWork. Yapir references the provider's Issue rather than maintaining its own copy.
+_Avoid_: Ticket, WorkItem, Yapir Issue
+
+### Orchestration
+
+**AgentWork**:
+One Agent's persistent continuity for one correlated scope of work in a Project. It owns one logically persistent Sandbox and may relate to multiple Issues and ChangeRequests in that scope. It is the correlation identity recorded by the ChangeRequests, Reviews, and Comments the Agent produces. For one Agent, a related Issue or ChangeRequest identifies at most one active AgentWork; different Agents working on the same artifacts have separate AgentWorks.
+_Avoid_: Collaboration, WorkItem, AgentSession, AgentWorkspace
+
+**Trigger**:
+An ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an external event matches automation configuration or a User explicitly requests the Agent. Repeated executions are runtime behavior, not durable domain objects.
+_Avoid_: Activation, Run, Execution, AutomationRule
 
 ### Reviews
 
 **Review**:
-One Agent's pass over a ChangeRequest at a given commit, executed in a Sandbox and producing review output. A ChangeRequest accumulates many Reviews over time (on open, on push, on manual re-review); each Review runs exactly one Agent.
+A submitted assessment of a ChangeRequest at a given commit, authored by an Agent or a User and grouping a set of review Comments and optional ReviewNotes. An Agent-authored Review records the AgentWork that produced it. A ChangeRequest accumulates many Reviews over time.
 _Avoid_: ReviewRun, Pass, Assessment
 
 **Comment**:
-A single review remark, authored by an Agent or a User; it may be anchored to a file and line at a commit sha, reply to another Comment to form a thread, and be resolved. An agent Comment records the Review that produced it and carries a severity; the sha lets anchored Comments be marked outdated once the branch advances.
+A single review remark, authored by an Agent or a User; it may be anchored to a file and line at a commit sha, reply to another Comment to form a thread, and be resolved. An Agent-authored Comment records its AgentWork and, when applicable, the Review that produced it; it carries a severity. The sha lets anchored Comments be marked outdated once the branch advances.
 _Avoid_: Note (see ReviewNote), annotation
 
 **Sandbox**:
-An ephemeral, isolated environment where an Agent clones the repo and runs a Review.
+An isolated working environment owned by an AgentWork whose workspace and Agent context persist logically across Triggers for the lifetime of that work.
 _Avoid_: Runner, worker, container (an implementation detail)
 
 **ReviewNote**:
