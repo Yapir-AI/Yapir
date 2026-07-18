@@ -16,7 +16,7 @@
     "start": "wrangler dev",
     "build": "wrangler deploy --dry-run",
     "check-types": "tsc --noEmit",
-    "auth-gen": "bunx auth@1.7.0-rc.0 generate --output ./src/lib/db/auth-schema.ts",
+    "auth-gen": "bunx auth@1.7.0-rc.1 generate --output ./src/lib/db/auth-schema.ts",
     "db-gen": "drizzle-kit generate --name",
     "cf-gen": "wrangler types"
   },

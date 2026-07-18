@@ -55,16 +55,12 @@ function SignupPage() {
     },
   });
   const form = useAppForm({
+    schema: signupSchema,
     defaultValues: {
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
-    },
-    validators: {
-      onBlur: signupSchema,
-      onChange: signupSchema,
-      onSubmit: signupSchema,
     },
     onSubmit: ({ value }) => signup.mutateAsync(value),
   });

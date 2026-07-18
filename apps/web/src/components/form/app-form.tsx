@@ -1,9 +1,21 @@
-import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import {
+  createFormHook,
+  createFormHookContexts,
+  revalidateLogic,
+  type FormOptions,
+  type FormValidateOrFn,
+} from "@tanstack/react-form";
+import type { BaseType } from "arktype";
 
 import { Button } from "#web/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#web/components/ui/field";
 import { Input } from "#web/components/ui/input";
 import * as React from "react";
+
+type AppStandardSchema<T> = Extract<
+  FormValidateOrFn<T>,
+  { readonly "~standard": unknown }
+>;
 
 const { fieldContext, formContext, useFieldContext, useFormContext } =
   createFormHookContexts();
@@ -88,9 +100,55 @@ function Form({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const { useAppForm } = createFormHook({
+const { useAppForm: useTanStackAppForm } = createFormHook({
   fieldContext,
   formContext,
   fieldComponents: { TextField },
   formComponents: { Form, SubmitButton },
 });
+
+export function useAppForm<TFormData, TSubmitMeta = never>({
+  schema,
+  ...options
+}: Omit<
+  FormOptions<
+    TFormData,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    AppStandardSchema<TFormData>,
+    undefined,
+    undefined,
+    TSubmitMeta
+  >,
+  "validationLogic" | "validators"
+> & {
+  schema: BaseType<TFormData>;
+}) {
+  const validator = {
+    "~standard": schema["~standard"],
+  } as AppStandardSchema<TFormData>;
+
+  return useTanStackAppForm<
+    TFormData,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    AppStandardSchema<TFormData>,
+    undefined,
+    undefined,
+    TSubmitMeta
+  >({
+    ...options,
+    validationLogic: revalidateLogic({ mode: "change" }),
+    validators: { onDynamic: validator },
+  });
+}
