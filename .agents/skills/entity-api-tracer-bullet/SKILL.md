@@ -70,7 +70,37 @@ Services are optional. Introduce a service only when multiple operations need th
 
 Completion: each operation is one use case, has precise deps, and uses only shared API error helpers for intentional HTTP errors.
 
-### 5. Implement routes
+### 5. Paginate LIST endpoints
+
+LIST endpoints use the standard zero-based offset pagination contract from ADR 0004.
+
+Request query parameters:
+
+- `page`: optional non-negative integer, default `0`.
+- `size`: optional integer from `1` through `100`, default `20`.
+- `sort`: optional single key from the endpoint's sort registry, with an endpoint-defined default.
+- `direction`: optional `asc` or `desc`, with an endpoint-defined default independent of `sort`.
+
+Reject invalid values with `400`; do not clamp or replace them silently. Return `{ items, page, size, totalItems, totalPages }`. An out-of-range page returns `200` with empty `items`; `totalPages` is `0` when the collection is empty.
+
+Define each LIST once in `<resource>-list.definition.ts` with its public sort keys mapped to Drizzle columns, default sort and direction, and primary-key tie-breaker. Expose all response DTO fields only when each is intentionally part of the public sorting contract. Text columns use the native PostgreSQL ordering unless the endpoint explicitly requires another collation.
+
+The shared pure definition helper owns the ArkType query schema and inferred request DTO. The DI-managed pagination service owns `db`, opens a read-only `REPEATABLE READ` transaction, counts the unpaginated query, applies the requested order plus the primary key in the same direction as a stable tie-breaker, and builds the response. The Operation supplies a pure `tx.select` recipe and the DTO mapper:
+
+```ts
+return paginationService.paginate({
+  definition: noteTemplateListDefinition,
+  requestDto,
+  query: (tx) => tx.select().from(noteTemplateTable),
+  map: toNoteTemplateResponseDto,
+});
+```
+
+The service invokes the recipe once for the count and once for the page. The recipe must produce one row per response item and must not contain side effects, `orderBy`, `limit`, or `offset`. Keep resource filters, joins, authorization constraints, and selected shape in that recipe. Support `tx.select` builders only until another query form has a concrete use case.
+
+Completion: the route validates the definition's request schema, the Operation passes the validated DTO to the pagination service, and count and items use the same recipe and database snapshot.
+
+### 6. Implement routes
 
 Routes are HTTP glue only:
 
@@ -82,7 +112,7 @@ Routes are HTTP glue only:
 
 Completion: the root Hono app only composes route groups; resource routes contain no business logic.
 
-### 6. Remove repetition with small helpers
+### 7. Remove repetition with small helpers
 
 Be proactive about DX helpers. If a pattern is about to be copied across operations, stop and look for an existing helper or propose a tiny shared one.
 
@@ -91,23 +121,21 @@ Good candidates:
 - update dirty/change checking
 - audit field construction
 - permission checks once the error contract exists
-- pagination parsing once the LIST contract exists
 - repeated DTO normalization
 
 Do not create speculative helpers. The helper earns its place when it removes real repeated plumbing now, or implements a project-wide convention that has already been decided.
 
 Completion: repeated cross-cutting plumbing is centralized once, or intentionally left inline because it appears only once.
 
-### 7. Respect current deliberate deferrals
+### 8. Respect current deliberate deferrals
 
 Known platform gaps:
 
 - `currentUser` request-scoped wiring is not done yet; do not invent defensive `501` paths or throwaway auth abstractions.
-- LIST endpoints are intended to be paginated, but the pagination contract is not defined yet. If adding LIST before that session, leave a local TODO.
 
 Completion: any gap used by the endpoint is marked at the nearest useful location.
 
-### 8. Verify
+### 9. Verify
 
 Run API typecheck:
 
