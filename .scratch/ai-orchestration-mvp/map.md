@@ -26,12 +26,12 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Define Agent capabilities and scoped actions](issues/06-define-agent-permissions-and-actions.md) — One ProjectAgentConfiguration grants provider-supplied capabilities and a stable per-work tool catalogue, while Yapir pre-scopes proxied actions and GitHub alone constrains repository-wide Git access.
 - [Define collaboration through CommentSets](issues/07-define-collaboration-comments-and-reviews.md) — One immutable CommentSet atomically groups an Agent's or User's description, Comments, replies, and author-owned thread actions at a commit into one Yapir-only collaboration event.
 - [Prototype the automation configuration experience](issues/08-prototype-the-automation-configuration-experience.md) — A transient four-step first connection and a matching section-based management page make Agent selection, shared capabilities, optional independent rules, and disconnection explicit.
+- [Prototype the collaboration and supervision experience](issues/09-prototype-the-collaboration-and-supervision-experience.md) — A familiar ChangeRequest page exposes descriptions, code conversations, and grouped reviews while hiding CommentSet and excluding User-facing Agent supervision from the MVP.
 
 ## Not yet specified
 
 - The complete MVP trigger and filter catalogue beyond the issue, ChangeRequest, CommentSet, and push events needed by the core journey.
 - Runtime economics, scheduling, and concurrency controls that prove product-critical once the execution lifecycle is defined.
-- Notification and discovery behavior that emerges from prototyping the supervision surface.
 
 ## Out of scope
 
@@ -47,3 +47,4 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - Per-execution dynamic activation or deactivation of capabilities; MVP capabilities are configured on the ProjectAgentConfiguration and snapshotted when a Trigger executes.
 - Scheduled or release-driven housekeeping that starts fresh work while using a configured root Issue and related Issue graph as shared external memory.
 - User-added capability sources such as MCP servers.
+- User-facing work-supervision dashboards and direct Agent relaunch or interruption controls; MVP collaboration stays centered on ChangeRequests.
