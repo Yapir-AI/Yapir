@@ -27,6 +27,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Define collaboration through CommentSets](issues/07-define-collaboration-comments-and-reviews.md) — One immutable CommentSet atomically groups an Agent's or User's description, Comments, replies, and author-owned thread actions at a commit into one Yapir-only collaboration event.
 - [Prototype the automation configuration experience](issues/08-prototype-the-automation-configuration-experience.md) — A transient four-step first connection and a matching section-based management page make Agent selection, shared capabilities, optional independent rules, and disconnection explicit.
 - [Prototype the collaboration and supervision experience](issues/09-prototype-the-collaboration-and-supervision-experience.md) — A familiar ChangeRequest page exposes descriptions, code conversations, and grouped reviews while hiding CommentSet and excluding User-facing Agent supervision from the MVP.
+- [Specify the Issue-to-ChangeRequest journey](issues/10-specify-the-issue-to-changerequest-journey.md) — Matching rules independently produce AgentWork branches and explicit non-draft ChangeRequest submissions, after which ordinary creation, CommentSet, and push events drive any configured continuation.
 
 ## Not yet specified
 
