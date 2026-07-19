@@ -65,7 +65,7 @@ One Agent's permanent correlation identity for one explicitly related scope of w
 _Avoid_: Collaboration, WorkItem, AgentSession, AgentWorkspace
 
 **Trigger**:
-An ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an event matches a ProjectAutomationRule. Repeated executions are runtime behavior, not durable domain objects.
+An ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an event matches a ProjectAutomationRule. It is running until the Agent runtime returns normally, making it completed, or a technical interruption prevents that return, making it failed; either outcome leaves the permanent AgentWork unchanged. Repeated executions are runtime behavior, not durable domain objects.
 _Avoid_: Activation, Run, Execution, AutomationRule
 
 ### Collaboration
