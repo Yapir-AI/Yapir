@@ -57,7 +57,7 @@ A Project-owned configuration that connects one Agent to the Project and describ
 _Avoid_: Workflow, Agent connection, AutomationRule
 
 **AgentWork**:
-One Agent's persistent continuity for one correlated scope of work in a Project. It owns one logically persistent Sandbox and may relate to multiple Issues and ChangeRequests in that scope. It is the correlation identity recorded by the ChangeRequests, Reviews, and Comments the Agent produces. For one Agent, a related Issue or ChangeRequest identifies at most one active AgentWork; different Agents working on the same artifacts have separate AgentWorks.
+One Agent's permanent correlation identity for one explicitly related scope of work in a Project. It owns one Sandbox at a time and may relate to multiple Issues and ChangeRequests in that scope, although a ChangeRequest need not relate to an Issue. It is the correlation identity recorded by the ChangeRequests, Reviews, and Comments the Agent produces. For one Agent, an Issue or ChangeRequest selects at most one AgentWork for automatic related continuity; independent work may retain the same artifact only as provenance. AgentWork has no completion lifecycle, and different Agents working on the same artifacts have separate AgentWorks.
 _Avoid_: Collaboration, WorkItem, AgentSession, AgentWorkspace
 
 **Trigger**:
@@ -75,7 +75,7 @@ A single review remark, authored by an Agent or a User; it may be anchored to a 
 _Avoid_: Note (see ReviewNote), annotation
 
 **Sandbox**:
-An isolated working environment owned by an AgentWork whose workspace and Agent context persist logically across Triggers for the lifetime of that work.
+An isolated working environment owned by an AgentWork whose workspace and private Agent context persist across Triggers during its operational retention period. After expiry, a fresh Sandbox and private session may continue the same permanent AgentWork.
 _Avoid_: Runner, worker, container (an implementation detail)
 
 **ReviewNote**:

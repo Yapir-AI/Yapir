@@ -18,15 +18,15 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 
 <!-- Resolved ticket pointers are appended here. -->
 
-- [Establish the orchestration domain model](issues/01-establish-the-orchestration-domain-model.md) — AgentWork is each Agent's durable correlation scope and Sandbox continuity across related Issues and ChangeRequests; ephemeral Triggers resume it under a user-facing continuity policy.
+- [Establish the orchestration domain model](issues/01-establish-the-orchestration-domain-model.md) — AgentWork is each Agent's durable correlation scope across explicitly related Issues and ChangeRequests; ephemeral Triggers resume it under a user-facing continuity policy.
 - [Define the Agent profile contract](issues/02-define-the-agent-profile-contract.md) — An Agent is a reusable Organization-owned identity, persona, and single-model configuration; Project context, task instructions, authorization, tools, and harness behavior stay outside its MVP profile.
 - [Draw the external-system boundary](issues/03-draw-the-external-system-boundary.md) — GitHub owns external artifacts and merge while Yapir owns orchestration and review collaboration, crossing the boundary through references, scoped tools and Git access, provider events, and linked ChangeRequest comments.
 - [Define Project automation rules](issues/04-define-project-automation-rules.md) — Each named, stateless ProjectAutomationRule independently matches one typed event, connects its target Agent, supplies continuity and context, and grants artifact-scoped access without explicit rule chaining.
+- [Define AgentWork and continuity](issues/05-define-agent-work-and-continuity.md) — AgentWork is a permanent artifact-correlated identity without a business lifecycle; related work deduplicates by Issue or ChangeRequest, while private Sandbox continuity lasts only for its retention period.
 
 ## Not yet specified
 
 - The complete MVP trigger and filter catalogue beyond the issue, ChangeRequest, Review, Comment, and push events needed by the core journey.
-- Agent lifecycle concerns such as profile evolution and the effect of configuration changes on work already in progress.
 - Runtime economics, scheduling, and concurrency controls that prove product-critical once the execution lifecycle is defined.
 - Notification and discovery behavior that emerges from prototyping the configuration and supervision surfaces.
 
@@ -39,3 +39,5 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - A configurable execution harness and Agent-level tool catalogue.
 - Organization-wide knowledge attached to Agent profiles.
 - Direct User requests that start or resume an AgentWork; MVP intervention occurs through event-producing collaboration and provider actions.
+- Project-wide persistent Agent missions that share one private context across unrelated Issues or ChangeRequests.
+- Reconciliation, private-history merging, or manual scope selection when external artifacts are related only after separate AgentWorks already exist.
