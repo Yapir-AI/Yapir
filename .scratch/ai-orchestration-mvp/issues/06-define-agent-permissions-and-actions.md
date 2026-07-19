@@ -4,7 +4,7 @@ Blocked by: 02, 03, 04
 
 ## Question
 
-Which product-level permissions and actions can a ProjectAutomationRule and Trigger grant an Agent in the MVP; how narrowly are they scoped when reading and modifying Issues, code, ChangeRequests, Reviews, and Comments; and how are unavailable or denied actions presented to configurators and supervisors?
+Which product-level permissions and actions can a ProjectAutomationRule and Trigger grant an Agent in the MVP; how narrowly are they scoped when reading and modifying Issues, code, ChangeRequests, CommentSets, and Comments; and how are unavailable or denied actions presented to configurators and supervisors?
 
 ## Answer
 
@@ -20,7 +20,7 @@ The initial GitHub-first catalogue is:
 - Update the active GitHub Issue, including its fields and native conversation. The active Issue is the Issue carried by the Trigger or unambiguously related to its ChangeRequest; no arbitrary Issue identifier is accepted.
 - Use Git for the whole Project repository. The Agent may clone, fetch, create commits, and push through a short-lived repository-scoped credential. Yapir directs it to an AgentWork branch, but only GitHub rules and branch protection constrain refs; the capability is deliberately not presented as `push code` or as branch-scoped security.
 - Manage the active GitHub ChangeRequest: create it for the AgentWork, then read and update its title and description. It does not permit close, reopen, or merge, and provider-native ChangeRequest conversation is not Yapir's collaboration surface.
-- Collaborate on Yapir Reviews for the active ChangeRequest: read every participant's Reviews and Comments, submit one grouped Review, reply to any Comment, and resolve only Comments authored by that Agent. The exact Review grouping and description contract belongs to the collaboration decision.
+- Collaborate through Yapir CommentSets for the active ChangeRequest: read every participant's CommentSets and Comments; atomically submit a description, Comments, replies, and state changes; and resolve or reopen only threads whose root Comment was authored by that Agent.
 
 An AgentWork receives a stable, broad tool catalogue covering the actions its ProjectAgentConfiguration could support throughout that work. Tools remain present even before a later artifact such as a ChangeRequest exists, favoring provider prompt-cache reuse over repeatedly changing tool definitions. Proxied tools are pre-scoped by Yapir: for example, `updateIssue` has its target bound from execution context rather than accepting an arbitrary `issueId`. If no unambiguous target exists, the action performs no write and returns a structured unavailable result.
 

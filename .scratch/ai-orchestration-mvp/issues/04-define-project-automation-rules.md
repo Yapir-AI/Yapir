@@ -16,10 +16,10 @@ Every matching rule independently creates a Trigger. Multiple matching rules all
 
 The continuity policy expresses one of two intentions: start an independent AgentWork for every match or resume work related to the event's Issue or ChangeRequest. Yapir resolves related continuity from the event artifact, the parent configuration's Agent, and the existing typed relationships. If related work does not yet exist, Yapir creates it. The MVP has no Project-wide persistent mission and does not reconcile artifact relationships established only after separate AgentWorks exist.
 
-A ProjectAgentConfiguration explicitly connects its Agent to the Project and owns that connection's rules. It may exist without any rules. Deleting it deletes its rules and prevents future Triggers while preserving all existing AgentWorks, ChangeRequests, Reviews, and Comments; reconnecting the same Agent later may resume preserved related work according to a new rule's continuity policy.
+A ProjectAgentConfiguration explicitly connects its Agent to the Project and owns that connection's rules. It may exist without any rules. Deleting it deletes its rules and prevents future Triggers while preserving all existing AgentWorks, ChangeRequests, and CommentSets; reconnecting the same Agent later may resume preserved related work according to a new rule's continuity policy.
 
 The Trigger supplies structured event context separately from the optional contextual instruction, which is plain text without variables or templating. Its execution snapshots the current capabilities of the parent ProjectAgentConfiguration. Proxied tools bind relevant targets from that context rather than asking the model to choose arbitrary artifact identifiers.
 
 Rules do not target or invoke other rules, so there is no explicit workflow chaining. Events caused by an Agent are nevertheless evaluated like equivalent events caused by a User and may independently match other rules. Automatic loop guardrails remain outside the MVP.
 
-Direct User requests to start or resume an AgentWork are outside the MVP. Users intervene through Reviews, Comments, resolutions, and provider actions whose resulting events may match rules. A future manual request can be introduced as another event type without changing this contract.
+Direct User requests to start or resume an AgentWork are outside the MVP. Users intervene through CommentSet submissions and provider actions whose resulting events may match rules. A future manual request can be introduced as another event type without changing this contract.

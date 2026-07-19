@@ -1,5 +1,7 @@
 # Execute Reviews in Sandboxes with opencode as an internal runtime
 
+Status: Partially superseded. The Sandbox runtime decision remains, but `CONTEXT.md`'s CommentSet model replaces this ADR's Review, ReviewNote, and output-shape vocabulary.
+
 Yapir Reviews run in a Sandbox that clones the Project repo, checks out the ChangeRequest head, and runs one opencode session for the Review. opencode is an internal execution detail, not a product concept: the domain remains Agent to Review to Comment/ReviewNote, and opencode can be replaced later without renaming the product model.
 
 ## Considered options

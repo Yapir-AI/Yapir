@@ -61,34 +61,26 @@ A rule owned by a ProjectAgentConfiguration that describes when and with what co
 _Avoid_: Workflow, Agent connection, AutomationRule
 
 **AgentWork**:
-One Agent's permanent correlation identity for one explicitly related scope of work in a Project. It owns one Sandbox at a time and may relate to multiple Issues and ChangeRequests in that scope, although a ChangeRequest need not relate to an Issue. It is the correlation identity recorded by the ChangeRequests, Reviews, and Comments the Agent produces. For one Agent, an Issue or ChangeRequest selects at most one AgentWork for automatic related continuity; independent work may retain the same artifact only as provenance. AgentWork has no completion lifecycle, and different Agents working on the same artifacts have separate AgentWorks.
+One Agent's permanent correlation identity for one explicitly related scope of work in a Project. It owns one Sandbox at a time and may relate to multiple Issues and ChangeRequests in that scope, although a ChangeRequest need not relate to an Issue. It is the correlation identity recorded by the ChangeRequests and CommentSets the Agent produces. For one Agent, an Issue or ChangeRequest selects at most one AgentWork for automatic related continuity; independent work may retain the same artifact only as provenance. AgentWork has no completion lifecycle, and different Agents working on the same artifacts have separate AgentWorks.
 _Avoid_: Collaboration, WorkItem, AgentSession, AgentWorkspace
 
 **Trigger**:
 An ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an event matches a ProjectAutomationRule. Repeated executions are runtime behavior, not durable domain objects.
 _Avoid_: Activation, Run, Execution, AutomationRule
 
-### Reviews
+### Collaboration
 
-**Review**:
-A submitted assessment of a ChangeRequest at a given commit, authored by an Agent or a User and grouping a set of review Comments and optional ReviewNotes. An Agent-authored Review records the AgentWork that produced it. A ChangeRequest accumulates many Reviews over time.
-_Avoid_: ReviewRun, Pass, Assessment
+**CommentSet**:
+An immutable, atomic publication on a ChangeRequest, authored by one Agent or User at the current commit. It contains an ordered, non-empty combination of a narrative description, new Comments or replies across multiple threads, and resolution or reopening actions on existing threads. The whole CommentSet is accepted or rejected together. Every intervention, including a single Comment, reply, or thread-state change, is submitted as one CommentSet and produces one grouped collaboration event. It has no structured recipient. Its description is not itself replyable, and its submitted content cannot be edited or deleted. Its new content inherits its author. An Agent-authored CommentSet records the AgentWork that produced it. A CommentSet becomes old when the ChangeRequest head advances beyond its commit, independently of any thread's resolution state. A review is a way of using a CommentSet, not a separate durable object or event. CommentSets remain canonical in Yapir and are not published to the git provider.
+_Avoid_: Review, ReviewRun, CommentBatch
 
 **Comment**:
-A single review remark, authored by an Agent or a User; it may be anchored to a file and line at a commit sha, reply to another Comment to form a thread, and be resolved. An Agent-authored Comment records its AgentWork and, when applicable, the Review that produced it; it carries a severity. The sha lets anchored Comments be marked outdated once the branch advances.
-_Avoid_: Note (see ReviewNote), annotation
+A single remark contained in a CommentSet. A root Comment starts a thread and may be general to the ChangeRequest or anchored to a file and line at the CommentSet's commit; replies reference that root, inherit its context and anchor, and form a flat chronological thread. Resolution belongs to the whole thread and only the root Comment's author may resolve or reopen it.
+_Avoid_: Note, annotation
 
 **Sandbox**:
 An isolated working environment owned by an AgentWork whose workspace and private Agent context persist across Triggers during its operational retention period. After expiry, a fresh Sandbox and private session may continue the same permanent AgentWork.
 _Avoid_: Runner, worker, container (an implementation detail)
-
-**ReviewNote**:
-A narrative synthesis produced by a Review beyond inline Comments (e.g. a technical summary or a general assessment).
-_Avoid_: Summary, report
-
-**NoteTemplate**:
-A reusable, configurable template (title, prompt) that instructs an Agent to produce a ReviewNote.
-_Avoid_: NoteDefinition
 
 ### Opinions
 

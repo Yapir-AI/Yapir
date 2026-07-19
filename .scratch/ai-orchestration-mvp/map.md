@@ -8,7 +8,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 
 - Work at the business and product level; defer implementation planning until the specification suite is complete.
 - Use the `grilling` and `domain-modeling` skills in every decision session, and keep `CONTEXT.md` current as vocabulary resolves.
-- Yapir is the control plane and the place for Review and Comment collaboration. The external issue tracker remains canonical for issues, while the git provider remains canonical for repositories, branches, commits, ChangeRequests, and merge.
+- Yapir is the control plane and the place for CommentSet collaboration. The external issue tracker remains canonical for issues, while the git provider remains canonical for repositories, branches, commits, ChangeRequests, and merge.
 - Agents are specialized Organization-owned profiles reused across Projects. A ProjectAgentConfiguration explicitly links an Agent to one Project, grants its capabilities, and owns its automation rules.
 - The MVP exposes a builder based on event plus filters, continuity, and contextual instruction under a ProjectAgentConfiguration. Multiple matching rules all execute independently.
 - A User may intervene throughout, but only human merge is mandatory on the happy path.
@@ -20,14 +20,15 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 
 - [Establish the orchestration domain model](issues/01-establish-the-orchestration-domain-model.md) — AgentWork is each Agent's durable correlation scope across explicitly related Issues and ChangeRequests; ephemeral Triggers resume it under a user-facing continuity policy.
 - [Define the Agent profile contract](issues/02-define-the-agent-profile-contract.md) — An Agent is a reusable Organization-owned identity, persona, and single-model configuration; Project-specific capabilities and tools belong to its ProjectAgentConfiguration rather than its profile.
-- [Draw the external-system boundary](issues/03-draw-the-external-system-boundary.md) — GitHub owns external artifacts and merge while Yapir owns orchestration and review collaboration, crossing the boundary through provider-supplied scoped tools, Git access, events, and linked ChangeRequest comments.
+- [Draw the external-system boundary](issues/03-draw-the-external-system-boundary.md) — GitHub owns external artifacts and merge while Yapir owns orchestration and CommentSet collaboration, crossing the boundary through provider-supplied scoped tools, Git access, and events without mirroring Yapir discussion to GitHub.
 - [Define Project automation rules](issues/04-define-project-automation-rules.md) — Each named, stateless ProjectAutomationRule belongs to a ProjectAgentConfiguration and independently supplies one typed event, continuity, and contextual intent without rights or explicit rule chaining.
 - [Define AgentWork and continuity](issues/05-define-agent-work-and-continuity.md) — AgentWork is a permanent artifact-correlated identity without a business lifecycle; related work deduplicates by Issue or ChangeRequest, while private Sandbox continuity lasts only for its retention period.
 - [Define Agent capabilities and scoped actions](issues/06-define-agent-permissions-and-actions.md) — One ProjectAgentConfiguration grants provider-supplied capabilities and a stable per-work tool catalogue, while Yapir pre-scopes proxied actions and GitHub alone constrains repository-wide Git access.
+- [Define collaboration through CommentSets](issues/07-define-collaboration-comments-and-reviews.md) — One immutable CommentSet atomically groups an Agent's or User's description, Comments, replies, and author-owned thread actions at a commit into one Yapir-only collaboration event.
 
 ## Not yet specified
 
-- The complete MVP trigger and filter catalogue beyond the issue, ChangeRequest, Review, Comment, and push events needed by the core journey.
+- The complete MVP trigger and filter catalogue beyond the issue, ChangeRequest, CommentSet, and push events needed by the core journey.
 - Runtime economics, scheduling, and concurrency controls that prove product-critical once the execution lifecycle is defined.
 - Notification and discovery behavior that emerges from prototyping the configuration and supervision surfaces.
 
