@@ -32,10 +32,11 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Define Trigger failure and retry semantics](issues/12-define-trigger-failure-and-retry-semantics.md) — Triggers end as technically completed or failed without orchestration retries, recovery controls, rollback, or User-visible execution status; later matching events remain independent.
 - [Define ChangeRequest discovery and notifications](issues/14-define-changerequest-discovery-and-notifications.md) — Users browse a factual Project-level index of post-connection ChangeRequests; the MVP has no personal attention state, initial import, or notification channel.
 - [Define Trigger scheduling and concurrency semantics](issues/15-define-trigger-scheduling-and-concurrency-semantics.md) — Each delivery-rule match creates a distinct Trigger, but an AgentWork admits only one at a time and immediately fails contenders; distinct works remain unordered and concurrent without cancellation, stale-head intervention, deduplication, coalescing, or product economics controls.
+- [Shape the final MVP specification suite](issues/13-shape-the-final-mvp-specification-suite.md) — One index and five single-owner normative specifications separate foundations, configuration, execution, collaboration, and a cross-spec acceptance proof ending at successful human merge on GitHub.
 
 ## Not yet specified
 
-- The complete MVP trigger and filter catalogue beyond the issue, ChangeRequest, CommentSet, and push events needed by the core journey.
+<!-- In-scope fog will be recorded here as the frontier advances. -->
 
 ## Out of scope
 
