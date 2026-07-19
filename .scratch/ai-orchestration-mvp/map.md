@@ -9,7 +9,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - Work at the business and product level; defer implementation planning until the specification suite is complete.
 - Use the `grilling` and `domain-modeling` skills in every decision session, and keep `CONTEXT.md` current as vocabulary resolves.
 - Yapir is the control plane and the place for Review and Comment collaboration. The external issue tracker remains canonical for issues, while the git provider remains canonical for repositories, branches, commits, ChangeRequests, and merge.
-- Agents are specialized Organization-owned profiles reused across Projects. An Agent carries its stable identity, model, system instructions, and permissions; Project automation rules add event-specific instructions.
+- Agents are specialized Organization-owned profiles reused across Projects. An Agent carries its stable identity, model, and system instructions; Project automation rules add event-specific instructions and execution context supplies authorization.
 - The MVP exposes a builder based on event plus filters, Agent, and contextual instruction. Multiple matching rules all execute, and one Agent may be targeted by multiple rules.
 - A User may intervene throughout, but only human merge is mandatory on the happy path.
 - Specify GitHub concretely while keeping the product model provider-neutral.
@@ -19,6 +19,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 <!-- Resolved ticket pointers are appended here. -->
 
 - [Establish the orchestration domain model](issues/01-establish-the-orchestration-domain-model.md) — AgentWork is each Agent's durable correlation scope and Sandbox continuity across related Issues and ChangeRequests; ephemeral Triggers resume it under a user-facing continuity policy.
+- [Define the Agent profile contract](issues/02-define-the-agent-profile-contract.md) — An Agent is a reusable Organization-owned identity, persona, and single-model configuration; Project context, task instructions, authorization, tools, and harness behavior stay outside its MVP profile.
 
 ## Not yet specified
 
@@ -33,3 +34,5 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - Automatic loop guardrails, activation-chain limits, budgets, and escalation policies; the MVP relies on responsible configuration and may permit fully autonomous factories.
 - A public Agent marketplace across Organizations.
 - Provider implementations other than GitHub.
+- A configurable execution harness and Agent-level tool catalogue.
+- Organization-wide knowledge attached to Agent profiles.

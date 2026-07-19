@@ -7,7 +7,7 @@ An AI orchestration platform where Agents and Users collaborate on software deli
 ### People and AI
 
 **Agent**:
-An Organization-owned AI profile configured for a specialized kind of software delivery work and reusable across Projects.
+An Organization-owned AI profile with a stable identity, specialized system instructions, and model configuration, reusable unchanged across Projects. Project context, contextual tasks, and effective authorization remain outside the profile.
 _Avoid_: Reviewer, bot, assistant
 
 **AiProvider**:
