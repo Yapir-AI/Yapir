@@ -28,6 +28,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Prototype the automation configuration experience](issues/08-prototype-the-automation-configuration-experience.md) — A transient four-step first connection and a matching section-based management page make Agent selection, shared capabilities, optional independent rules, and disconnection explicit.
 - [Prototype the collaboration and supervision experience](issues/09-prototype-the-collaboration-and-supervision-experience.md) — A familiar ChangeRequest page exposes descriptions, code conversations, and grouped reviews while hiding CommentSet and excluding User-facing Agent supervision from the MVP.
 - [Specify the Issue-to-ChangeRequest journey](issues/10-specify-the-issue-to-changerequest-journey.md) — Matching rules independently produce AgentWork branches and explicit non-draft ChangeRequest submissions, after which ordinary creation, CommentSet, and push events drive any configured continuation.
+- [Specify the review and correction journey](issues/11-specify-the-review-and-correction-journey.md) — Ordinary ChangeRequest, CommentSet, and push events drive configured evaluation and correction loops whose visible publications inform, but never gate, human merge on GitHub.
 
 ## Not yet specified
 
