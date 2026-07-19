@@ -31,6 +31,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Specify the review and correction journey](issues/11-specify-the-review-and-correction-journey.md) — Ordinary ChangeRequest, CommentSet, and push events drive configured evaluation and correction loops whose visible publications inform, but never gate, human merge on GitHub.
 - [Define Trigger failure and retry semantics](issues/12-define-trigger-failure-and-retry-semantics.md) — Triggers end as technically completed or failed without orchestration retries, recovery controls, rollback, or User-visible execution status; later matching events remain independent.
 - [Define ChangeRequest discovery and notifications](issues/14-define-changerequest-discovery-and-notifications.md) — Users browse a factual Project-level index of post-connection ChangeRequests; the MVP has no personal attention state, initial import, or notification channel.
+- [Define Trigger scheduling and concurrency semantics](issues/15-define-trigger-scheduling-and-concurrency-semantics.md) — Each delivery-rule match creates a distinct Trigger, but an AgentWork admits only one at a time and immediately fails contenders; distinct works remain unordered and concurrent without cancellation, stale-head intervention, deduplication, coalescing, or product economics controls.
 
 ## Not yet specified
 
