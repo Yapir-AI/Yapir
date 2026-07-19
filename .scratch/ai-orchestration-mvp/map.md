@@ -30,6 +30,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Specify the Issue-to-ChangeRequest journey](issues/10-specify-the-issue-to-changerequest-journey.md) — Matching rules independently produce AgentWork branches and explicit non-draft ChangeRequest submissions, after which ordinary creation, CommentSet, and push events drive any configured continuation.
 - [Specify the review and correction journey](issues/11-specify-the-review-and-correction-journey.md) — Ordinary ChangeRequest, CommentSet, and push events drive configured evaluation and correction loops whose visible publications inform, but never gate, human merge on GitHub.
 - [Define Trigger failure and retry semantics](issues/12-define-trigger-failure-and-retry-semantics.md) — Triggers end as technically completed or failed without orchestration retries, recovery controls, rollback, or User-visible execution status; later matching events remain independent.
+- [Define ChangeRequest discovery and notifications](issues/14-define-changerequest-discovery-and-notifications.md) — Users browse a factual Project-level index of post-connection ChangeRequests; the MVP has no personal attention state, initial import, or notification channel.
 
 ## Not yet specified
 
