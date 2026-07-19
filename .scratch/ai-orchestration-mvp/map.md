@@ -9,8 +9,8 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - Work at the business and product level; defer implementation planning until the specification suite is complete.
 - Use the `grilling` and `domain-modeling` skills in every decision session, and keep `CONTEXT.md` current as vocabulary resolves.
 - Yapir is the control plane and the place for Review and Comment collaboration. The external issue tracker remains canonical for issues, while the git provider remains canonical for repositories, branches, commits, ChangeRequests, and merge.
-- Agents are specialized Organization-owned profiles reused across Projects. An Agent carries its stable identity, model, and system instructions; Project automation rules add event-specific instructions and execution context supplies authorization.
-- The MVP exposes a builder based on event plus filters, Agent, and contextual instruction. Multiple matching rules all execute, and one Agent may be targeted by multiple rules.
+- Agents are specialized Organization-owned profiles reused across Projects. A ProjectAgentConfiguration explicitly links an Agent to one Project, grants its capabilities, and owns its automation rules.
+- The MVP exposes a builder based on event plus filters, continuity, and contextual instruction under a ProjectAgentConfiguration. Multiple matching rules all execute independently.
 - A User may intervene throughout, but only human merge is mandatory on the happy path.
 - Specify GitHub concretely while keeping the product model provider-neutral.
 
@@ -19,10 +19,11 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 <!-- Resolved ticket pointers are appended here. -->
 
 - [Establish the orchestration domain model](issues/01-establish-the-orchestration-domain-model.md) — AgentWork is each Agent's durable correlation scope across explicitly related Issues and ChangeRequests; ephemeral Triggers resume it under a user-facing continuity policy.
-- [Define the Agent profile contract](issues/02-define-the-agent-profile-contract.md) — An Agent is a reusable Organization-owned identity, persona, and single-model configuration; Project context, task instructions, authorization, tools, and harness behavior stay outside its MVP profile.
-- [Draw the external-system boundary](issues/03-draw-the-external-system-boundary.md) — GitHub owns external artifacts and merge while Yapir owns orchestration and review collaboration, crossing the boundary through references, scoped tools and Git access, provider events, and linked ChangeRequest comments.
-- [Define Project automation rules](issues/04-define-project-automation-rules.md) — Each named, stateless ProjectAutomationRule independently matches one typed event, connects its target Agent, supplies continuity and context, and grants artifact-scoped access without explicit rule chaining.
+- [Define the Agent profile contract](issues/02-define-the-agent-profile-contract.md) — An Agent is a reusable Organization-owned identity, persona, and single-model configuration; Project-specific capabilities and tools belong to its ProjectAgentConfiguration rather than its profile.
+- [Draw the external-system boundary](issues/03-draw-the-external-system-boundary.md) — GitHub owns external artifacts and merge while Yapir owns orchestration and review collaboration, crossing the boundary through provider-supplied scoped tools, Git access, events, and linked ChangeRequest comments.
+- [Define Project automation rules](issues/04-define-project-automation-rules.md) — Each named, stateless ProjectAutomationRule belongs to a ProjectAgentConfiguration and independently supplies one typed event, continuity, and contextual intent without rights or explicit rule chaining.
 - [Define AgentWork and continuity](issues/05-define-agent-work-and-continuity.md) — AgentWork is a permanent artifact-correlated identity without a business lifecycle; related work deduplicates by Issue or ChangeRequest, while private Sandbox continuity lasts only for its retention period.
+- [Define Agent capabilities and scoped actions](issues/06-define-agent-permissions-and-actions.md) — One ProjectAgentConfiguration grants provider-supplied capabilities and a stable per-work tool catalogue, while Yapir pre-scopes proxied actions and GitHub alone constrains repository-wide Git access.
 
 ## Not yet specified
 
@@ -41,3 +42,6 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - Direct User requests that start or resume an AgentWork; MVP intervention occurs through event-producing collaboration and provider actions.
 - Project-wide persistent Agent missions that share one private context across unrelated Issues or ChangeRequests.
 - Reconciliation, private-history merging, or manual scope selection when external artifacts are related only after separate AgentWorks already exist.
+- Per-execution dynamic activation or deactivation of capabilities; MVP capabilities are configured on the ProjectAgentConfiguration and snapshotted when a Trigger executes.
+- Scheduled or release-driven housekeeping that starts fresh work while using a configured root Issue and related Issue graph as shared external memory.
+- User-added capability sources such as MCP servers.

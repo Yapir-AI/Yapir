@@ -16,7 +16,7 @@ A Trigger is an ephemeral occurrence that starts or resumes an AgentWork with ev
 
 Durable Agent-produced artifacts provide the correlation paths for later events: ChangeRequests, Reviews, and Comments record the AgentWork that produced them. Correlation relationships remain explicit and typed (`AgentWork` to `Issue`, and `AgentWork` to `ChangeRequest`) rather than introducing a generic Artifact entity. Reviews and Comments reach the scope through their ChangeRequest.
 
-Automation exposes continuity intent rather than a technical correlation key: start independent work for each match or resume work related to an Issue or ChangeRequest. For related work, Yapir combines the event's artifact with the rule's target Agent to locate the AgentWork. If none exists, it creates one; if another Agent joins the same scope, it creates or resumes that Agent's separate AgentWork. Unrelated artifacts never share one Project-wide private context.
+Automation exposes continuity intent rather than a technical correlation key: start independent work for each match or resume work related to an Issue or ChangeRequest. For related work, Yapir combines the event's artifact with the Agent from the rule's ProjectAgentConfiguration to locate the AgentWork. If none exists, it creates one; if another Agent joins the same scope, it creates or resumes that Agent's separate AgentWork. Unrelated artifacts never share one Project-wide private context.
 
 For one Agent, an Issue or ChangeRequest selects at most one AgentWork for automatic related continuity. Independent work may retain the same artifact as provenance without becoming that target. The MVP neither merges separately established private histories nor reconciles artifacts related only after separate AgentWorks exist.
 

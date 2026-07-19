@@ -32,6 +32,10 @@ _Avoid_: Owner, superuser
 A grant linking a User to a Project, carrying a project role: project admin (manages the Project — connects Agents, invites Users) or project member (participates in collaborative work). Platform Admins bypass ProjectAccess and access all Projects.
 _Avoid_: Project membership (as a noun), permission, share
 
+**ProjectAgentConfiguration**:
+The unique Project-owned configuration linking one Agent to one Project; it grants that Agent a stable set of capabilities from Yapir, Git, and the Project's connected providers, and owns the ProjectAutomationRules that can start or resume its work. Capability changes apply to future Triggers, including those resuming existing AgentWorks.
+_Avoid_: Agent connection, ProjectAgentAccess, Agent permissions
+
 ### Projects and git
 
 **Project**:
@@ -53,7 +57,7 @@ _Avoid_: Ticket, WorkItem, Yapir Issue
 ### Orchestration
 
 **ProjectAutomationRule**:
-A Project-owned configuration that connects one Agent to the Project and describes when and with what contextual intent that Agent starts or resumes work. Each matching rule acts independently; the connection exists only while at least one rule targets the Agent.
+A rule owned by a ProjectAgentConfiguration that describes when and with what contextual intent its Agent starts or resumes work. Each matching rule acts independently; capabilities belong to the parent ProjectAgentConfiguration rather than to individual rules.
 _Avoid_: Workflow, Agent connection, AutomationRule
 
 **AgentWork**:
