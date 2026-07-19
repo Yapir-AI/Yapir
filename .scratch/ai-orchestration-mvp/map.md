@@ -25,12 +25,13 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Define AgentWork and continuity](issues/05-define-agent-work-and-continuity.md) — AgentWork is a permanent artifact-correlated identity without a business lifecycle; related work deduplicates by Issue or ChangeRequest, while private Sandbox continuity lasts only for its retention period.
 - [Define Agent capabilities and scoped actions](issues/06-define-agent-permissions-and-actions.md) — One ProjectAgentConfiguration grants provider-supplied capabilities and a stable per-work tool catalogue, while Yapir pre-scopes proxied actions and GitHub alone constrains repository-wide Git access.
 - [Define collaboration through CommentSets](issues/07-define-collaboration-comments-and-reviews.md) — One immutable CommentSet atomically groups an Agent's or User's description, Comments, replies, and author-owned thread actions at a commit into one Yapir-only collaboration event.
+- [Prototype the automation configuration experience](issues/08-prototype-the-automation-configuration-experience.md) — A transient four-step first connection and a matching section-based management page make Agent selection, shared capabilities, optional independent rules, and disconnection explicit.
 
 ## Not yet specified
 
 - The complete MVP trigger and filter catalogue beyond the issue, ChangeRequest, CommentSet, and push events needed by the core journey.
 - Runtime economics, scheduling, and concurrency controls that prove product-critical once the execution lifecycle is defined.
-- Notification and discovery behavior that emerges from prototyping the configuration and supervision surfaces.
+- Notification and discovery behavior that emerges from prototyping the supervision surface.
 
 ## Out of scope
 
