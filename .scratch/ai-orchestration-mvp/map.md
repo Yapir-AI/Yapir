@@ -21,6 +21,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Establish the orchestration domain model](issues/01-establish-the-orchestration-domain-model.md) — AgentWork is each Agent's durable correlation scope and Sandbox continuity across related Issues and ChangeRequests; ephemeral Triggers resume it under a user-facing continuity policy.
 - [Define the Agent profile contract](issues/02-define-the-agent-profile-contract.md) — An Agent is a reusable Organization-owned identity, persona, and single-model configuration; Project context, task instructions, authorization, tools, and harness behavior stay outside its MVP profile.
 - [Draw the external-system boundary](issues/03-draw-the-external-system-boundary.md) — GitHub owns external artifacts and merge while Yapir owns orchestration and review collaboration, crossing the boundary through references, scoped tools and Git access, provider events, and linked ChangeRequest comments.
+- [Define Project automation rules](issues/04-define-project-automation-rules.md) — Each named, stateless ProjectAutomationRule independently matches one typed event, connects its target Agent, supplies continuity and context, and grants artifact-scoped access without explicit rule chaining.
 
 ## Not yet specified
 
@@ -37,3 +38,4 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - Provider implementations other than GitHub.
 - A configurable execution harness and Agent-level tool catalogue.
 - Organization-wide knowledge attached to Agent profiles.
+- Direct User requests that start or resume an AgentWork; MVP intervention occurs through event-producing collaboration and provider actions.

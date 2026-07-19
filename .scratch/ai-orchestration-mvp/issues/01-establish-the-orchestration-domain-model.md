@@ -12,7 +12,7 @@ The MVP does not introduce a Yapir-owned Collaboration or an internal twin of an
 
 AgentWork is the durable correlation identity. It belongs to one Agent and one Project, represents that Agent's continuity for one correlated scope of work, and owns one logically persistent Sandbox. The Sandbox's workspace and Agent context survive resumptions as a product guarantee even if the physical runtime must be recreated. An AgentWork may relate to multiple Issues and ChangeRequests in its scope, while different Agents participating around the same artifacts have separate AgentWorks.
 
-A Trigger is an ephemeral occurrence that starts or resumes an AgentWork with event-specific context. It may result from an external event matching automation configuration or from an explicit User request. Triggers and the resulting executions are not durable domain objects in this minimal model.
+A Trigger is an ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an event matches a ProjectAutomationRule. Triggers and the resulting executions are not durable domain objects in this minimal model.
 
 Durable Agent-produced artifacts provide the correlation paths for later events: ChangeRequests, Reviews, and Comments record the AgentWork that produced them. Correlation relationships remain explicit and typed (`AgentWork` to `Issue`, and `AgentWork` to `ChangeRequest`) rather than introducing a generic Artifact entity. Reviews and Comments reach the scope through their ChangeRequest.
 
@@ -20,4 +20,4 @@ Automation exposes continuity intent rather than a technical correlation key: st
 
 For one Agent, a related Issue or ChangeRequest identifies at most one active AgentWork. If an event connects multiple existing AgentWorks for the same Agent, Yapir does not merge their private histories automatically: the Trigger is blocked until the intended AgentWork is selected explicitly.
 
-Users participate through authored Reviews and Comments, explicit requests, resolutions, and external provider actions. They do not receive a parallel UserWork or activation lifecycle.
+Users participate through authored Reviews and Comments, resolutions, and external provider actions whose resulting events may match ProjectAutomationRules. They do not receive a parallel UserWork or activation lifecycle.

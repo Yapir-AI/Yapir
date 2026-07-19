@@ -52,12 +52,16 @@ _Avoid_: Ticket, WorkItem, Yapir Issue
 
 ### Orchestration
 
+**ProjectAutomationRule**:
+A Project-owned configuration that connects one Agent to the Project and describes when and with what contextual intent that Agent starts or resumes work. Each matching rule acts independently; the connection exists only while at least one rule targets the Agent.
+_Avoid_: Workflow, Agent connection, AutomationRule
+
 **AgentWork**:
 One Agent's persistent continuity for one correlated scope of work in a Project. It owns one logically persistent Sandbox and may relate to multiple Issues and ChangeRequests in that scope. It is the correlation identity recorded by the ChangeRequests, Reviews, and Comments the Agent produces. For one Agent, a related Issue or ChangeRequest identifies at most one active AgentWork; different Agents working on the same artifacts have separate AgentWorks.
 _Avoid_: Collaboration, WorkItem, AgentSession, AgentWorkspace
 
 **Trigger**:
-An ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an external event matches automation configuration or a User explicitly requests the Agent. Repeated executions are runtime behavior, not durable domain objects.
+An ephemeral occurrence that starts or resumes an AgentWork with event-specific context after an event matches a ProjectAutomationRule. Repeated executions are runtime behavior, not durable domain objects.
 _Avoid_: Activation, Run, Execution, AutomationRule
 
 ### Reviews
