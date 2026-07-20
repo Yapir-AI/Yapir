@@ -16,7 +16,7 @@ Agents interact with external artifacts through tools supplied by the capabiliti
 
 Code work is the exception that requires ordinary Git access. A Sandbox may receive a short-lived GitHub App installation token scoped to its Project repository so it can clone, fetch, and push. Yapir directs the Agent to its AgentWork branch, but GitHub tokens cannot enforce a dynamic per-AgentWork branch restriction. Branch protection is configured and enforced by Users in GitHub; Yapir neither manages it nor claims that its branch convention is a security boundary.
 
-Yapir listens to useful GitHub changes, including Issue creation and updates, labels, assignments, native Issue comments, ChangeRequest lifecycle and head changes, pushes, and native GitHub review activity when an automation may react to them. These occurrences create or resume work through Triggers; they do not become a second canonical event history in Yapir.
+For the MVP, Yapir's automation catalogue consumes only the GitHub occurrences needed for labeled Issue entry, ChangeRequest creation, and ChangeRequest head changes. Native GitHub comments and reviews, other Issue and ChangeRequest lifecycle activity, and repository pushes outside a known ChangeRequest do not create Triggers. Consumed occurrences do not become a second canonical event history in Yapir.
 
 Yapir does not mirror CommentSets or their summaries, verdicts, checks, or links into GitHub. The ChangeRequest itself is the sole collaborative artifact Yapir publishes to GitHub; all CommentSet collaboration remains canonical in Yapir.
 

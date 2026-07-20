@@ -80,7 +80,7 @@ This specification owns the shared product experience around every ChangeRequest
 
 This specification is an executable cross-spec proof, not another owner of product contracts. Every assertion links to its owning specification.
 
-Its primary fixture contains one GitHub-connected Project, one implementing Agent, one evaluating Agent, their ProjectAgentConfigurations, their minimum capabilities, and exact independent rules, filters, continuity choices, and contextual instructions. A GitHub Issue acquires the fixture's configured external ready condition; Yapir has no intrinsic ready state.
+Its primary fixture contains one GitHub-connected Project, one implementing Agent, one evaluating Agent, their ProjectAgentConfigurations, their minimum capabilities, and exact independent rules, filters, continuity choices, and contextual-instruction intentions. Literal instruction prose remains editable fixture data. A GitHub Issue acquires the fixture's configured external ready condition; Yapir has no intrinsic ready state.
 
 The primary narrative proves that:
 
@@ -89,7 +89,7 @@ The primary narrative proves that:
 3. Yapir relates and exposes the ChangeRequest in the Project index and page.
 4. A configured ChangeRequest rule starts related evaluation work.
 5. The evaluator publishes one non-empty CommentSet for the evaluated commit.
-6. A configured, author-filtered CommentSet rule resumes the implementer without the CommentSet addressing it directly.
+6. A configured CommentSet rule resumes the implementer without the CommentSet addressing it directly; intrinsic self-author suppression replaces an author filter.
 7. The implementer replies, pushes a correction, or does both according to its instructions.
 8. A configured push rule resumes the evaluator, which may publish follow-up feedback and change only the state of threads rooted by that Agent identity.
 9. A User examines the factual collaboration history, follows the GitHub link, and successfully merges on GitHub.

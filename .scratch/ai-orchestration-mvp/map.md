@@ -33,6 +33,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 - [Define ChangeRequest discovery and notifications](issues/14-define-changerequest-discovery-and-notifications.md) — Users browse a factual Project-level index of post-connection ChangeRequests; the MVP has no personal attention state, initial import, or notification channel.
 - [Define Trigger scheduling and concurrency semantics](issues/15-define-trigger-scheduling-and-concurrency-semantics.md) — Each delivery-rule match creates a distinct Trigger, but an AgentWork admits only one at a time and immediately fails contenders; distinct works remain unordered and concurrent without cancellation, stale-head intervention, deduplication, coalescing, or product economics controls.
 - [Shape the final MVP specification suite](issues/13-shape-the-final-mvp-specification-suite.md) — One index and five single-owner normative specifications separate foundations, configuration, execution, collaboration, and a cross-spec acceptance proof ending at successful human merge on GitHub.
+- [Define the MVP event and filter catalogue](issues/16-define-the-mvp-event-and-filter-catalogue.md) — Four minimally filtered events cover labeled Issue entry, ChangeRequest creation and head changes, and self-suppressing CommentSet collaboration for the acceptance journey.
 
 ## Not yet specified
 
@@ -40,6 +41,7 @@ A coherent suite of decision-complete product specifications for Yapir's GitHub-
 
 ## Out of scope
 
+- [Automation catalogue expansion](issues/16-define-the-mvp-event-and-filter-catalogue.md) beyond the four MVP events and required Issue label filter, including native GitHub comments and reviews, additional Issue or ChangeRequest lifecycle events, pre-ChangeRequest push automation, and configurable actor, author, branch, draft, text, or content filters.
 - Post-merge automations such as documentation updates, issue unblocking, release reactions, and other future triggers; these remain roadmap directions for a later effort.
 - Automatic loop guardrails, activation-chain limits, budgets, and escalation policies; the MVP relies on responsible configuration and may permit fully autonomous factories.
 - A public Agent marketplace across Organizations.
